@@ -37,12 +37,12 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Adapter: Открита сцена „Сълза и смях“ (`salzaismyah.bg/site/calendar/YYYY/MM` + stage lists)
+- [ ] Adapter: Младежки театър „Николай Бинев“ (`mlt.bg/programa.php` + `tickets.mlt.bg` for future months)
 
 ## Next up
 
 Adapters in this order (easiest first, see Data sources):
-- [ ] Младежки театър → Театър 199 → Сатира
+- [ ] Театър 199 → Сатира
 - [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
 ## Build milestones
@@ -62,11 +62,12 @@ Adapters in this order (easiest first, see Data sources):
 - [x] Adapter: Възраждане (`VazrajdaneAdapter`: Entase-fed cards, guest category, several times per card, Entase ticket links)
 - [x] Adapter: МГТ „Зад канала“ (`ZadKanalaAdapter`: Drupal table with ISO timestamps)
 - [x] Adapter: Театър „София“ (`SofiaTheatreAdapter`: month pages, selected-month check, other venues as stage)
+- [x] Adapter: Сълза и смях (`SalzaISmyahAdapter`: month calendar joined with per-stage lists by ticket id)
 - [ ] Театър „София“ sold-out rows have no time or stage, so they're skipped; read them from the production pages (`/repertoires/{id}`) later
 - [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
-- [ ] Adapters for 2 more theatres (6 of the 8 easy ones done)
+- [ ] Adapters for 2 more theatres: Младежки театър, Театър 199 (6 of the 8 easy ones done; Сатира is medium)
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
 - [ ] Cast and remaining credits from theatres' production pages
 - [ ] Posters (theatres' own production pages)
@@ -116,8 +117,8 @@ protected by the EU database right (see investigation). Everything else is fair 
 | 4 | Театър „Възраждане“ | `theatrevazrajdane.bg/programa/?date=YYYYMMDD-YYYYMMDD` | WordPress; Oct–Dec; one venue; several times per entry | Easy | **Adapter done** |
 | 5 | МГТ „Зад канала“ | `zadkanala.bg/programa/YYYY-MM` | full dates; Oct–Dec; one stage; credits + posters on `/spektakli/{slug}` | Easy | **Adapter done** |
 | 6 | Театър „София“ | `sofiatheatre.eu/program?year=Y&month=M` | per-performance pages `/program/{id}` with price; 2 stages | Easy | **Adapter done** (sold-out rows skipped) |
-| 7 | Открита сцена „Сълза и смях“ | `salzaismyah.bg/site/calendar/YYYY/MM` + stage lists `/site/events/{1,2,3}` | calendar has dates, stage lists have stage — join both; many visiting companies | Easy | Now |
-| 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=`; future months via `tickets.mlt.bg` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes | Easy | |
+| 7 | Открита сцена „Сълза и смях“ | `salzaismyah.bg/site/calendar/YYYY/MM` + stage lists `/site/events/{1,2,3}` | calendar has dates, stage lists have stage — join both; many visiting companies | Easy | **Adapter done** |
+| 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=`; future months via `tickets.mlt.bg` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes | Easy | Now |
 | 9 | Театър 199 „Валентин Стойчев“ | `theatre199.org/bg/schedule?page=N` | no year anywhere; one hall; Eventim venue page has full dates | Easy | |
 | 10 | Сатиричен театър „Алеко Константинов“ | `satirata.bg/program` | only the current month in HTML (filter is JS); rows have day + weekday only; credits with roles on `/show/{slug}` | Medium | |
 | 11 | Театрална работилница „Сфумато“ | `sfumato.info/programa.php?year=&month=` | **robots.txt disallows crawling**; same platform as theatre.art.bg | Blocked | See decisions |
@@ -166,6 +167,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-15** — Сълза и смях adapter (7/8): calendar gives dates, stage lists give stage + production page, joined on the ticket id. **Gate reached: 8 of 12 theatres have adapters.**
 - **2026-10-15** — Театър „София“ adapter (6/8): `?page=N` doesn't page; `?year=&month=` returns the whole month. Sold-out rows have no time, skipped for now. 7 theatres now have adapters (gate is 8).
 - **2026-10-15** — МГТ „Зад канала“ adapter (5/8): Drupal table with ISO timestamps, simplest so far. No ticket URLs on the site (popup only); app falls back to the theatre's box-office link.
 - **2026-10-15** — Възраждане adapter (4/8). Importer now adds a director credit when a listing names one and the production has none (Théatro and Възраждане list directors).

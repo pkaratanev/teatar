@@ -18,7 +18,7 @@ class LaunchTheatresSeeder extends Seeder
         $theatres = [
             ['name' => 'Театър „Българска армия“', 'website' => 'http://www.tba.art.bg', 'adapter' => 'tba'],
             ['name' => 'Народен театър „Иван Вазов“', 'website' => 'https://nationaltheatre.bg', 'adapter' => 'national'],
-            ['name' => 'Открита сцена „Сълза и смях“'],
+            ['name' => 'Открита сцена „Сълза и смях“', 'website' => 'https://www.salzaismyah.bg', 'adapter' => 'salzaismyah'],
             ['name' => 'Младежки театър „Николай Бинев“'],
             ['name' => 'Театър 199 „Валентин Стойчев“'],
             ['name' => 'Театрална работилница „Сфумато“'],
