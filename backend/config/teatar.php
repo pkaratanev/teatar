@@ -10,6 +10,7 @@ return [
         'csv' => App\Adapters\CsvProgrammeAdapter::class,
         'tba' => App\Adapters\TbaAdapter::class,
         'national' => App\Adapters\NationalTheatreAdapter::class,
+        'theatro' => App\Adapters\TheatroAdapter::class,
     ],
 
     // Days before a watchlisted production's next date that the reminder push goes out.

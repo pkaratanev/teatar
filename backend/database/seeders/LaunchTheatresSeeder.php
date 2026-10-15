@@ -27,7 +27,7 @@ class LaunchTheatresSeeder extends Seeder
             ['name' => 'Театър „София“'],
             ['name' => 'Театър „Възраждане“'],
             ['name' => 'Нов театър НДК'],
-            ['name' => 'Театро'],
+            ['name' => 'Théatro', 'website' => 'https://www.theatro.bg', 'adapter' => 'theatro'],
         ];
 
         foreach ($theatres as $t) {
