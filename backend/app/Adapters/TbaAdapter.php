@@ -67,7 +67,7 @@ class TbaAdapter implements TheatreAdapter
 
         foreach ($blocks as $node) {
             $block = new Crawler($node);
-            $class = (string) $node->getAttribute('class');
+            $class = (string) $block->attr('class');
 
             if (str_contains($class, 'antetka-programa')) {
                 $stage = self::cleanStage($block->text());
