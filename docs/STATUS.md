@@ -41,8 +41,10 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Next up
 
-- [ ] Find a public programme source for each remaining launch theatre (table below)
-- [ ] Cast and crew: find where each theatre publishes credits (production pages on their sites)
+Adapters in this order (easiest first, see Data sources):
+- [ ] Shared year-inference helper for dates printed without a year
+- [ ] Théatro → Възраждане → МГТ „Зад канала“ → Театър „София“ → Сълза и смях → Младежки театър → Театър 199 → Сатира
+- [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
 ## Build milestones
 
@@ -57,6 +59,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 - [x] Seeder for the 12 launch theatres
 - [x] Adapter: Българска армия (`TbaAdapter`)
 - [x] Guest performances listed under the host theatre (`productions.visiting_company`)
+- [x] Programme sources researched for all 12 (Data sources table)
 - [ ] Adapters for at least 7 more theatres
 - [ ] Credits (author, director, cast) from theatres' production pages
 - [ ] Posters (theatres' own production pages)
@@ -97,20 +100,25 @@ stage, cast, author). Contact theatres only for what we can't find — decide th
 The one source to keep out is theatre.art.bg itself: its terms forbid copying and its catalogue is
 protected by the EU database right (see investigation). Everything else is fair game for facts.
 
-| # | Theatre | Programme source | Adapter | Credits source | Status |
+| # | Theatre | Programme source | Notes | Verdict | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Театър „Българска армия“ | tba.art.bg/programabg.php | `tba` | production pages on tba.art.bg | Programme done |
-| 2 | Народен театър „Иван Вазов“ | nationaltheatre.bg | — | — | Next |
-| 3 | Открита сцена „Сълза и смях“ | to find | — | — | |
-| 4 | Младежки театър „Николай Бинев“ | to find | — | — | |
-| 5 | Театър 199 „Валентин Стойчев“ | to find | — | — | |
-| 6 | Театрална работилница „Сфумато“ | to find | — | — | |
-| 7 | Сатиричен театър „Алеко Константинов“ | to find | — | — | |
-| 8 | Малък градски театър „Зад канала“ | to find | — | — | |
-| 9 | Театър „София“ | to find | — | — | |
-| 10 | Театър „Възраждане“ | to find | — | — | |
-| 11 | Нов театър НДК | to find | — | — | |
-| 12 | Театро | to find | — | — | |
+| 1 | Театър „Българска армия“ | `tba.art.bg/programabg.php?year=&month=` | 3 stages; guests "– Гостува X" | Easy | **Adapter done** |
+| 2 | Народен театър „Иван Вазов“ | `nationaltheatre.bg/bg/programa?day=&month=&year=` | UTF-8; Oct–Dec published; 6 stages; guests labelled „Гостуващ“; credits on `/bg/predstavlenie/{slug}` | Easy | Now |
+| 3 | Théatro | `theatro.bg/program/` (one long page) | no year in dates; stale block at top to skip; guests in title text; Eventim/Entase ticket links | Easy | |
+| 4 | Театър „Възраждане“ | `theatrevazrajdane.bg/programa/?date=YYYYMMDD-YYYYMMDD` | WordPress; Oct–Dec; one venue; several times per entry | Easy | |
+| 5 | МГТ „Зад канала“ | `zadkanala.bg/programa/YYYY-MM` | full dates; Oct–Dec; one stage; credits + posters on `/spektakli/{slug}` | Easy | |
+| 6 | Театър „София“ | `sofiatheatre.eu/program?page=N` | per-performance pages `/program/{id}` with price; 2 stages | Easy | |
+| 7 | Открита сцена „Сълза и смях“ | `salzaismyah.bg/site/calendar/YYYY/MM` + stage lists `/site/events/{1,2,3}` | calendar has dates, stage lists have stage — join both; many visiting companies | Easy | |
+| 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=`; future months via `tickets.mlt.bg` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes | Easy | |
+| 9 | Театър 199 „Валентин Стойчев“ | `theatre199.org/bg/schedule?page=N` | no year anywhere; one hall; Eventim venue page has full dates | Easy | |
+| 10 | Сатиричен театър „Алеко Константинов“ | `satirata.bg/program` | only the current month in HTML (filter is JS); rows have day + weekday only; credits with roles on `/show/{slug}` | Medium | |
+| 11 | Театрална работилница „Сфумато“ | `sfumato.info/programa.php?year=&month=` | **robots.txt disallows crawling**; same platform as theatre.art.bg | Blocked | See decisions |
+| 12 | ~~Нов театър НДК~~ | — | reported closed since Aug 2024; its own site blocks crawlers | Drop | See decisions |
+
+Findings that shape the code:
+- Most sites print dates without a year (Народен, Théatro, Възраждане, Театър 199, Сатира). Needs one shared helper: infer the year from day + month (+ weekday when present) relative to today.
+- Entase is not a shortcut: organiser pages load events by JavaScript and the API needs a key per organiser. Individual `entase.com/book?eid=` pages are readable, so ticket links can still be kept.
+- tba.art.bg, mlt.bg and sfumato.info share URL patterns (`slug___id`) and ids with theatre.art.bg — the same vendor runs them. We take only bare facts from each theatre's own programme page.
 
 ## After the MVP (not before)
 
@@ -140,6 +148,9 @@ protected by the EU database right (see investigation). Everything else is fair 
 
 ## Open decisions
 
+- [ ] Сфумато: its robots.txt asks bots not to crawl. Respect it (add Сфумато by hand in the admin / later contact) or not?
+- [ ] Нов театър НДК looks closed: replace it in the launch set? Candidates: Театър „Азарян“ (НДК), Топлоцентрала, Столичен куклен театър
+
 - [ ] App name (placeholder: Teatar)
 - [ ] Store developer accounts: individual or company
 
@@ -147,6 +158,7 @@ protected by the EU database right (see investigation). Everything else is fair 
 
 Newest first. One line per working session.
 
+- **2026-10-15** — Researched the 10 remaining theatres with 4 parallel agents: 8 easy server-HTML programmes, Сатира medium, Сфумато blocked by robots.txt, Нов театър НДК likely closed. Entase isn't a shortcut.
 - **2026-10-15** — Reworked around MVP goals: stable MVP → Preslav tests → deploy and stores. Data: use any public source except theatre.art.bg; no outreach until after the MVP. Guest shows are in: listed under the host theatre with the visiting company; quote-safe title cleaning shared by all adapters.
 - **2026-10-15** — Българска армия adapter (windows-1251 monthly page, Latin look-alike letters folded). tba.art.bg runs on Art.bg's platform; we take only facts from the theatre's page.
 - **2026-10-15** — Hosting decided: Laravel Cloud, after the MVP.
