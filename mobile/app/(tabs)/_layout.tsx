@@ -1,13 +1,14 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
+import type { ColorValue } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
 const icon =
   (name: IconName) =>
-  ({ color, size }: { color: string; size: number }) => <MaterialCommunityIcons name={name} color={color} size={size} />;
+  ({ color, size }: { color: ColorValue; size: number }) => <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 export default function TabsLayout() {
   const theme = useTheme();
