@@ -1,7 +1,7 @@
 # Teatar
 
 A Letterboxd-style app for Bulgarian theatre: browse the Sofia programme, rate and review what you saw,
-keep a diary and a watchlist. See [docs/plan.md](docs/plan.md) and [docs/investigation.md](docs/investigation.md).
+keep a diary and a watchlist. **Where things stand: [docs/STATUS.md](docs/STATUS.md).** Plan: [docs/plan.md](docs/plan.md) · research: [docs/investigation.md](docs/investigation.md).
 
 | Folder | What |
 | --- | --- |
