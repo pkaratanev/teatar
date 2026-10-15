@@ -73,6 +73,7 @@ class TheatroAdapter implements TheatreAdapter
             [$title, $authorFromTitle] = self::splitTitle($lines[0]);
             $visiting = self::firstMatch($lines, '/^гостува\s+(.+)$/iu');
             $author = self::firstMatch($lines, '/^автор:\s*(.+)$/iu') ?? $authorFromTitle;
+            $director = self::firstMatch($lines, '/^режисьор:\s*(.+)$/iu');
 
             $day = (int) $d[1];
             $month = BulgarianDate::month($d[2]);
@@ -90,6 +91,7 @@ class TheatroAdapter implements TheatreAdapter
                 sourceUrl: $more->count() ? (string) $more->first()->attr('href') : $pageUrl,
                 visitingCompany: $visiting,
                 author: $author,
+                director: $director,
             );
         }
 

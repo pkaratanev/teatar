@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Adapters\ScrapedPerformance;
 use App\Enums\CatalogueSource;
+use App\Enums\CreditRole;
 use App\Enums\ProductionStatus;
 use App\Models\Performance;
+use App\Models\Person;
 use App\Models\Production;
 use App\Models\Stage;
 use App\Models\Theatre;
@@ -37,6 +39,10 @@ class ProgrammeImporter
                     $stats['productions_created']++;
                 } elseif ($production->author === null && $item->author !== null) {
                     $production->update(['author' => $item->author]); // fill gaps, never overwrite admin edits
+                }
+
+                if ($item->director !== null) {
+                    $this->ensureDirector($production, $item->director);
                 }
 
                 $stage = $item->stage
@@ -105,6 +111,26 @@ class ProgrammeImporter
             ->get(['id', 'title', 'author', 'is_guest', 'visiting_company'])
             ->first(fn (Production $p) => self::normaliseTitle($p->title) === $wanted
                 && ($p->visiting_company === null ? null : self::normaliseTitle($p->visiting_company)) === $company);
+    }
+
+    /** Add a director credit when the production has none yet; reuse a person with the same name. */
+    private function ensureDirector(Production $production, string $name): void
+    {
+        $name = trim(preg_replace('/\s+/u', ' ', $name) ?? $name);
+        if ($name === '' || $production->credits()->where('role_type', CreditRole::Director)->exists()) {
+            return;
+        }
+
+        $person = Person::where('name', $name)->first()
+            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->first()
+            ?? Person::create([
+                'name' => $name,
+                'slug' => Str::slug($name).'-'.Str::lower(Str::random(4)),
+                'source' => CatalogueSource::Adapter->value,
+                'source_url' => $production->source_url,
+            ]);
+
+        $production->credits()->create(['person_id' => $person->id, 'role_type' => CreditRole::Director]);
     }
 
     private function createProduction(Theatre $theatre, ScrapedPerformance $item): Production
