@@ -171,7 +171,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
-- **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests.
+- **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests. The tests caught 3 real bugs: Filament closures must name their parameter `$query` (the reviews list crashed), widgets were lazy, and `canAccessPanel` returned null for new users. Noted in CLAUDE.md.
 - **2026-10-15** — Live check green after the encoding fix: Българска армия 144 performances (18 guest), total 817 across 10 theatres.
 - **2026-10-15** — First live run from GitHub Actions: 9 of 11 adapters OK (e.g. Народен 160 performances to 31 Dec, Сатира 93, Възраждане 70). Българска армия: UTF-8 body with a windows-1251 meta tag got converted twice — fixed. Младежки театър: Cloudflare blocks datacenter IPs; its ticket shop needs a login, so no alternative public source.
 - **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 11 of 12 launch theatres have adapters.
