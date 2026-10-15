@@ -6,9 +6,10 @@ use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
 use App\Support\BulgarianDate;
+use App\Support\Encoding;
 use App\Support\GuestTitle;
+use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -32,13 +33,13 @@ class TbaAdapter implements TheatreAdapter
 
         for ($i = 0; $i < self::MONTHS; $i++, $month = $month->addMonth()) {
             $url = "{$base}/programabg.php?year={$month->year}&month={$month->month}";
-            $response = Http::timeout(20)->retry(2, 1000)->get($url);
+            $response = TheatreHttp::client()->get($url);
 
             if (! $response->successful()) {
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");
             }
 
-            yield from $this->parse(self::toUtf8($response->body(), $response->header('Content-Type')), $month->year, $month->month, $base);
+            yield from $this->parse(Encoding::toUtf8($response->body()), $month->year, $month->month, $base);
         }
     }
 
@@ -129,12 +130,5 @@ class TbaAdapter implements TheatreAdapter
         }
 
         return [(int) $m[1], BulgarianDate::month($m[2])];
-    }
-
-    private static function toUtf8(string $body, ?string $contentType): string
-    {
-        $declared = preg_match('/charset=([\w-]+)/i', (string) $contentType, $m) ? strtolower($m[1]) : 'windows-1251';
-
-        return $declared === 'utf-8' ? $body : mb_convert_encoding($body, 'UTF-8', 'Windows-1251');
     }
 }

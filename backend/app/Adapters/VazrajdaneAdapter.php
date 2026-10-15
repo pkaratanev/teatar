@@ -6,8 +6,8 @@ use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
 use App\Support\BulgarianDate;
+use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -30,7 +30,7 @@ class VazrajdaneAdapter implements TheatreAdapter
 
         for ($i = 0; $i < self::MONTHS; $i++, $month = $month->addMonth()) {
             $url = "{$base}/programa/?date={$month->format('Ymd')}-{$month->endOfMonth()->format('Ymd')}";
-            $response = Http::timeout(20)->retry(2, 1000)->get($url);
+            $response = TheatreHttp::client()->get($url);
 
             if (! $response->successful()) {
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");

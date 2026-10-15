@@ -5,8 +5,8 @@ namespace App\Adapters;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
+use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
 /**
@@ -34,7 +34,7 @@ class SatirataAdapter implements TheatreAdapter
 
         for ($i = 0; $i < self::MONTHS; $i++, $month = $month->addMonth()) {
             $url = "{$base}/program?f:month={$month->format('Y-m')}";
-            $response = Http::timeout(20)->retry(2, 1000)->get($url);
+            $response = TheatreHttp::client()->get($url);
 
             if (! $response->successful()) {
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");

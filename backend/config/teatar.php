@@ -20,6 +20,9 @@ return [
         'satirata' => App\Adapters\SatirataAdapter::class,
     ],
 
+    // Sent with every request to theatre sites, so they can see who we are and reach us.
+    'user_agent' => env('TEATAR_USER_AGENT', 'TeatarBot/0.1 (+https://github.com/pkaratanev/teatar; theatre listings app)'),
+
     // Days before a watchlisted production's next date that the reminder push goes out.
     'watchlist_reminder_days' => 7,
 

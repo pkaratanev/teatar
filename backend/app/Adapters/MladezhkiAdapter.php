@@ -5,9 +5,10 @@ namespace App\Adapters;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Support\BulgarianDate;
+use App\Support\Encoding;
 use App\Support\GuestTitle;
+use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -30,18 +31,13 @@ class MladezhkiAdapter implements TheatreAdapter
 
         for ($i = 0; $i < self::MONTHS; $i++, $month = $month->addMonth()) {
             $url = "{$base}/programa.php?year={$month->year}&month={$month->month}";
-            $response = Http::timeout(20)->retry(2, 1000)->get($url);
+            $response = TheatreHttp::client()->get($url);
 
             if (! $response->successful()) {
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");
             }
 
-            $body = $response->body();
-            if (! preg_match('/charset=utf-8/i', (string) $response->header('Content-Type'))) {
-                $body = mb_convert_encoding($body, 'UTF-8', 'Windows-1251');
-            }
-
-            yield from $this->parse($body, $month->year, $month->month, $base);
+            yield from $this->parse(Encoding::toUtf8($response->body()), $month->year, $month->month, $base);
         }
     }
 

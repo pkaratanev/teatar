@@ -6,8 +6,8 @@ use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
 use App\Support\BulgarianDate;
+use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -27,7 +27,7 @@ class TheatroAdapter implements TheatreAdapter
     {
         $base = rtrim($theatre->website ?: self::DEFAULT_BASE_URL, '/');
         $url = "{$base}/program/";
-        $response = Http::timeout(20)->retry(2, 1000)->get($url);
+        $response = TheatreHttp::client()->get($url);
 
         if (! $response->successful()) {
             throw new RuntimeException("{$url} answered HTTP {$response->status()}");
