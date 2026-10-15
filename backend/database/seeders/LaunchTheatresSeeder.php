@@ -22,7 +22,7 @@ class LaunchTheatresSeeder extends Seeder
             ['name' => 'Младежки театър „Николай Бинев“', 'website' => 'https://mlt.bg', 'adapter' => 'mlt'],
             ['name' => 'Театър 199 „Валентин Стойчев“', 'website' => 'https://theatre199.org', 'adapter' => 'theatre199'],
             ['name' => 'Театрална работилница „Сфумато“'],
-            ['name' => 'Сатиричен театър „Алеко Константинов“'],
+            ['name' => 'Сатиричен театър „Алеко Константинов“', 'website' => 'https://satirata.bg', 'adapter' => 'satirata'],
             ['name' => 'Малък градски театър „Зад канала“', 'website' => 'https://zadkanala.bg', 'adapter' => 'zadkanala'],
             ['name' => 'Театър „София“', 'website' => 'https://sofiatheatre.eu', 'adapter' => 'sofia'],
             ['name' => 'Театър „Възраждане“', 'website' => 'https://theatrevazrajdane.bg', 'adapter' => 'vazrajdane'],

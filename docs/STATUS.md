@@ -37,7 +37,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Adapter: Сатира (`satirata.bg/program`; only the current month is in the HTML — find the JS month data or accept ~2–4 weeks ahead)
+- [ ] Run every adapter once against the live sites (`teatar:sync-programmes --now`) and fix what breaks
 
 ## Next up
 
@@ -64,11 +64,12 @@ Adapters in this order (easiest first, see Data sources):
 - [x] Adapter: Сълза и смях (`SalzaISmyahAdapter`: month calendar joined with per-stage lists by ticket id)
 - [x] Adapter: Младежки театър (`MladezhkiAdapter`: windows-1251 table, month heading check; Nov–Dec published, so no ticket-shop fallback needed). Guest-title parsing shared in `GuestTitle`
 - [x] Adapter: Театър 199 (`Theatre199Adapter`: pages until empty, featured block + cards, year inferred)
+- [x] Adapter: Сатира (`SatirataAdapter`: Next.js `__NEXT_DATA__` JSON per month; prices in €, ePayGO ticket links, age rating)
 - [ ] Театър „София“ sold-out rows have no time or stage, so they're skipped; read them from the production pages (`/repertoires/{id}`) later
 - [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
-- [x] All 8 easy theatres have adapters (10 of 12 launch theatres incl. Българска армия)
+- [x] Adapters for 11 of 12 launch theatres (only Сфумато and Нов театър НДК left, both waiting on decisions)
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
 - [ ] Cast and remaining credits from theatres' production pages
 - [ ] Posters (theatres' own production pages)
@@ -121,12 +122,12 @@ protected by the EU database right (see investigation). Everything else is fair 
 | 7 | Открита сцена „Сълза и смях“ | `salzaismyah.bg/site/calendar/YYYY/MM` + stage lists `/site/events/{1,2,3}` | calendar has dates, stage lists have stage — join both; many visiting companies | Easy | **Adapter done** |
 | 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=`; future months via `tickets.mlt.bg` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes | Easy | **Adapter done** |
 | 9 | Театър 199 „Валентин Стойчев“ | `theatre199.org/bg/schedule?page=N` | no year anywhere; one hall; Eventim venue page has full dates | Easy | **Adapter done** |
-| 10 | Сатиричен театър „Алеко Константинов“ | `satirata.bg/program` | only the current month in HTML (filter is JS); rows have day + weekday only; credits with roles on `/show/{slug}` | Medium | Now |
+| 10 | Сатиричен театър „Алеко Константинов“ | `satirata.bg/program?f:month=YYYY-MM` | Next.js; the whole month is in `__NEXT_DATA__` JSON (UTC times, stage keys, € prices, ePayGO links); age rating in the title | Easy (was Medium) | **Adapter done** |
 | 11 | Театрална работилница „Сфумато“ | `sfumato.info/programa.php?year=&month=` | **robots.txt disallows crawling**; same platform as theatre.art.bg | Blocked | See decisions |
 | 12 | ~~Нов театър НДК~~ | — | reported closed since Aug 2024; its own site blocks crawlers | Drop | See decisions |
 
 Findings that shape the code:
-- Most sites print dates without a year (Народен, Théatro, Възраждане, Театър 199, Сатира). Needs one shared helper: infer the year from day + month (+ weekday when present) relative to today.
+- Most sites print dates without a year (Народен, Théatro, Възраждане, Театър 199). Needs one shared helper: infer the year from day + month (+ weekday when present) relative to today.
 - Entase is not a shortcut: organiser pages load events by JavaScript and the API needs a key per organiser. Individual `entase.com/book?eid=` pages are readable, so ticket links can still be kept.
 - tba.art.bg, mlt.bg and sfumato.info share URL patterns (`slug___id`) and ids with theatre.art.bg — the same vendor runs them. We take only bare facts from each theatre's own programme page.
 
@@ -168,6 +169,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 11 of 12 launch theatres have adapters.
 - **2026-10-15** — Театър 199 adapter: all 8 easy theatres done; 10 of 12 launch theatres now have adapters. Left: Сатира (medium), Сфумато (robots.txt, decision pending), Нов театър НДК (closed, decision pending).
 - **2026-10-15** — Младежки театър adapter: same Art.bg platform as ТБА; a month that isn't published returns another month, so the heading is checked and such pages yield nothing. 9 theatres have adapters.
 - **2026-10-15** — Сълза и смях adapter (7/8): calendar gives dates, stage lists give stage + production page, joined on the ticket id. **Gate reached: 8 of 12 theatres have adapters.**

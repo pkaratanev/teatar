@@ -23,6 +23,7 @@ final readonly class ScrapedPerformance
         public bool $isGuest = false,
         public ?string $author = null,
         public ?string $director = null,
+        public ?string $ageAdvisory = null,
     ) {}
 
     public function guest(): bool

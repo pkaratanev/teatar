@@ -37,8 +37,15 @@ class ProgrammeImporter
                 if ($production === null) {
                     $production = $this->createProduction($theatre, $item);
                     $stats['productions_created']++;
-                } elseif ($production->author === null && $item->author !== null) {
-                    $production->update(['author' => $item->author]); // fill gaps, never overwrite admin edits
+                } else {
+                    // Fill gaps, never overwrite what an admin already set.
+                    $gaps = array_filter([
+                        'author' => $production->author === null ? $item->author : null,
+                        'age_advisory' => $production->age_advisory === null ? $item->ageAdvisory : null,
+                    ]);
+                    if ($gaps !== []) {
+                        $production->update($gaps);
+                    }
                 }
 
                 if ($item->director !== null) {
@@ -108,7 +115,7 @@ class ProgrammeImporter
         return $theatre->productions()
             ->where('status', ProductionStatus::Running)
             ->where('is_guest', $guest)
-            ->get(['id', 'title', 'author', 'is_guest', 'visiting_company'])
+            ->get(['id', 'title', 'author', 'age_advisory', 'is_guest', 'visiting_company'])
             ->first(fn (Production $p) => self::normaliseTitle($p->title) === $wanted
                 && ($p->visiting_company === null ? null : self::normaliseTitle($p->visiting_company)) === $company);
     }
@@ -142,6 +149,7 @@ class ProgrammeImporter
         return $theatre->productions()->create([
             'title' => $title,
             'author' => $item->author,
+            'age_advisory' => $item->ageAdvisory,
             'is_guest' => $item->guest(),
             'visiting_company' => $item->visitingCompany,
             'slug' => Str::slug($title).'-'.Str::lower(Str::random(5)),

@@ -20,6 +20,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $title
  * @property string $slug
  * @property string|null $author
+ * @property string|null $age_advisory
  * @property bool $is_guest
  * @property string|null $visiting_company
  * @property ProductionStatus $status
