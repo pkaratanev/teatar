@@ -77,5 +77,7 @@ jobs:
         run: |
           npm install --no-audit --no-fund > npm.log 2>&1 || { grep -E "npm (error|ERR)" npm.log | head -40 | sed 's/^/::error::/'; exit 1; }
       - name: Typecheck
-        run: npx tsc --noEmit --pretty false | sed -E 's/^(.+)\(([0-9]+),[0-9]+\): error (.*)$/::error file=mobile\/\1,line=\2::\3/'; exit ${PIPESTATUS[0]}
+        run: |
+          set -o pipefail
+          npx tsc --noEmit --pretty false | sed -E 's/^(.+)\(([0-9]+),[0-9]+\): error (.*)$/::error file=mobile\/\1,line=\2::\3/'
         shell: bash
