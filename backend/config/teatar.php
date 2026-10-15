@@ -8,6 +8,7 @@ return [
      */
     'adapters' => [
         'csv' => App\Adapters\CsvProgrammeAdapter::class,
+        'tba' => App\Adapters\TbaAdapter::class,
     ],
 
     // Days before a watchlisted production's next date that the reminder push goes out.

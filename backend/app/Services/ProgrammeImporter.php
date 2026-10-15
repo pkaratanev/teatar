@@ -9,6 +9,7 @@ use App\Models\Performance;
 use App\Models\Production;
 use App\Models\Stage;
 use App\Models\Theatre;
+use App\Support\Cyrillic;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -65,6 +66,7 @@ class ProgrammeImporter
     /** Titles differ in case and quotes between sources ("ГНЯВ" vs „Гняв“), so match on a normalised form. */
     public static function normaliseTitle(string $title): string
     {
+        $title = Cyrillic::foldHomoglyphs($title);
         $title = preg_replace('/["\'„“”«»‚‘’]/u', '', $title);
         $title = preg_replace('/\s+/u', ' ', $title);
 

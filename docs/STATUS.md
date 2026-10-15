@@ -7,11 +7,11 @@ tick what's done, add what you found, move the "Now" marker. Plan and rationale:
 
 ## Now
 
-- [ ] First real theatre adapter: Театър „Българска армия“ (tba.art.bg), with saved-HTML fixture test
+- [ ] Adapter: Народен театър „Иван Вазов“ (nationaltheatre.bg)
 
 ## Next up
 
-- [ ] Adapter: Народен театър „Иван Вазов“ (nationaltheatre.bg)
+- [ ] Run `teatar:sync-programmes театър-българска-армия --now` locally and check the result in Filament
 - [ ] Adapter: a third launch theatre
 - [ ] Outreach email to theatres asking for a monthly programme feed / spreadsheet
 - [ ] Confirm the programme source for each of the 12 launch theatres (table below)
@@ -30,7 +30,8 @@ tick what's done, add what you found, move the "Now" marker. Plan and rationale:
 - [x] Adapter framework: `TheatreAdapter`, idempotent `ProgrammeImporter`, nightly `teatar:sync-programmes`
 - [x] CSV adapter (theatre sends a spreadsheet)
 - [x] Seeder for the 12 launch theatres
-- [ ] 3 site adapters filling a month of real performances
+- [x] Adapter 1/3: Българска армия (`TbaAdapter`, 3 months ahead, 3 stages)
+- [ ] Adapters 2–3 filling a month of real performances
 - [ ] Admin dashboard widget: productions missing author / cast / poster
 
 ### 3. Gate: 8 of 12 theatres — target 15 Nov
@@ -102,7 +103,7 @@ Release path:
 
 | # | Theatre | Programme source | Adapter | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Театър „Българска армия“ | tba.art.bg | — | Next |
+| 1 | Театър „Българска армия“ | tba.art.bg/programabg.php | `tba` | Adapter done |
 | 2 | Народен театър „Иван Вазов“ | nationaltheatre.bg | — | |
 | 3 | Открита сцена „Сълза и смях“ | to confirm | — | |
 | 4 | Младежки театър „Николай Бинев“ | to confirm | — | |
@@ -120,11 +121,13 @@ Release path:
 - [ ] App name and bundle id (placeholder: Teatar, `bg.teatar.app`)
 - [ ] Timeline assumes full-time work; stretch it if this is evenings and weekends
 - [ ] Store developer accounts: individual or company (see Store releases)
+- [ ] tba.art.bg runs on Art.bg's platform (same production ids as theatre.art.bg). We take only facts from the theatre's own programme page; mention it when talking to Art.bg Net.
 - [ ] Guest performances (e.g. „… - Гостува ДТ-Пловдив“ on the ТБА programme): skip for MVP, or list them under the host theatre?
 
 ## Log
 
 Newest first. One line per working session: what changed, anything surprising.
 
+- **2026-10-15** — Българска армия adapter: parses the monthly page (windows-1251), skips guest shows, folds Latin look-alike letters ("Бaлдахинът"). Fixture in `tests/Fixtures/tba/`.
 - **2026-10-15** — Hosting decided: Laravel Cloud for the backend. Added hosting and store-release checklists.
 - **2026-10-15** — Plan settled (Bulgarian only, ½-star ratings, mobile + Filament, Laravel, Expo, solo). Scaffold pushed; CI green after fixing Larastan types, an npm peer conflict and a tab-icon type.

@@ -16,7 +16,7 @@ class LaunchTheatresSeeder extends Seeder
     public function run(): void
     {
         $theatres = [
-            ['name' => 'Театър „Българска армия“', 'website' => 'http://tba.art.bg'],
+            ['name' => 'Театър „Българска армия“', 'website' => 'http://www.tba.art.bg', 'adapter' => 'tba'],
             ['name' => 'Народен театър „Иван Вазов“', 'website' => 'https://nationaltheatre.bg'],
             ['name' => 'Открита сцена „Сълза и смях“'],
             ['name' => 'Младежки театър „Николай Бинев“'],
@@ -33,7 +33,7 @@ class LaunchTheatresSeeder extends Seeder
         foreach ($theatres as $t) {
             Theatre::firstOrCreate(
                 ['slug' => Str::slug($t['name'])],
-                ['name' => $t['name'], 'city' => 'София', 'website' => $t['website'] ?? null, 'source' => 'admin'],
+                ['name' => $t['name'], 'city' => 'София', 'website' => $t['website'] ?? null, 'adapter' => $t['adapter'] ?? null, 'source' => 'admin'],
             );
         }
     }
