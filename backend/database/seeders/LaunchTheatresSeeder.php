@@ -23,7 +23,7 @@ class LaunchTheatresSeeder extends Seeder
             ['name' => 'Театър 199 „Валентин Стойчев“'],
             ['name' => 'Театрална работилница „Сфумато“'],
             ['name' => 'Сатиричен театър „Алеко Константинов“'],
-            ['name' => 'Малък градски театър „Зад канала“'],
+            ['name' => 'Малък градски театър „Зад канала“', 'website' => 'https://zadkanala.bg', 'adapter' => 'zadkanala'],
             ['name' => 'Театър „София“'],
             ['name' => 'Театър „Възраждане“', 'website' => 'https://theatrevazrajdane.bg', 'adapter' => 'vazrajdane'],
             ['name' => 'Нов театър НДК'],
