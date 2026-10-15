@@ -17,11 +17,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -56,7 +59,8 @@ class ProductionResource extends Resource
                 Select::make('theatre_id')->label('Театър')->relationship('theatre', 'name')->searchable()->preload()->required(),
                 Select::make('status')->label('Статус')->options(ProductionStatus::class)->default(ProductionStatus::Running)->required(),
                 TextInput::make('author')->label('Автор'),
-                TextInput::make('visiting_company')->label('Гостуваща трупа')->helperText('Само за гостуващи представления'),
+                Toggle::make('is_guest')->label('Гостуващ спектакъл')->live(),
+                TextInput::make('visiting_company')->label('Гостуваща трупа')->visible(fn (Get $get) => (bool) $get('is_guest')),
                 TextInput::make('age_advisory')->label('Възраст')->placeholder('12+')->maxLength(8),
                 DatePicker::make('premiered_on')->label('Премиера'),
                 TextInput::make('running_time_minutes')->label('Продължителност (мин.)')->numeric(),
@@ -93,6 +97,7 @@ class ProductionResource extends Resource
                 SpatieMediaLibraryImageColumn::make('poster')->collection('poster')->label(''),
                 TextColumn::make('title')->label('Заглавие')->searchable()->sortable(),
                 TextColumn::make('theatre.name')->label('Театър')->sortable(),
+                IconColumn::make('is_guest')->label('Гост')->boolean()->toggleable(),
                 TextColumn::make('visiting_company')->label('Гостува')->toggleable(),
                 TextColumn::make('status')->label('Статус')->badge(),
                 TextColumn::make('credits_count')->label('Хора')->counts('credits'),

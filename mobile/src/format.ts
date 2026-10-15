@@ -24,6 +24,12 @@ export function formatStars(stars: number | null): string {
   return '★'.repeat(Math.floor(rounded)) + (rounded % 1 ? '½' : '');
 }
 
+/** "гостува ДТ-Пловдив", or "гостуващ спектакъл" when the company isn't known. */
+export function guestLabel(p: { is_guest: boolean; visiting_company: string | null }): string | null {
+  if (!p.is_guest) return null;
+  return p.visiting_company ? `гостува ${p.visiting_company}` : 'гостуващ спектакъл';
+}
+
 export function formatPrice(from: number | null, to: number | null): string | null {
   if (from === null) return null;
   return to !== null && to !== from ? `${from}–${to} €` : `${from} €`;

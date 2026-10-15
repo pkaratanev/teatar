@@ -5,6 +5,7 @@ namespace App\Adapters;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
+use App\Support\BulgarianDate;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -21,11 +22,6 @@ class TbaAdapter implements TheatreAdapter
 
     /** How many months ahead to read, including the current one. */
     public const MONTHS = 3;
-
-    private const MONTHS_BG = [
-        'януари' => 1, 'февруари' => 2, 'март' => 3, 'април' => 4, 'май' => 5, 'юни' => 6,
-        'юли' => 7, 'август' => 8, 'септември' => 9, 'октомври' => 10, 'ноември' => 11, 'декември' => 12,
-    ];
 
     /** Visiting companies: "Бариерата - Гостува ДТ-Пловдив", "Лекция №3 за "…" гостува ДТ-Пловдив". */
     private const GUEST_PATTERN = '/^(.*?)\s*(?:[-–—]\s*)?(?<!\p{L})гостува(?!\p{L})\s+(.+)$/iu';
@@ -88,7 +84,7 @@ class TbaAdapter implements TheatreAdapter
             [$title, $visitingCompany] = self::splitGuest($rawTitle);
 
             [$day, $rowMonth] = self::parseDay($block->filter('.program-left .time')->text());
-            $time = self::parseTime($block->filter('.program-right span')->text());
+            $time = BulgarianDate::time($block->filter('.program-right span')->text());
 
             // A page lists one month; a row in January on a December page belongs to next year.
             $rowYear = $rowMonth < $month ? $year + 1 : $year;
@@ -137,21 +133,11 @@ class TbaAdapter implements TheatreAdapter
     /** "02 Ноември (Понеделник)" → [2, 11] */
     private static function parseDay(string $text): array
     {
-        if (! preg_match('/(\d{1,2})\s+(\p{L}+)/u', $text, $m) || ! isset(self::MONTHS_BG[mb_strtolower($m[2])])) {
+        if (! preg_match('/(\d{1,2})\s+(\p{L}+)/u', $text, $m)) {
             throw new RuntimeException("Unrecognised date: {$text}");
         }
 
-        return [(int) $m[1], self::MONTHS_BG[mb_strtolower($m[2])]];
-    }
-
-    /** "19.30 ч." → [19, 30] */
-    private static function parseTime(string $text): array
-    {
-        if (! preg_match('/(\d{1,2})[.:](\d{2})/', $text, $m)) {
-            throw new RuntimeException("Unrecognised time: {$text}");
-        }
-
-        return [(int) $m[1], (int) $m[2]];
+        return [(int) $m[1], BulgarianDate::month($m[2])];
     }
 
     private static function toUtf8(string $body, ?string $contentType): string

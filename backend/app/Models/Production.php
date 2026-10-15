@@ -19,6 +19,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property int $theatre_id
  * @property string $title
  * @property string $slug
+ * @property string|null $author
+ * @property bool $is_guest
  * @property string|null $visiting_company
  * @property ProductionStatus $status
  * @property \Illuminate\Support\Carbon|null $premiered_on
@@ -26,7 +28,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property float|null $rating_average
  * @property-read Theatre $theatre
  */
-#[Fillable(['theatre_id', 'title', 'title_en', 'slug', 'author', 'visiting_company', 'synopsis', 'age_advisory', 'running_time_minutes', 'premiered_on', 'status', 'source', 'source_url'])]
+#[Fillable(['theatre_id', 'title', 'title_en', 'slug', 'author', 'is_guest', 'visiting_company', 'synopsis', 'age_advisory', 'running_time_minutes', 'premiered_on', 'status', 'source', 'source_url'])]
 class Production extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
@@ -35,6 +37,7 @@ class Production extends Model implements HasMedia
     {
         return [
             'status' => ProductionStatus::class,
+            'is_guest' => 'boolean',
             'premiered_on' => 'date',
             'rating_average' => 'float',
         ];

@@ -31,10 +31,12 @@ class ProgrammeImporter
             foreach ($scraped as $item) {
                 $stats['found']++;
 
-                $production = $this->findProduction($theatre, $item->title, $item->visitingCompany);
+                $production = $this->findProduction($theatre, $item->title, $item->guest(), $item->visitingCompany);
                 if ($production === null) {
                     $production = $this->createProduction($theatre, $item);
                     $stats['productions_created']++;
+                } elseif ($production->author === null && $item->author !== null) {
+                    $production->update(['author' => $item->author]); // fill gaps, never overwrite admin edits
                 }
 
                 $stage = $item->stage
@@ -90,15 +92,17 @@ class ProgrammeImporter
         return mb_strtolower(trim($title));
     }
 
-    private function findProduction(Theatre $theatre, string $title, ?string $visitingCompany): ?Production
+    private function findProduction(Theatre $theatre, string $title, bool $guest, ?string $visitingCompany): ?Production
     {
         $wanted = self::normaliseTitle($title);
         $company = $visitingCompany === null ? null : self::normaliseTitle($visitingCompany);
 
-        // The same title by a different company is a different production.
+        // The same title as a home and a guest production, or by a different
+        // visiting company, is a different production.
         return $theatre->productions()
             ->where('status', ProductionStatus::Running)
-            ->get(['id', 'title', 'visiting_company'])
+            ->where('is_guest', $guest)
+            ->get(['id', 'title', 'author', 'is_guest', 'visiting_company'])
             ->first(fn (Production $p) => self::normaliseTitle($p->title) === $wanted
                 && ($p->visiting_company === null ? null : self::normaliseTitle($p->visiting_company)) === $company);
     }
@@ -111,6 +115,8 @@ class ProgrammeImporter
         // or by the community; the admin dashboard lists productions missing them.
         return $theatre->productions()->create([
             'title' => $title,
+            'author' => $item->author,
+            'is_guest' => $item->guest(),
             'visiting_company' => $item->visitingCompany,
             'slug' => Str::slug($title).'-'.Str::lower(Str::random(5)),
             'status' => ProductionStatus::Running,

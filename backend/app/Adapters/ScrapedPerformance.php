@@ -17,7 +17,15 @@ final readonly class ScrapedPerformance
         public ?float $priceFrom = null,
         public ?float $priceTo = null,
         public ?string $sourceUrl = null,
-        // Set for guest performances: the company visiting the host theatre.
+        // Guest performances: a visiting company plays at this theatre. The company
+        // name is optional (some sites only label the show as a guest).
         public ?string $visitingCompany = null,
+        public bool $isGuest = false,
+        public ?string $author = null,
     ) {}
+
+    public function guest(): bool
+    {
+        return $this->isGuest || $this->visitingCompany !== null;
+    }
 }

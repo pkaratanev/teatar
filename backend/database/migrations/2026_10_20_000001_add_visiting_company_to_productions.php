@@ -14,14 +14,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('productions', function (Blueprint $table) {
-            $table->string('visiting_company')->nullable()->after('author');
+            $table->boolean('is_guest')->default(false)->after('author');
+            // Often unknown: the National Theatre marks guests with a label but no company name.
+            $table->string('visiting_company')->nullable()->after('is_guest');
         });
     }
 
     public function down(): void
     {
         Schema::table('productions', function (Blueprint $table) {
-            $table->dropColumn('visiting_company');
+            $table->dropColumn(['is_guest', 'visiting_company']);
         });
     }
 };

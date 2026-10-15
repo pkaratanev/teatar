@@ -20,6 +20,7 @@ class ProductionSummaryResource extends JsonResource
             'slug' => $this->slug,
             'title' => $this->title,
             'author' => $this->author,
+            'is_guest' => $this->is_guest,
             'visiting_company' => $this->visiting_company,
             'status' => $this->status,
             'poster_url' => $this->getFirstMediaUrl('poster', 'card') ?: null,

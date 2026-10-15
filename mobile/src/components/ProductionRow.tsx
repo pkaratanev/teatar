@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import type { ProductionSummary } from '@/src/api/types';
-import { formatStars } from '@/src/format';
+import { formatStars, guestLabel } from '@/src/format';
 
 type Props = {
   production: ProductionSummary;
@@ -27,9 +27,9 @@ export function ProductionRow({ production, detail }: Props) {
               {production.theatre.name}
             </Text>
           )}
-          {production.visiting_company && (
+          {guestLabel(production) && (
             <Text variant="bodySmall" style={styles.muted} numberOfLines={1}>
-              гостува {production.visiting_company}
+              {guestLabel(production)}
             </Text>
           )}
           {production.rating_average !== null && (

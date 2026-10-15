@@ -37,13 +37,12 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Adapter: Народен театър „Иван Вазов“
+- [ ] Adapter: Théatro (`theatro.bg/program/`, one long page, dates without a year)
 
 ## Next up
 
 Adapters in this order (easiest first, see Data sources):
-- [ ] Shared year-inference helper for dates printed without a year
-- [ ] Théatro → Възраждане → МГТ „Зад канала“ → Театър „София“ → Сълза и смях → Младежки театър → Театър 199 → Сатира
+- [ ] Възраждане → МГТ „Зад канала“ → Театър „София“ → Сълза и смях → Младежки театър → Театър 199 → Сатира
 - [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
 ## Build milestones
@@ -58,7 +57,9 @@ Adapters in this order (easiest first, see Data sources):
 - [x] Tables, Filament admin for catalogue, adapter framework, idempotent importer, nightly sync, CSV adapter
 - [x] Seeder for the 12 launch theatres
 - [x] Adapter: Българска армия (`TbaAdapter`)
-- [x] Guest performances listed under the host theatre (`productions.visiting_company`)
+- [x] Adapter: Народен театър (`NationalTheatreAdapter`: date/time from ticket link, author line, „Гостуващ“ label, skips building tours)
+- [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
+- [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
 - [ ] Adapters for at least 7 more theatres
 - [ ] Credits (author, director, cast) from theatres' production pages
@@ -103,7 +104,7 @@ protected by the EU database right (see investigation). Everything else is fair 
 | # | Theatre | Programme source | Notes | Verdict | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Театър „Българска армия“ | `tba.art.bg/programabg.php?year=&month=` | 3 stages; guests "– Гостува X" | Easy | **Adapter done** |
-| 2 | Народен театър „Иван Вазов“ | `nationaltheatre.bg/bg/programa?day=&month=&year=` | UTF-8; Oct–Dec published; 6 stages; guests labelled „Гостуващ“; credits on `/bg/predstavlenie/{slug}` | Easy | Now |
+| 2 | Народен театър „Иван Вазов“ | `nationaltheatre.bg/bg/programa?day=&month=&year=` | UTF-8; Oct–Dec published; 6 stages; guests labelled „Гостуващ“; credits on `/bg/predstavlenie/{slug}` | Easy | **Adapter done** |
 | 3 | Théatro | `theatro.bg/program/` (one long page) | no year in dates; stale block at top to skip; guests in title text; Eventim/Entase ticket links | Easy | |
 | 4 | Театър „Възраждане“ | `theatrevazrajdane.bg/programa/?date=YYYYMMDD-YYYYMMDD` | WordPress; Oct–Dec; one venue; several times per entry | Easy | |
 | 5 | МГТ „Зад канала“ | `zadkanala.bg/programa/YYYY-MM` | full dates; Oct–Dec; one stage; credits + posters on `/spektakli/{slug}` | Easy | |

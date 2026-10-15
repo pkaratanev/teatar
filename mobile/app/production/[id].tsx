@@ -6,7 +6,7 @@ import { Button, Divider, List, Text } from 'react-native-paper';
 
 import { useProduction } from '@/src/api/hooks';
 import { ErrorState, Loading } from '@/src/components/States';
-import { formatDay, formatPrice, formatStars, formatTime } from '@/src/format';
+import { formatDay, formatPrice, formatStars, formatTime, guestLabel } from '@/src/format';
 
 export default function ProductionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,9 +28,9 @@ export default function ProductionScreen() {
         <View style={styles.headerText}>
           <Text variant="headlineSmall">{p.title}</Text>
           {p.author && <Text variant="bodyLarge">{p.author}</Text>}
-          {p.visiting_company && (
+          {guestLabel(p) && (
             <Text variant="bodyMedium" style={styles.muted}>
-              Гостува {p.visiting_company}
+              {guestLabel(p)}
             </Text>
           )}
           {p.theatre && (

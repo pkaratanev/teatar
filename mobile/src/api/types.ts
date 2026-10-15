@@ -21,7 +21,8 @@ export interface ProductionSummary {
   slug: string;
   title: string;
   author: string | null;
-  /** Set for guest performances: the company visiting the host theatre. */
+  /** Guest performance: a visiting company plays at this theatre (company name may be unknown). */
+  is_guest: boolean;
   visiting_company: string | null;
   status: ProductionStatus;
   poster_url: string | null;
