@@ -23,6 +23,13 @@ Letterboxd-style app for Bulgarian theatre. Solo developer (Preslav), familiar w
 - Each site adapter gets a test against saved HTML in `backend/tests/Fixtures`, so a site redesign
   fails a test instead of importing wrong data.
 
+## Filament gotcha
+
+Filament fills closure parameters **by name**. Query closures must name the parameter `$query`
+(`modifyQueryUsing(fn (Builder $query) => …)`, filter `query()` / `queries()`, `relationship(…, fn (Builder $query) …)`).
+Any other name gets a blank builder with no model, which crashes with "… on null".
+Plain Eloquent closures (`whereHas`, `withCount`) can use any name.
+
 ## Working in the cloud sandbox
 
 Packagist and npm are blocked there, so `composer install` / `npm install` can't run. Push and let CI

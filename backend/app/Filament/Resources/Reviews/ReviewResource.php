@@ -43,7 +43,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $q) => $q->with(['user', 'production'])->withCount('openReports'))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['user', 'production'])->withCount('openReports'))
             ->columns([
                 TextColumn::make('production.title')->label('Постановка')->searchable(),
                 TextColumn::make('user.username')->label('Потребител')->searchable(),
@@ -56,7 +56,7 @@ class ReviewResource extends Resource
             ->defaultSort('open_reports_count', 'desc')
             ->filters([
                 Filter::make('reported')->label('Само със сигнали')->default()
-                    ->query(fn (Builder $q) => $q->has('openReports')),
+                    ->query(fn (Builder $query) => $query->has('openReports')),
                 SelectFilter::make('status')->label('Статус')->options(ReviewStatus::class),
             ])
             ->recordActions([

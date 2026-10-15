@@ -114,8 +114,8 @@ class ProductionResource extends Resource
                     ->trueLabel('Без екип или автор')
                     ->falseLabel('С екип и автор')
                     ->queries(
-                        true: fn (Builder $q) => $q->where(fn (Builder $w) => $w->whereNull('author')->orWhereDoesntHave('credits')),
-                        false: fn (Builder $q) => $q->whereNotNull('author')->whereHas('credits'),
+                        true: fn (Builder $query) => $query->where(fn (Builder $w) => $w->whereNull('author')->orWhereDoesntHave('credits')),
+                        false: fn (Builder $query) => $query->whereNotNull('author')->whereHas('credits'),
                     ),
             ])
             ->recordActions([EditAction::make()]);

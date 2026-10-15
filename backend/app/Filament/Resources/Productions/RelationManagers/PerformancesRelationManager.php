@@ -30,7 +30,7 @@ class PerformancesRelationManager extends RelationManager
             DateTimePicker::make('starts_at')->label('Начало')->seconds(false)
                 ->timezone(config('app.theatre_timezone'))->required(),
             Select::make('stage_id')->label('Сцена')
-                ->relationship('stage', 'name', fn (Builder $q) => $q->where('theatre_id', $this->production()->theatre_id)),
+                ->relationship('stage', 'name', fn (Builder $query) => $query->where('theatre_id', $this->production()->theatre_id)),
             TextInput::make('ticket_url')->label('Билети')->url(),
             TextInput::make('price_from')->label('Цена от (€)')->numeric(),
             TextInput::make('price_to')->label('Цена до (€)')->numeric(),
@@ -55,7 +55,7 @@ class PerformancesRelationManager extends RelationManager
                 TextColumn::make('source')->label('Източник')->badge(),
             ])
             ->defaultSort('starts_at')
-            ->modifyQueryUsing(fn (Builder $q) => $q->where('starts_at', '>=', now()->subDays(30)))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('starts_at', '>=', now()->subDays(30)))
             ->headerActions([CreateAction::make()])
             ->recordActions([
                 EditAction::make(),
