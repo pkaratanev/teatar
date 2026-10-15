@@ -16,8 +16,10 @@ Letterboxd-style app for Bulgarian theatre. Solo developer (Preslav), familiar w
 
 ## Rules
 
-- Never scrape or copy from theatre.art.bg (terms of use + EU database right). Programme data comes from
-  each theatre's own site, feed or spreadsheet. Every catalogue row sets `source` and `source_url`.
+- Never scrape or copy from theatre.art.bg (terms of use + EU database right). Everything else public is
+  fair game for bare facts (title, date, time, stage, credits): theatres' own sites first, then public
+  ticketing pages. Every catalogue row sets `source` and `source_url`.
+- Never work around bot checks (Cloudflare challenges, CAPTCHAs) or robots.txt. Report the site as blocked.
 - Ratings are stored as `half_stars` 1–10; the API and app show stars.
 - Programme times are entered in Europe/Sofia and stored in UTC.
 - Each site adapter gets a test against saved HTML in `backend/tests/Fixtures`, so a site redesign
