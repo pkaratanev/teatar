@@ -37,10 +37,11 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Run every adapter once against the live sites (`teatar:sync-programmes --now`) and fix what breaks
+- [ ] Live check green for every adapter (Actions → Live sources). First run: 9 of 11 OK; Българска армия encoding fix pushed; Младежки театър blocked by Cloudflare from datacenter IPs
 
 ## Next up
 
+- [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 Adapters in this order (easiest first, see Data sources):
 - [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
@@ -69,6 +70,7 @@ Adapters in this order (easiest first, see Data sources):
 - [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
+- [x] `teatar:check-sources` + **Live sources** workflow (manual and weekly): runs every adapter against the real sites without saving
 - [x] Adapters for 11 of 12 launch theatres (only Сфумато and Нов театър НДК left, both waiting on decisions)
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
 - [ ] Cast and remaining credits from theatres' production pages
@@ -169,6 +171,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-15** — First live run from GitHub Actions: 9 of 11 adapters OK (e.g. Народен 160 performances to 31 Dec, Сатира 93, Възраждане 70). Българска армия: UTF-8 body with a windows-1251 meta tag got converted twice — fixed. Младежки театър: Cloudflare blocks datacenter IPs; its ticket shop needs a login, so no alternative public source.
 - **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 11 of 12 launch theatres have adapters.
 - **2026-10-15** — Театър 199 adapter: all 8 easy theatres done; 10 of 12 launch theatres now have adapters. Left: Сатира (medium), Сфумато (robots.txt, decision pending), Нов театър НДК (closed, decision pending).
 - **2026-10-15** — Младежки театър adapter: same Art.bg platform as ТБА; a month that isn't published returns another month, so the heading is checked and such pages yield nothing. 9 theatres have adapters.

@@ -23,6 +23,11 @@ return [
     // Sent with every request to theatre sites, so they can see who we are and reach us.
     'user_agent' => env('TEATAR_USER_AGENT', 'TeatarBot/0.1 (+https://github.com/pkaratanev/teatar; theatre listings app)'),
 
+    // Adapters whose site blocks datacenter IPs with a bot check (Cloudflare).
+    // The live source check reports them as warnings instead of failures.
+    // We never try to get around such checks.
+    'known_blocked' => ['mlt'],
+
     // Days before a watchlisted production's next date that the reminder push goes out.
     'watchlist_reminder_days' => 7,
 

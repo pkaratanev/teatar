@@ -49,11 +49,12 @@ class CheckSources extends Command
                     $this->line("::notice title={$theatre->name}::".count($found)." performances, {$titles} productions, {$guests} guest, ".($dates ? min($dates).' to '.max($dates) : ''));
                 }
             } catch (Throwable $e) {
-                $failures++;
-                $rows[] = [$theatre->name, 0, 0, 0, 0, '—', 'ERROR'];
+                $blocked = in_array($theatre->adapter, (array) config('teatar.known_blocked'), true);
+                $blocked || $failures++;
+                $rows[] = [$theatre->name, 0, 0, 0, 0, '—', $blocked ? 'BLOCKED (known)' : 'ERROR'];
                 $message = str_replace(["\r", "\n"], ' ', mb_substr($e->getMessage(), 0, 500));
                 $this->error("{$theatre->name}: {$message}");
-                $inCi && $this->line("::error title={$theatre->name}::{$message}");
+                $inCi && $this->line('::'.($blocked ? 'warning' : 'error')." title={$theatre->name}::{$message}");
             }
         }
 
