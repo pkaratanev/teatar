@@ -20,7 +20,7 @@ class LaunchTheatresSeeder extends Seeder
             ['name' => 'Народен театър „Иван Вазов“', 'website' => 'https://nationaltheatre.bg', 'adapter' => 'national'],
             ['name' => 'Открита сцена „Сълза и смях“', 'website' => 'https://www.salzaismyah.bg', 'adapter' => 'salzaismyah'],
             ['name' => 'Младежки театър „Николай Бинев“', 'website' => 'https://mlt.bg', 'adapter' => 'mlt'],
-            ['name' => 'Театър 199 „Валентин Стойчев“'],
+            ['name' => 'Театър 199 „Валентин Стойчев“', 'website' => 'https://theatre199.org', 'adapter' => 'theatre199'],
             ['name' => 'Театрална работилница „Сфумато“'],
             ['name' => 'Сатиричен театър „Алеко Константинов“'],
             ['name' => 'Малък градски театър „Зад канала“', 'website' => 'https://zadkanala.bg', 'adapter' => 'zadkanala'],
