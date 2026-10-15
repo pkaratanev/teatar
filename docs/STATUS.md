@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-15 · **Stage:** building the MVP, locally · **Then:** Preslav tests → deploy → stores
+**Last updated:** 2026-10-15 (end of day) · **Stage:** building the MVP, locally · **Then:** Preslav tests → deploy → stores
 
 This is the single source of truth for the project. Update it in the same commit as the work: tick what's
 done, move "Now", add what you found, add a Log line. Plan and rationale: [plan.md](plan.md).
@@ -39,6 +39,16 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 - [ ] Credits and posters, second pass: read cast, director and poster from each theatre's production pages
 
+**Pick up here (2026-10-16):** start the credits/posters pass. Plan: a second adapter method per theatre
+that reads a production page (we already store its `source_url`) and returns author, director, cast with
+roles and a poster URL; the importer fills only missing data. Same routine as the programmes: save a real
+production page from the browser as a fixture, test, then the Live sources run. Pages known so far:
+Народен `/bg/predstavlenie/{slug}`, Сатира `/show/{slug}` (cast with roles), МГТ `/spektakli/{slug}`,
+Театър „София“ `/repertoires/{id}/{slug}`, Възраждане `/portfolio/{slug}`, Théatro `/portfolio_page/{slug}`,
+Сълза и смях `/site/play/{id}`, Театър 199 `/bg/plays/p/{id}-{slug}`, ТБА and Младежки `{slug}___{id}`.
+
+**Waiting on Preslav:** the two open decisions below (Сфумато, Нов театър НДК), and running it locally once.
+
 ## Next up
 
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
@@ -69,8 +79,8 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
 - [x] `teatar:check-sources` + **Live sources** workflow (manual and weekly): runs every adapter against the real sites without saving
-- [x] Live check green: 10 of 11 adapters return real programmes (817 performances, 10 theatres, ~6–10 weeks ahead); Младежки театър reported as known-blocked
-- [x] Adapters for 11 of 12 launch theatres (only Сфумато and Нов театър НДК left, both waiting on decisions)
+- [x] Live check green: 9 of 10 adapters return real programmes (717 performances across 9 theatres, ~6–10 weeks ahead); Младежки театър reported as known-blocked
+- [x] Adapters for 10 of 12 launch theatres (only Сфумато and Нов театър НДК left, both waiting on decisions)
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
 - [ ] Cast and remaining credits from theatres' production pages
 - [ ] Posters (theatres' own production pages)
@@ -122,7 +132,7 @@ protected by the EU database right (see investigation). Everything else is fair 
 | 5 | МГТ „Зад канала“ | `zadkanala.bg/programa/YYYY-MM` | full dates; Oct–Dec; one stage; credits + posters on `/spektakli/{slug}` | Easy | **Adapter done** |
 | 6 | Театър „София“ | `sofiatheatre.eu/program?year=Y&month=M` | per-performance pages `/program/{id}` with price; 2 stages | Easy | **Adapter done** (sold-out rows skipped) |
 | 7 | Открита сцена „Сълза и смях“ | `salzaismyah.bg/site/calendar/YYYY/MM` + stage lists `/site/events/{1,2,3}` | calendar has dates, stage lists have stage — join both; many visiting companies | Easy | **Adapter done** |
-| 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=`; future months via `tickets.mlt.bg` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes | Easy | **Adapter done** |
+| 8 | Младежки театър „Николай Бинев“ | `mlt.bg/programa.php?year=&month=` | unpublished month silently returns another month — check the page heading; guests "– Гостува X"; Latin look-alikes. **Cloudflare blocks datacenter IPs** (GitHub); `tickets.mlt.bg` needs a login | Easy | **Adapter done**, blocked live |
 | 9 | Театър 199 „Валентин Стойчев“ | `theatre199.org/bg/schedule?page=N` | no year anywhere; one hall; Eventim venue page has full dates | Easy | **Adapter done** |
 | 10 | Сатиричен театър „Алеко Константинов“ | `satirata.bg/program?f:month=YYYY-MM` | Next.js; the whole month is in `__NEXT_DATA__` JSON (UTC times, stage keys, € prices, ePayGO links); age rating in the title | Easy (was Medium) | **Adapter done** |
 | 11 | Театрална работилница „Сфумато“ | `sfumato.info/programa.php?year=&month=` | **robots.txt disallows crawling**; same platform as theatre.art.bg | Blocked | See decisions |
@@ -172,13 +182,13 @@ Findings that shape the code:
 Newest first. One line per working session.
 
 - **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests. The tests caught 3 real bugs: Filament closures must name their parameter `$query` (the reviews list crashed), widgets were lazy, and `canAccessPanel` returned null for new users. Noted in CLAUDE.md.
-- **2026-10-15** — Live check green after the encoding fix: Българска армия 144 performances (18 guest), total 817 across 10 theatres.
+- **2026-10-15** — Live check green after the encoding fix: Българска армия 144 performances (18 guest); 717 performances across the 9 reachable theatres. (Earlier entries miscounted theatres by one from Театър „София“ on, and I first reported 817 — corrected here.)
 - **2026-10-15** — First live run from GitHub Actions: 9 of 11 adapters OK (e.g. Народен 160 performances to 31 Dec, Сатира 93, Възраждане 70). Българска армия: UTF-8 body with a windows-1251 meta tag got converted twice — fixed. Младежки театър: Cloudflare blocks datacenter IPs; its ticket shop needs a login, so no alternative public source.
-- **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 11 of 12 launch theatres have adapters.
-- **2026-10-15** — Театър 199 adapter: all 8 easy theatres done; 10 of 12 launch theatres now have adapters. Left: Сатира (medium), Сфумато (robots.txt, decision pending), Нов театър НДК (closed, decision pending).
-- **2026-10-15** — Младежки театър adapter: same Art.bg platform as ТБА; a month that isn't published returns another month, so the heading is checked and such pages yield nothing. 9 theatres have adapters.
-- **2026-10-15** — Сълза и смях adapter (7/8): calendar gives dates, stage lists give stage + production page, joined on the ticket id. **Gate reached: 8 of 12 theatres have adapters.**
-- **2026-10-15** — Театър „София“ adapter (6/8): `?page=N` doesn't page; `?year=&month=` returns the whole month. Sold-out rows have no time, skipped for now. 7 theatres now have adapters (gate is 8).
+- **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 10 of 12 launch theatres have adapters.
+- **2026-10-15** — Театър 199 adapter: all 8 easy theatres done; 9 of 12 launch theatres now have adapters. Left: Сатира (medium), Сфумато (robots.txt, decision pending), Нов театър НДК (closed, decision pending).
+- **2026-10-15** — Младежки театър adapter: same Art.bg platform as ТБА; a month that isn't published returns another month, so the heading is checked and such pages yield nothing. **8 theatres have adapters — gate reached.**
+- **2026-10-15** — Сълза и смях adapter (7/8): calendar gives dates, stage lists give stage + production page, joined on the ticket id. 7 theatres have adapters.
+- **2026-10-15** — Театър „София“ adapter (6/8): `?page=N` doesn't page; `?year=&month=` returns the whole month. Sold-out rows have no time, skipped for now. 6 theatres have adapters.
 - **2026-10-15** — МГТ „Зад канала“ adapter (5/8): Drupal table with ISO timestamps, simplest so far. No ticket URLs on the site (popup only); app falls back to the theatre's box-office link.
 - **2026-10-15** — Възраждане adapter (4/8). Importer now adds a director credit when a listing names one and the production has none (Théatro and Възраждане list directors).
 - **2026-10-15** — Théatro adapter (3/8): the "stale block" is page-builder rows hidden at every screen size, skipped by class; cancellation notices skipped; year inferred with `BulgarianDate`.
