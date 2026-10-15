@@ -61,7 +61,7 @@ Adapters in this order (easiest first, see Data sources):
 - [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
-- [ ] Adapters for at least 7 more theatres
+- [ ] Adapters for 6 more theatres (2 of the 8 easy ones done)
 - [ ] Credits (author, director, cast) from theatres' production pages
 - [ ] Posters (theatres' own production pages)
 - [ ] Admin dashboard widget: productions missing author / cast / poster
@@ -105,7 +105,7 @@ protected by the EU database right (see investigation). Everything else is fair 
 | --- | --- | --- | --- | --- | --- |
 | 1 | Театър „Българска армия“ | `tba.art.bg/programabg.php?year=&month=` | 3 stages; guests "– Гостува X" | Easy | **Adapter done** |
 | 2 | Народен театър „Иван Вазов“ | `nationaltheatre.bg/bg/programa?day=&month=&year=` | UTF-8; Oct–Dec published; 6 stages; guests labelled „Гостуващ“; credits on `/bg/predstavlenie/{slug}` | Easy | **Adapter done** |
-| 3 | Théatro | `theatro.bg/program/` (one long page) | no year in dates; stale block at top to skip; guests in title text; Eventim/Entase ticket links | Easy | |
+| 3 | Théatro | `theatro.bg/program/` (one long page) | no year in dates; stale block at top to skip; guests in title text; Eventim/Entase ticket links | Easy | Now |
 | 4 | Театър „Възраждане“ | `theatrevazrajdane.bg/programa/?date=YYYYMMDD-YYYYMMDD` | WordPress; Oct–Dec; one venue; several times per entry | Easy | |
 | 5 | МГТ „Зад канала“ | `zadkanala.bg/programa/YYYY-MM` | full dates; Oct–Dec; one stage; credits + posters on `/spektakli/{slug}` | Easy | |
 | 6 | Театър „София“ | `sofiatheatre.eu/program?page=N` | per-performance pages `/program/{id}` with price; 2 stages | Easy | |
@@ -159,6 +159,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-15** — Народен театър adapter (2/8 easy theatres): exact date and time from the ticket link; fills a missing author; guest shows are labelled without a company, so productions now have `is_guest`. Shared `BulgarianDate` helper with year inference.
 - **2026-10-15** — Researched the 10 remaining theatres with 4 parallel agents: 8 easy server-HTML programmes, Сатира medium, Сфумато blocked by robots.txt, Нов театър НДК likely closed. Entase isn't a shortcut.
 - **2026-10-15** — Reworked around MVP goals: stable MVP → Preslav tests → deploy and stores. Data: use any public source except theatre.art.bg; no outreach until after the MVP. Guest shows are in: listed under the host theatre with the visiting company; quote-safe title cleaning shared by all adapters.
 - **2026-10-15** — Българска армия adapter (windows-1251 monthly page, Latin look-alike letters folded). tba.art.bg runs on Art.bg's platform; we take only facts from the theatre's page.
