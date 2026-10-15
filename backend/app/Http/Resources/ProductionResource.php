@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Credit;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,7 +19,7 @@ class ProductionResource extends JsonResource
             'running_time_minutes' => $this->running_time_minutes,
             'premiered_on' => $this->premiered_on?->toDateString(),
             'box_office_url' => $this->theatre->box_office_url,
-            'credits' => $this->credits->map(fn ($credit) => [
+            'credits' => $this->credits->map(fn (Credit $credit) => [
                 'person' => ['id' => $credit->person->id, 'slug' => $credit->person->slug, 'name' => $credit->person->name],
                 'role_type' => $credit->role_type,
                 'role_label' => $credit->role_type->getLabel(),

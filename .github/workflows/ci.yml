@@ -30,7 +30,7 @@ jobs:
       DB_USERNAME: teatar
       DB_PASSWORD: teatar
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
@@ -46,11 +46,21 @@ jobs:
         run: vendor/bin/pint --test
         continue-on-error: true # becomes blocking once the scaffold has been run through pint locally
       - name: Static analysis
-        run: vendor/bin/phpstan analyse --memory-limit=1G
+        run: vendor/bin/phpstan analyse --memory-limit=1G --error-format=github
       - name: Migrate (Postgres, with pg_trgm)
         run: php artisan migrate --force
       - name: Tests
-        run: php artisan test
+        run: php artisan test --log-junit junit.xml
+      - name: Test failures as annotations
+        if: failure() && hashFiles('backend/junit.xml') != ''
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          for tc in ET.parse('junit.xml').iter('testcase'):
+              for f in list(tc.iter('failure')) + list(tc.iter('error')):
+                  msg = (f.text or f.get('message') or '').strip().replace('\n', '%0A')[:1500]
+                  print(f"::error title={tc.get('name')}::{msg}")
+          PY
 
   mobile:
     runs-on: ubuntu-latest
@@ -58,9 +68,14 @@ jobs:
       run:
         working-directory: mobile
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - run: npm install
-      - run: npx tsc --noEmit
+      - name: Install
+        # Errors are echoed as annotations so they are readable without downloading logs.
+        run: |
+          npm install --no-audit --no-fund > npm.log 2>&1 || { grep -E "npm (error|ERR)" npm.log | head -40 | sed 's/^/::error::/'; exit 1; }
+      - name: Typecheck
+        run: npx tsc --noEmit --pretty false | sed -E 's/^(.+)\(([0-9]+),[0-9]+\): error (.*)$/::error file=mobile\/\1,line=\2::\3/'; exit ${PIPESTATUS[0]}
+        shell: bash

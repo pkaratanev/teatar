@@ -32,8 +32,8 @@ class PerformanceController extends Controller
 
         [$from, $to] = match ($data['range'] ?? 'week') {
             'tonight' => [CarbonImmutable::now($tz), $today->endOfDay()],
-            'week' => [CarbonImmutable::now($tz), $today->addDays(7)->endOfDay()],
             'month' => [CarbonImmutable::now($tz), $today->addMonth()->endOfDay()],
+            default => [CarbonImmutable::now($tz), $today->addDays(7)->endOfDay()], // week
         };
 
         if (isset($data['from'])) {

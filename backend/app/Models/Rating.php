@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $half_stars
+ * @property-read Production $production
+ */
 #[Fillable(['user_id', 'production_id', 'half_stars'])]
 class Rating extends Model
 {

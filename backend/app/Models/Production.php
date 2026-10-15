@@ -14,6 +14,17 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+/**
+ * @property int $id
+ * @property int $theatre_id
+ * @property string $title
+ * @property string $slug
+ * @property ProductionStatus $status
+ * @property \Illuminate\Support\Carbon|null $premiered_on
+ * @property int $ratings_count
+ * @property float|null $rating_average
+ * @property-read Theatre $theatre
+ */
 #[Fillable(['theatre_id', 'title', 'title_en', 'slug', 'author', 'synopsis', 'age_advisory', 'running_time_minutes', 'premiered_on', 'status', 'source', 'source_url'])]
 class Production extends Model implements HasMedia
 {

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Productions\RelationManagers;
 
 use App\Models\Performance;
+use App\Models\Production;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -29,12 +30,18 @@ class PerformancesRelationManager extends RelationManager
             DateTimePicker::make('starts_at')->label('Начало')->seconds(false)
                 ->timezone(config('app.theatre_timezone'))->required(),
             Select::make('stage_id')->label('Сцена')
-                ->relationship('stage', 'name', fn (Builder $q) => $q->where('theatre_id', $this->getOwnerRecord()->theatre_id)),
+                ->relationship('stage', 'name', fn (Builder $q) => $q->where('theatre_id', $this->production()->theatre_id)),
             TextInput::make('ticket_url')->label('Билети')->url(),
             TextInput::make('price_from')->label('Цена от (€)')->numeric(),
             TextInput::make('price_to')->label('Цена до (€)')->numeric(),
             Toggle::make('is_cancelled')->label('Отменено'),
         ]);
+    }
+
+    private function production(): Production
+    {
+        /** @var Production */
+        return $this->getOwnerRecord();
     }
 
     public function table(Table $table): Table

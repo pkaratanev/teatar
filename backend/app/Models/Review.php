@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property ReviewStatus $status
+ * @property bool $has_spoilers
+ * @property int|null $open_reports_count
+ */
 #[Fillable(['user_id', 'production_id', 'body', 'has_spoilers', 'status'])]
 class Review extends Model
 {

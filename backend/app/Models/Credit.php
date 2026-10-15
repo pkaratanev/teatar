@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property CreditRole $role_type
+ * @property string|null $character_name
+ * @property-read Person $person
+ * @property-read Production $production
+ */
 #[Fillable(['production_id', 'person_id', 'role_type', 'character_name', 'sort'])]
 class Credit extends Model
 {
