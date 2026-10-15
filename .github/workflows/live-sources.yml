@@ -1,0 +1,37 @@
+name: Live sources
+
+# Runs every theatre adapter against the real websites (nothing is saved).
+# Start it by hand from the Actions tab; it also runs weekly so a theatre
+# redesign shows up as a red run before users notice.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1" # Mondays 05:17 UTC
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ${{ github.workspace }}/backend/database/database.sqlite
+      APP_ENV: production
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite, intl, mbstring
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-dev
+      - name: Prepare app
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          touch database/database.sqlite
+          php artisan migrate --force
+          php artisan db:seed --class=LaunchTheatresSeeder --force
+      - name: Check every source
+        run: php artisan teatar:check-sources
