@@ -17,5 +17,7 @@ final readonly class ScrapedPerformance
         public ?float $priceFrom = null,
         public ?float $priceTo = null,
         public ?string $sourceUrl = null,
+        // Set for guest performances: the company visiting the host theatre.
+        public ?string $visitingCompany = null,
     ) {}
 }

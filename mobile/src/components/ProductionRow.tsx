@@ -27,6 +27,11 @@ export function ProductionRow({ production, detail }: Props) {
               {production.theatre.name}
             </Text>
           )}
+          {production.visiting_company && (
+            <Text variant="bodySmall" style={styles.muted} numberOfLines={1}>
+              гостува {production.visiting_company}
+            </Text>
+          )}
           {production.rating_average !== null && (
             <Text variant="bodySmall">
               {formatStars(production.rating_average)} · {production.ratings_count}

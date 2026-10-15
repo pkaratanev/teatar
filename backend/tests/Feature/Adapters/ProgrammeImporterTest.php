@@ -56,3 +56,15 @@ it('stores local programme times in UTC', function () {
     // Sofia is UTC+2 in November.
     expect(Performance::first()->starts_at->utc()->format('Y-m-d H:i'))->toBe('2026-11-03 17:00');
 });
+
+it('keeps a guest production apart from a home production with the same title', function () {
+    $theatre = Theatre::factory()->create();
+    $home = Production::factory()->for($theatre)->create(['title' => 'Хамлет']);
+
+    $guest = new ScrapedPerformance('Хамлет', CarbonImmutable::parse('2026-11-20 19:00', 'Europe/Sofia'), visitingCompany: 'ДТ-Варна');
+    $stats = app(ProgrammeImporter::class)->import($theatre, [$guest, scraped('Хамлет', '2026-11-21 19:00')]);
+
+    expect($stats['productions_created'])->toBe(1)
+        ->and($home->performances()->count())->toBe(1)
+        ->and(Production::where('visiting_company', 'ДТ-Варна')->sole()->performances()->count())->toBe(1);
+});

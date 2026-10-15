@@ -28,6 +28,11 @@ export default function ProductionScreen() {
         <View style={styles.headerText}>
           <Text variant="headlineSmall">{p.title}</Text>
           {p.author && <Text variant="bodyLarge">{p.author}</Text>}
+          {p.visiting_company && (
+            <Text variant="bodyMedium" style={styles.muted}>
+              Гостува {p.visiting_company}
+            </Text>
+          )}
           {p.theatre && (
             <Link href={{ pathname: '/theatre/[id]', params: { id: p.theatre.id } }}>
               <Text variant="bodyMedium" style={styles.link}>

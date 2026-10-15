@@ -4,7 +4,7 @@ namespace App\Adapters;
 
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
-use App\Support\Cyrillic;
+use App\Services\ProgrammeImporter;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -27,8 +27,8 @@ class TbaAdapter implements TheatreAdapter
         'юли' => 7, 'август' => 8, 'септември' => 9, 'октомври' => 10, 'ноември' => 11, 'декември' => 12,
     ];
 
-    /** Visiting companies are listed as "Заглавие - Гостува ДТ-Пловдив"; they are not this theatre's productions. */
-    private const GUEST_PATTERN = '/(?<!\p{L})гостува(?!\p{L})/iu';
+    /** Visiting companies: "Бариерата - Гостува ДТ-Пловдив", "Лекция №3 за "…" гостува ДТ-Пловдив". */
+    private const GUEST_PATTERN = '/^(.*?)\s*(?:[-–—]\s*)?(?<!\p{L})гостува(?!\p{L})\s+(.+)$/iu';
 
     public function fetch(Theatre $theatre): iterable
     {
@@ -81,9 +81,11 @@ class TbaAdapter implements TheatreAdapter
 
             $link = $block->filter('.program-right a');
             $rawTitle = $link->count() ? $link->text() : '';
-            if ($rawTitle === '' || preg_match(self::GUEST_PATTERN, $rawTitle)) {
+            if ($rawTitle === '') {
                 continue;
             }
+
+            [$title, $visitingCompany] = self::splitGuest($rawTitle);
 
             [$day, $rowMonth] = self::parseDay($block->filter('.program-left .time')->text());
             $time = self::parseTime($block->filter('.program-right span')->text());
@@ -92,22 +94,36 @@ class TbaAdapter implements TheatreAdapter
             $rowYear = $rowMonth < $month ? $year + 1 : $year;
 
             $performances[] = new ScrapedPerformance(
-                title: self::cleanTitle($rawTitle),
+                title: $title,
                 startsAt: CarbonImmutable::create($rowYear, $rowMonth, $day, $time[0], $time[1], 0, $tz),
                 stage: $stage,
                 sourceUrl: $base.'/'.ltrim((string) $link->attr('href'), '/'),
+                visitingCompany: $visitingCompany,
             );
         }
 
         return $performances;
     }
 
+    /**
+     * "Бариерата - Гостува ДТ-Пловдив" → ["Бариерата", "ДТ-Пловдив"]; own productions → [title, null].
+     *
+     * @return array{0: string, 1: string|null}
+     */
+    public static function splitGuest(string $raw): array
+    {
+        $raw = trim(preg_replace('/\s+/u', ' ', $raw) ?? $raw);
+
+        if (preg_match(self::GUEST_PATTERN, $raw, $m) && trim($m[1]) !== '') {
+            return [self::cleanTitle($m[1]), trim($m[2])];
+        }
+
+        return [self::cleanTitle($raw), null];
+    }
+
     public static function cleanTitle(string $title): string
     {
-        $title = Cyrillic::foldHomoglyphs($title);
-        $title = preg_replace('/\s+/u', ' ', $title) ?? $title;
-
-        return trim($title, " \t\n\r\0\x0B\"„“”");
+        return ProgrammeImporter::cleanTitle($title);
     }
 
     private static function cleanStage(string $name): string

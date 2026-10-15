@@ -12,6 +12,12 @@ Decisions that shape this codebase:
 
 ## Data
 
-Never extract from theatre.art.bg: its terms forbid copying and its catalogue is protected by the EU
-database right. Bare facts (title, date, time, venue, cast) gathered from each theatre's own site, feed or
-spreadsheet are fine. Every catalogue row records `source` and `source_url`.
+Source facts from any public page that has them: each theatre's own site first, then public ticketing
+listings and other pages. Take bare facts only (title, date, time, stage, cast, author). Contact theatres
+only for what can't be found, after the MVP. Guest performances are listed under the host theatre with
+`visiting_company` set.
+
+The exception is theatre.art.bg itself: its terms forbid copying and its catalogue is protected by the EU
+database right. Every catalogue row records `source` and `source_url`.
+
+Order of work: stable MVP (goals in STATUS.md) → Preslav tests → deploy to Laravel Cloud → store releases.

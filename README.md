@@ -34,7 +34,7 @@ npx expo start                       # scan the QR code with Expo Go
 
 ## Programme data
 
-Each theatre's programme comes from a source the theatre controls. A theatre's `adapter` (set in
+Programme data comes from public sources (see docs/plan.md). A theatre's `adapter` (set in
 Filament) names a class in `config/teatar.php`:
 
 - `csv` — the theatre sends a spreadsheet; save it as `backend/storage/app/private/programmes/{slug}.csv`

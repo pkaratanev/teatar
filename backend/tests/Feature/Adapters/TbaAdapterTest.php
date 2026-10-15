@@ -14,22 +14,36 @@ function tbaFixture(): string
     return file_get_contents(base_path('tests/Fixtures/tba/programme-2026-11.html'));
 }
 
-it('parses own productions and skips visiting companies', function () {
-    $rows = (new TbaAdapter)->parse(tbaFixture(), 2026, 11);
+it('parses every row, including guest performances', function () {
+    $rows = collect((new TbaAdapter)->parse(tbaFixture(), 2026, 11));
 
-    // 11 rows in the fixture, 2 of them guest shows.
-    expect($rows)->toHaveCount(9)
-        ->and(collect($rows)->pluck('title')->unique()->values()->all())->toBe([
-            'Железният светилник', 'Гняв', 'Кафе с претенция', 'Мечтата на идиотката',
-            'Балдахинът', 'Басейнът', 'Урок по български', 'Времето',
-        ])
-        ->and(collect($rows)->contains(fn (ScrapedPerformance $p) => str_contains($p->title, 'Бариерата')))->toBeFalse();
+    expect($rows)->toHaveCount(11)
+        ->and($rows->pluck('title')->unique()->values()->all())->toBe([
+            'Бариерата', 'Железният светилник', 'Гняв', 'Кафе с претенция', 'Лекция №3 за "СИЛАТА НА СЛОВОТО"',
+            'Мечтата на идиотката', 'Балдахинът', 'Басейнът', 'Урок по български', 'Времето',
+        ]);
+
+    $guests = $rows->filter(fn (ScrapedPerformance $p) => $p->visitingCompany !== null);
+    expect($guests->map(fn ($p) => [$p->title, $p->visitingCompany])->values()->all())->toBe([
+        ['Бариерата', 'ДТ-Пловдив'],
+        ['Лекция №3 за "СИЛАТА НА СЛОВОТО"', 'ДТ-Пловдив'],
+    ]);
 });
+
+it('splits the visiting company out of a guest title', function (string $raw, string $title, ?string $company) {
+    expect(TbaAdapter::splitGuest($raw))->toBe([$title, $company]);
+})->with([
+    ['Бариерата - Гостува ДТ-Пловдив', 'Бариерата', 'ДТ-Пловдив'],
+    ['Ние, Духовата музика - Гостува Родопски театър-Смолян', 'Ние, Духовата музика', 'Родопски театър-Смолян'],
+    ['Роднини - Гостува ДКТ Хасково', 'Роднини', 'ДКТ Хасково'],
+    ['Лекция №3 за "СИЛАТА НА СЛОВОТО" гостува ДТ-Пловдив', 'Лекция №3 за "СИЛАТА НА СЛОВОТО"', 'ДТ-Пловдив'],
+    ['"Гняв"', 'Гняв', null],
+]);
 
 it('reads date, local time and stage for each row', function () {
     $rows = collect((new TbaAdapter)->parse(tbaFixture(), 2026, 11));
 
-    $first = $rows->first();
+    $first = $rows->firstWhere('title', 'Железният светилник');
     expect($first->title)->toBe('Железният светилник')
         ->and($first->startsAt->format('Y-m-d H:i'))->toBe('2026-11-03 19:00')
         ->and($first->startsAt->timezoneName)->toBe('Europe/Sofia')
@@ -77,9 +91,10 @@ it('syncs the theatre end to end from the windows-1251 site', function () {
     $run = AdapterRun::sole();
     expect($run->error)->toBeNull()
         ->and($run->status)->toBe('succeeded')
-        ->and($run->performances_found)->toBe(9)
-        ->and($run->productions_created)->toBe(7)          // 8 titles, Гняв already existed
+        ->and($run->performances_found)->toBe(11)
+        ->and($run->productions_created)->toBe(9)          // 10 titles, Гняв already existed
         ->and($existing->performances()->count())->toBe(2)
-        ->and(Performance::count())->toBe(9)
+        ->and(Performance::count())->toBe(11)
+        ->and(Production::where('title', 'Бариерата')->sole()->visiting_company)->toBe('ДТ-Пловдив')
         ->and($theatre->stages()->count())->toBe(3);
 });

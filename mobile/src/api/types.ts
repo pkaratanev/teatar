@@ -21,6 +21,8 @@ export interface ProductionSummary {
   slug: string;
   title: string;
   author: string | null;
+  /** Set for guest performances: the company visiting the host theatre. */
+  visiting_company: string | null;
   status: ProductionStatus;
   poster_url: string | null;
   rating_average: number | null;
