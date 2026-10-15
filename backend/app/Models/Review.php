@@ -50,6 +50,12 @@ class Review extends Model
         return $this->hasMany(Report::class);
     }
 
+    /** @return HasMany<Report, $this> */
+    public function openReports(): HasMany
+    {
+        return $this->hasMany(Report::class)->whereNull('resolved_at');
+    }
+
     /**
      * Reviews a given viewer may see: visible ones by non-shadow-banned users,
      * plus the viewer's own (a shadow-banned user still sees their reviews).

@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Builder;
 /** Productions playing soon that are missing author, director, cast or poster — the admin's to-do list. */
 class NeedsData extends TableWidget
 {
+    // Render with the page: three small queries, and the dashboard is the admin's first screen.
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = 'full';

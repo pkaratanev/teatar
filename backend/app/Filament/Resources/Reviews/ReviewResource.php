@@ -35,7 +35,7 @@ class ReviewResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $open = Review::whereHas('reports', fn (Builder $q) => $q->whereNull('resolved_at'))->count();
+        $open = Review::has('openReports')->count();
 
         return $open > 0 ? (string) $open : null;
     }
@@ -43,8 +43,7 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $q) => $q->with(['user', 'production'])
-                ->withCount(['reports as open_reports_count' => fn (Builder $r) => $r->whereNull('resolved_at')]))
+            ->modifyQueryUsing(fn (Builder $q) => $q->with(['user', 'production'])->withCount('openReports'))
             ->columns([
                 TextColumn::make('production.title')->label('Постановка')->searchable(),
                 TextColumn::make('user.username')->label('Потребител')->searchable(),
@@ -57,7 +56,7 @@ class ReviewResource extends Resource
             ->defaultSort('open_reports_count', 'desc')
             ->filters([
                 Filter::make('reported')->label('Само със сигнали')->default()
-                    ->query(fn (Builder $q) => $q->whereHas('reports', fn (Builder $r) => $r->whereNull('resolved_at'))),
+                    ->query(fn (Builder $q) => $q->has('openReports')),
                 SelectFilter::make('status')->label('Статус')->options(ReviewStatus::class),
             ])
             ->recordActions([
@@ -66,14 +65,14 @@ class ReviewResource extends Resource
                     ->visible(fn (Review $record) => $record->status === ReviewStatus::Visible)
                     ->action(function (Review $record) {
                         $record->update(['status' => ReviewStatus::Hidden]);
-                        $record->reports()->whereNull('resolved_at')->update(['resolved_at' => now(), 'resolved_by' => auth()->id()]);
+                        $record->openReports()->update(['resolved_at' => now(), 'resolved_by' => auth()->id()]);
                     }),
                 Action::make('restore')->label('Покажи')->icon(Heroicon::OutlinedEye)
                     ->visible(fn (Review $record) => $record->status === ReviewStatus::Hidden)
                     ->action(fn (Review $record) => $record->update(['status' => ReviewStatus::Visible])),
                 Action::make('dismiss')->label('Отхвърли сигналите')->icon(Heroicon::OutlinedCheck)
                     ->visible(fn (Review $record) => $record->open_reports_count > 0)
-                    ->action(fn (Review $record) => $record->reports()->whereNull('resolved_at')
+                    ->action(fn (Review $record) => $record->openReports()
                         ->update(['resolved_at' => now(), 'resolved_by' => auth()->id()])),
             ]);
     }

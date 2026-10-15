@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CatalogueStats extends StatsOverviewWidget
 {
+    // Render with the page: three small queries, and the dashboard is the admin's first screen.
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 1;
 
     protected function getStats(): array

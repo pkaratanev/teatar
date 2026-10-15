@@ -16,6 +16,9 @@ use Filament\Widgets\TableWidget;
 /** One row per theatre with an adapter: did last night's sync work, and how far ahead do we know the programme? */
 class SyncHealth extends TableWidget
 {
+    // Render with the page: three small queries, and the dashboard is the admin's first screen.
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 2;
 
     protected int|string|array $columnSpan = 'full';
