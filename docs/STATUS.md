@@ -42,7 +42,6 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 ## Next up
 
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
-Adapters in this order (easiest first, see Data sources):
 - [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
 ## Build milestones
