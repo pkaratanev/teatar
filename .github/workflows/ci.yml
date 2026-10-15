@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: teatar
+          POSTGRES_USER: teatar
+          POSTGRES_PASSWORD: teatar
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U teatar"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: teatar
+      DB_USERNAME: teatar
+      DB_PASSWORD: teatar
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_pgsql, intl, exif, gd
+          coverage: none
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+      - name: Prepare app
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - name: Code style
+        run: vendor/bin/pint --test
+        continue-on-error: true # becomes blocking once the scaffold has been run through pint locally
+      - name: Static analysis
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+      - name: Migrate (Postgres, with pg_trgm)
+        run: php artisan migrate --force
+      - name: Tests
+        run: php artisan test
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx tsc --noEmit

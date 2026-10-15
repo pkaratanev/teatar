@@ -1,0 +1,40 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Theatre;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+
+/**
+ * The proposed Sofia launch set (see docs/plan.md). Only names and the
+ * websites we have confirmed; addresses, box-office links and adapters are
+ * filled in Filament as each theatre is onboarded.
+ */
+class LaunchTheatresSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $theatres = [
+            ['name' => 'Театър „Българска армия“', 'website' => 'http://tba.art.bg'],
+            ['name' => 'Народен театър „Иван Вазов“', 'website' => 'https://nationaltheatre.bg'],
+            ['name' => 'Открита сцена „Сълза и смях“'],
+            ['name' => 'Младежки театър „Николай Бинев“'],
+            ['name' => 'Театър 199 „Валентин Стойчев“'],
+            ['name' => 'Театрална работилница „Сфумато“'],
+            ['name' => 'Сатиричен театър „Алеко Константинов“'],
+            ['name' => 'Малък градски театър „Зад канала“'],
+            ['name' => 'Театър „София“'],
+            ['name' => 'Театър „Възраждане“'],
+            ['name' => 'Нов театър НДК'],
+            ['name' => 'Театро'],
+        ];
+
+        foreach ($theatres as $t) {
+            Theatre::firstOrCreate(
+                ['slug' => Str::slug($t['name'])],
+                ['name' => $t['name'], 'city' => 'София', 'website' => $t['website'] ?? null, 'source' => 'admin'],
+            );
+        }
+    }
+}

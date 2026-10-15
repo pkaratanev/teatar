@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Person;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends Factory<Person>
+ */
+class PersonFactory extends Factory
+{
+    public function definition(): array
+    {
+        $name = fake()->name();
+
+        return [
+            'name' => $name,
+            'slug' => Str::slug($name).'-'.Str::lower(Str::random(4)),
+        ];
+    }
+}

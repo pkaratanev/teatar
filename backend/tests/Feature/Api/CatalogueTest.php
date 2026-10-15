@@ -1,0 +1,57 @@
+<?php
+
+use App\Enums\CreditRole;
+use App\Models\Credit;
+use App\Models\Performance;
+use App\Models\Person;
+use App\Models\Production;
+use App\Models\Theatre;
+
+it('lists this week\'s Sofia programme in date order', function () {
+    $production = Production::factory()->create();
+    Performance::factory()->for($production)->create(['starts_at' => now()->addDays(3)]);
+    Performance::factory()->for($production)->create(['starts_at' => now()->addDay()]);
+    Performance::factory()->for($production)->create(['starts_at' => now()->addDays(20)]); // outside the week
+    Performance::factory()->for($production)->create(['starts_at' => now()->addDays(2), 'is_cancelled' => true]);
+
+    $response = $this->getJson('/api/v1/performances?range=week')->assertOk();
+
+    expect($response->json('data'))->toHaveCount(2);
+    expect($response->json('data.0.starts_at') < $response->json('data.1.starts_at'))->toBeTrue();
+    expect($response->json('data.0.production.title'))->toBe($production->title);
+});
+
+it('excludes theatres in other cities and inactive theatres', function () {
+    $varna = Production::factory()->for(Theatre::factory()->create(['city' => 'Варна']))->create();
+    $inactive = Production::factory()->for(Theatre::factory()->create(['is_active' => false]))->create();
+    Performance::factory()->for($varna)->create(['starts_at' => now()->addDay()]);
+    Performance::factory()->for($inactive)->create(['starts_at' => now()->addDay()]);
+
+    $this->getJson('/api/v1/performances')->assertOk()->assertJsonCount(0, 'data');
+    $this->getJson('/api/v1/performances?city=Варна')->assertOk()->assertJsonCount(1, 'data');
+});
+
+it('shows a production with its credits and upcoming dates', function () {
+    $production = Production::factory()->create();
+    $person = Person::factory()->create();
+    Credit::create(['production_id' => $production->id, 'person_id' => $person->id, 'role_type' => CreditRole::Director]);
+    Performance::factory()->for($production)->create(['starts_at' => now()->addDay()]);
+    Performance::factory()->for($production)->create(['starts_at' => now()->subDay()]);
+
+    $this->getJson("/api/v1/productions/{$production->id}")
+        ->assertOk()
+        ->assertJsonPath('data.title', $production->title)
+        ->assertJsonPath('data.credits.0.person.name', $person->name)
+        ->assertJsonPath('data.credits.0.role_label', 'Режисьор')
+        ->assertJsonCount(1, 'data.upcoming_performances');
+});
+
+it('searches productions, people and theatres', function () {
+    Production::factory()->create(['title' => 'Майстора и Маргарита']);
+    Person::factory()->create(['name' => 'Маргарита Иванова']);
+
+    $this->getJson('/api/v1/search?q='.urlencode('Маргарита'))
+        ->assertOk()
+        ->assertJsonCount(1, 'productions')
+        ->assertJsonCount(1, 'people');
+});

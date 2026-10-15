@@ -1,0 +1,15 @@
+# Local Postgres for the backend: `docker compose up -d`
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: teatar
+      POSTGRES_USER: teatar
+      POSTGRES_PASSWORD: teatar
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
