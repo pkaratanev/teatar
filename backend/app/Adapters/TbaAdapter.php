@@ -6,6 +6,7 @@ use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
 use App\Support\BulgarianDate;
+use App\Support\GuestTitle;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -23,8 +24,6 @@ class TbaAdapter implements TheatreAdapter
     /** How many months ahead to read, including the current one. */
     public const MONTHS = 3;
 
-    /** Visiting companies: "Бариерата - Гостува ДТ-Пловдив", "Лекция №3 за "…" гостува ДТ-Пловдив". */
-    private const GUEST_PATTERN = '/^(.*?)\s*(?:[-–—]\s*)?(?<!\p{L})гостува(?!\p{L})\s+(.+)$/iu';
 
     public function fetch(Theatre $theatre): iterable
     {
@@ -102,19 +101,11 @@ class TbaAdapter implements TheatreAdapter
     }
 
     /**
-     * "Бариерата - Гостува ДТ-Пловдив" → ["Бариерата", "ДТ-Пловдив"]; own productions → [title, null].
-     *
      * @return array{0: string, 1: string|null}
      */
     public static function splitGuest(string $raw): array
     {
-        $raw = trim(preg_replace('/\s+/u', ' ', $raw) ?? $raw);
-
-        if (preg_match(self::GUEST_PATTERN, $raw, $m) && trim($m[1]) !== '') {
-            return [self::cleanTitle($m[1]), trim($m[2])];
-        }
-
-        return [self::cleanTitle($raw), null];
+        return GuestTitle::split($raw);
     }
 
     public static function cleanTitle(string $title): string

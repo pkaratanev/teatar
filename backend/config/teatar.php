@@ -15,6 +15,7 @@ return [
         'zadkanala' => App\Adapters\ZadKanalaAdapter::class,
         'sofia' => App\Adapters\SofiaTheatreAdapter::class,
         'salzaismyah' => App\Adapters\SalzaISmyahAdapter::class,
+        'mlt' => App\Adapters\MladezhkiAdapter::class,
     ],
 
     // Days before a watchlisted production's next date that the reminder push goes out.
