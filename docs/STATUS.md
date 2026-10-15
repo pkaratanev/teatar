@@ -59,9 +59,44 @@ tick what's done, add what you found, move the "Now" marker. Plan and rationale:
 
 ### 7. Beta + founding reviews — target 28 Feb
 - [ ] All launch adapters live
-- [ ] Hosting: EU VPS (Forge) or Laravel Cloud EU; Redis + Horizon for queues
 - [ ] 50–100 reviews from a founding group
-- [ ] TestFlight + Play internal testing; store listings
+
+## Hosting — Laravel Cloud (account already set up)
+
+Start early (during phase 4) so the app is tested against a real server, not just a laptop.
+- [ ] Create the `teatar` application in Laravel Cloud, EU region (Frankfurt), linked to `pkaratanev/teatar`, root `backend/`
+- [ ] Serverless Postgres in the same region; confirm `pg_trgm` is enabled (migration creates it)
+- [ ] Environment variables from `backend/.env.example` (`APP_THEATRE_TIMEZONE`, mail, `APP_KEY`)
+- [ ] Object storage bucket for posters and headshots; point `FILESYSTEM_DISK` / medialibrary at it
+- [ ] Scheduler on (nightly `teatar:sync-programmes`) and a queue worker
+- [ ] Deploy command: `php artisan migrate --force`; deploy on push to `main` once CI is green
+- [ ] Two environments: `staging` (TestFlight / Play internal builds) and `production`
+- [ ] Custom domain for the API (e.g. `api.<app-domain>`) and admin; HTTPS
+- [ ] First admin user in production (`php artisan make:filament-user`, then set `is_admin`)
+- [ ] Error tracking and uptime check; daily database backups confirmed
+
+## Store releases — Google Play and App Store
+
+Accounts and builds (start in phase 5, since review and setup take days):
+- [ ] Apple Developer Program enrolment (99 USD/year; individual or company — company needs a D-U-N-S number)
+- [ ] Google Play Console account (25 USD once); new personal accounts must run a closed test with 12+ testers for 14 days before production
+- [ ] Final app name, icon, splash and bundle id (replace placeholder `bg.teatar.app`)
+- [ ] `eas.json` with `development`, `preview` (staging API) and `production` (production API) profiles
+- [ ] EAS Build for iOS and Android; EAS Submit to App Store Connect and Play Console
+- [ ] OTA updates with EAS Update, channels matching the build profiles
+
+Listing and compliance:
+- [ ] Privacy policy and terms pages (hosted on Laravel Cloud), in Bulgarian
+- [ ] App Store privacy "nutrition label" and Play Data safety form (email, reviews, push token; no ads)
+- [ ] In-app account deletion (already in the API) — required by both stores
+- [ ] Sign in with Apple present whenever Google sign-in is offered (App Store rule)
+- [ ] Moderation and reporting for user reviews (App Store guideline for user-generated content)
+- [ ] Store listings in Bulgarian: description, keywords, screenshots (6.7" iPhone, Android phone), age rating questionnaire
+
+Release path:
+- [ ] TestFlight internal → external beta group (founding reviewers)
+- [ ] Play internal testing → closed testing (14 days, 12+ testers) → production
+- [ ] Submit both for review ~2 weeks before the target launch date
 
 ## Launch theatres
 
@@ -84,10 +119,12 @@ tick what's done, add what you found, move the "Now" marker. Plan and rationale:
 
 - [ ] App name and bundle id (placeholder: Teatar, `bg.teatar.app`)
 - [ ] Timeline assumes full-time work; stretch it if this is evenings and weekends
-- [ ] Apple Developer Program (99 USD/yr) and Google Play (25 USD) accounts
+- [ ] Store developer accounts: individual or company (see Store releases)
+- [ ] Guest performances (e.g. „… - Гостува ДТ-Пловдив“ on the ТБА programme): skip for MVP, or list them under the host theatre?
 
 ## Log
 
 Newest first. One line per working session: what changed, anything surprising.
 
+- **2026-10-15** — Hosting decided: Laravel Cloud for the backend. Added hosting and store-release checklists.
 - **2026-10-15** — Plan settled (Bulgarian only, ½-star ratings, mobile + Filament, Laravel, Expo, solo). Scaffold pushed; CI green after fixing Larastan types, an npm peer conflict and a tab-icon type.

@@ -7,6 +7,7 @@ Decisions that shape this codebase:
 - Bulgarian only (nullable `title_en` kept for later); ratings are 5 stars with halves, stored as `half_stars` 1–10.
 - Mobile app only (Expo), plus a Filament admin panel. No public web pages.
 - Laravel API (`/api/v1`, Sanctum tokens) + Filament + Postgres with `pg_trgm`.
+- Hosting: Laravel Cloud (EU region) for the API, admin, scheduler and queue; app builds via EAS to the App Store and Google Play.
 - Launch: 12 Sofia drama theatres, programmes from each theatre's own source. Gate: 8 of 12 with a usable source.
 
 ## Data
