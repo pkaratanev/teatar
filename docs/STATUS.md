@@ -37,12 +37,11 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Admin dashboard: last sync per theatre, performances ahead, productions missing author / cast / poster
+- [ ] Credits and posters, second pass: read cast, director and poster from each theatre's production pages
 
 ## Next up
 
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
-- [ ] Credits and posters from each theatre's production pages (second pass, after programmes)
 
 ## Build milestones
 
@@ -75,7 +74,8 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
 - [ ] Cast and remaining credits from theatres' production pages
 - [ ] Posters (theatres' own production pages)
-- [ ] Admin dashboard widget: productions missing author / cast / poster
+- [x] Admin dashboard: headline stats, sync health per theatre (last run, upcoming count, programme known until), "needs data" list for productions playing in 30 days
+- [x] Admin smoke tests: dashboard and every resource page load for an admin; non-admins get 403
 - [ ] Display casing for ALL-CAPS titles ("СЪН В ЗИМНА НОЩ", "ТЕАТЪР") — several sites shout; keep the source title, show a tidy one
 
 ### 3. Read-only app
@@ -171,6 +171,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests.
 - **2026-10-15** — Live check green after the encoding fix: Българска армия 144 performances (18 guest), total 817 across 10 theatres.
 - **2026-10-15** — First live run from GitHub Actions: 9 of 11 adapters OK (e.g. Народен 160 performances to 31 Dec, Сатира 93, Възраждане 70). Българска армия: UTF-8 body with a windows-1251 meta tag got converted twice — fixed. Младежки театър: Cloudflare blocks datacenter IPs; its ticket shop needs a login, so no alternative public source.
 - **2026-10-15** — Сатира adapter: turned out easy — `?f:month=` is server-rendered and the month is in the page's Next.js JSON. Importer now also fills age rating. 11 of 12 launch theatres have adapters.
