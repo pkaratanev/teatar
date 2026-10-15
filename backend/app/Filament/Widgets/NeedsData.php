@@ -27,7 +27,7 @@ class NeedsData extends TableWidget
             ->query(
                 Production::query()
                     ->with('theatre')
-                    ->whereHas('performances', fn (Builder $q) => $q->upcoming()->where('starts_at', '<=', now()->addDays(30)))
+                    ->whereHas('performances', fn (Builder $q) => $q->where('starts_at', '>=', now())->where('starts_at', '<=', now()->addDays(30))->where('is_cancelled', false))
                     ->where(fn (Builder $q) => $q
                         ->whereNull('author')
                         ->orWhereDoesntHave('credits', fn (Builder $c) => $c->where('role_type', CreditRole::Director))
@@ -38,7 +38,7 @@ class NeedsData extends TableWidget
                         'credits as has_cast' => fn (Builder $c) => $c->where('role_type', CreditRole::Actor),
                         'media as has_poster' => fn (Builder $m) => $m->where('collection_name', 'poster'),
                     ])
-                    ->withMin(['performances as next_at' => fn (Builder $q) => $q->upcoming()], 'starts_at')
+                    ->withMin(['performances as next_at' => fn (Builder $q) => $q->where('starts_at', '>=', now())->where('is_cancelled', false)], 'starts_at')
             )
             ->defaultSort('next_at')
             ->columns([

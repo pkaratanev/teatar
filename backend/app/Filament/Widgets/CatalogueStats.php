@@ -24,7 +24,7 @@ class CatalogueStats extends StatsOverviewWidget
             ->join('productions', 'productions.id', '=', 'performances.production_id')
             ->distinct()->count('productions.theatre_id');
 
-        $playing = Production::whereHas('performances', fn (Builder $q) => $q->upcoming());
+        $playing = Production::whereHas('performances', fn (Builder $q) => $q->where('starts_at', '>=', now())->where('is_cancelled', false));
         $playingCount = (clone $playing)->count();
         $noDirector = (clone $playing)->whereDoesntHave('credits', fn (Builder $q) => $q->where('role_type', CreditRole::Director))->count();
         $noPoster = (clone $playing)->whereDoesntHave('media', fn (Builder $q) => $q->where('collection_name', 'poster'))->count();
