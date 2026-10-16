@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdapterRuns;
 
 use App\Filament\Resources\AdapterRuns\Pages\ListAdapterRuns;
 use App\Models\AdapterRun;
+use App\Services\SyncAlerts;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -32,21 +33,38 @@ class AdapterRunResource extends Resource
                 TextColumn::make('started_at')->label('Начало')->dateTime('d.m.Y H:i', config('app.theatre_timezone'))->sortable(),
                 TextColumn::make('theatre.name')->label('Театър'),
                 TextColumn::make('status')->label('Статус')->badge()
-                    ->color(fn (string $state) => match ($state) {
-                        'succeeded' => 'success',
-                        'failed' => 'danger',
-                        default => 'gray',
-                    }),
+                    ->formatStateUsing(fn (string $state) => AdapterRun::LABELS[$state] ?? $state)
+                    ->color(fn (string $state) => AdapterRun::color($state)),
                 TextColumn::make('performances_found')->label('Намерени'),
                 TextColumn::make('performances_upserted')->label('Нови / променени'),
+                TextColumn::make('performances_moved')->label('Преместени'),
+                TextColumn::make('performances_cancelled')->label('Отменени'),
                 TextColumn::make('productions_created')->label('Нови постановки'),
                 TextColumn::make('error')->label('Грешка')->limit(60)->wrap(),
             ])
             ->defaultSort('started_at', 'desc')
             ->filters([
-                SelectFilter::make('status')->options(['succeeded' => 'Успешни', 'failed' => 'Неуспешни']),
+                SelectFilter::make('status')->options(['succeeded' => 'Успешни', 'failed' => 'Неуспешни', 'running' => 'Текат', 'queued' => 'На опашка']),
                 SelectFilter::make('theatre')->relationship('theatre', 'name'),
             ]);
+    }
+
+    /** Red count of theatres whose sync needs a look (failed, found nothing, or stale). */
+    public static function getNavigationBadge(): ?string
+    {
+        $count = SyncAlerts::count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): string
+    {
+        return 'danger';
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Театри с проблем в синхронизацията';
     }
 
     public static function canCreate(): bool

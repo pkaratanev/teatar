@@ -13,6 +13,9 @@ use App\Models\Stage;
 use App\Models\Theatre;
 use App\Support\Cyrillic;
 use App\Support\TheatreHttp;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -27,19 +30,30 @@ class ProgrammeImporter
     /** Posters bigger than this are skipped; theatre sites sometimes link print-size files. */
     public const MAX_POSTER_BYTES = 8 * 1024 * 1024;
 
+    /** Up to this many dropped shows per run are always cancelled; above it, only if they are under half. */
+    public const MAX_SAFE_CANCELLATIONS = 5;
+
     /**
      * @param  iterable<ScrapedPerformance>  $scraped
-     * @return array{found: int, upserted: int, productions_created: int, posters: int}
+     * @return array{found: int, upserted: int, productions_created: int, posters: int, moved: int, cancelled: int, held_back: int}
      */
     public function import(Theatre $theatre, iterable $scraped): array
     {
-        $stats = ['found' => 0, 'upserted' => 0, 'productions_created' => 0, 'posters' => 0];
+        $stats = ['found' => 0, 'upserted' => 0, 'productions_created' => 0, 'posters' => 0, 'moved' => 0, 'cancelled' => 0, 'held_back' => 0];
         /** @var array<int, array{Production, string}> $posters production id → [production, poster url] */
         $posters = [];
 
         DB::transaction(function () use ($theatre, $scraped, &$stats, &$posters) {
+            /** @var array<int, true> $seen performance ids the source lists this run */
+            $seen = [];
+            /** @var list<int> $created */
+            $created = [];
+            $first = $last = null;
+
             foreach ($scraped as $item) {
                 $stats['found']++;
+                $first = $first === null || $item->startsAt < $first ? $item->startsAt : $first;
+                $last = $last === null || $item->startsAt > $last ? $item->startsAt : $last;
 
                 $production = $this->findProduction($theatre, $item->title, $item->guest(), $item->visitingCompany);
                 if ($production === null) {
@@ -85,6 +99,15 @@ class ProgrammeImporter
                 if ($performance->wasRecentlyCreated || $performance->wasChanged()) {
                     $stats['upserted']++;
                 }
+
+                $seen[$performance->id] = true;
+                if ($performance->wasRecentlyCreated) {
+                    $created[] = $performance->id;
+                }
+            }
+
+            if ($first !== null && $last !== null) {
+                $this->reconcile($theatre, $first, $last, $seen, $created, $stats);
             }
         });
 
@@ -94,6 +117,86 @@ class ProgrammeImporter
         }
 
         return $stats;
+    }
+
+    /**
+     * Shows the source no longer lists, within the days it covered (first to last listed day, from now on):
+     * a moved show keeps its row and id, the rest are marked cancelled. Admin-entered rows are never touched.
+     *
+     * A move is recognised by a per-show ticket link that now points at a new time, or else by the same
+     * production, stage and day with exactly one old and one new time. Anything else is cancel + new row.
+     *
+     * @param  array<int, true>  $seen
+     * @param  list<int>  $created
+     * @param  array<string, int>  $stats
+     */
+    private function reconcile(Theatre $theatre, CarbonInterface $first, CarbonInterface $last, array $seen, array $created, array &$stats): void
+    {
+        $tz = (string) config('app.theatre_timezone');
+        $from = CarbonImmutable::instance($first)->setTimezone($tz)->startOfDay()->utc();
+        $from = $from->isBefore(now()) ? now()->toImmutable() : $from;
+        $to = CarbonImmutable::instance($last)->setTimezone($tz)->endOfDay()->utc();
+
+        $inWindow = Performance::query()
+            ->whereIn('production_id', $theatre->productions()->select('id'))
+            ->where('source', CatalogueSource::Adapter->value)
+            ->whereBetween('starts_at', [$from, $to]);
+
+        $missing = (clone $inWindow)->where('is_cancelled', false)->whereNotIn('id', array_keys($seen))->get();
+        if ($missing->isEmpty()) {
+            return;
+        }
+
+        $new = Performance::whereIn('id', $created)->get()->keyBy('id');
+        $pairs = [];
+
+        // 1. Per-show ticket links (Entase, ePayGO, …): unique on both sides, same production.
+        $ticketCount = fn (Collection $rows) => $rows->whereNotNull('ticket_url')->countBy('ticket_url');
+        $oldTickets = $ticketCount($missing);
+        $newTickets = $ticketCount($new);
+        foreach ($missing as $old) {
+            $url = $old->ticket_url;
+            if ($url === null || ($oldTickets[$url] ?? 0) !== 1 || ($newTickets[$url] ?? 0) !== 1) {
+                continue;
+            }
+            $match = $new->first(fn (Performance $p) => $p->ticket_url === $url && $p->production_id === $old->production_id);
+            if ($match !== null) {
+                $pairs[$old->id] = [$old, $match];
+                $new->forget($match->id);
+            }
+        }
+
+        // 2. Same production, stage and local day, exactly one old and one new time.
+        $key = fn (Performance $p) => $p->production_id.'|'.($p->stage_id ?? '-').'|'.$p->starts_at->copy()->setTimezone($tz)->format('Y-m-d');
+        $oldGroups = $missing->reject(fn (Performance $p) => isset($pairs[$p->id]))->groupBy($key);
+        $newGroups = $new->groupBy($key);
+        foreach ($oldGroups as $group => $olds) {
+            if ($olds->count() === 1 && ($newGroups[$group] ?? collect())->count() === 1) {
+                $pairs[$olds->first()->id] = [$olds->first(), $newGroups[$group]->first()];
+            }
+        }
+
+        $toCancel = $missing->reject(fn (Performance $p) => isset($pairs[$p->id]));
+
+        // A source that suddenly lists far fewer shows is more likely a broken page than a mass cancellation.
+        $existing = (clone $inWindow)->where('is_cancelled', false)->whereNotIn('id', $created)->count();
+        if ($toCancel->count() > self::MAX_SAFE_CANCELLATIONS && $toCancel->count() * 2 > $existing) {
+            $stats['held_back'] = $toCancel->count();
+            Log::warning("Not cancelling {$toCancel->count()} of {$existing} performances at {$theatre->slug}: the source may be broken.");
+            $toCancel = collect();
+        }
+
+        foreach ($pairs as [$old, $moved]) {
+            $values = $moved->only(['starts_at', 'stage_id', 'ticket_url', 'price_from', 'price_to', 'source_url']);
+            $moved->delete(); // Free the (production, start time) key before the old row takes it.
+            $old->update([...$values, 'is_cancelled' => false]);
+            $stats['moved']++;
+        }
+
+        foreach ($toCancel as $old) {
+            $old->update(['is_cancelled' => true]);
+            $stats['cancelled']++;
+        }
     }
 
     /**

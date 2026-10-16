@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SyncTheatreProgramme;
-use App\Models\Theatre;
+use App\Services\ProgrammeSync;
 use Illuminate\Console\Command;
 
 class SyncProgrammes extends Command
@@ -14,11 +14,9 @@ class SyncProgrammes extends Command
 
     protected $description = 'Pull upcoming performances from each theatre\'s own programme source';
 
-    public function handle(): int
+    public function handle(ProgrammeSync $sync): int
     {
-        $theatres = Theatre::query()
-            ->where('is_active', true)
-            ->whereNotNull('adapter')
+        $theatres = ProgrammeSync::theatres()
             ->when($this->argument('theatre'), fn ($q, $slug) => $q->where('slug', $slug))
             ->get();
 
@@ -29,11 +27,14 @@ class SyncProgrammes extends Command
         }
 
         foreach ($theatres as $theatre) {
-            $this->option('now')
-                ? SyncTheatreProgramme::dispatchSync($theatre)
-                : SyncTheatreProgramme::dispatch($theatre);
-
-            $this->line(($this->option('now') ? 'Synced ' : 'Queued ').$theatre->name);
+            if ($this->option('now')) {
+                SyncTheatreProgramme::dispatchSync($theatre);
+                $this->line("Synced {$theatre->name}");
+            } elseif ($sync->queue($theatre)) {
+                $this->line("Queued {$theatre->name}");
+            } else {
+                $this->line("Skipped {$theatre->name}: already queued or running");
+            }
         }
 
         return self::SUCCESS;
