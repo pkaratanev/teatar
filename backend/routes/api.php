@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PerformanceController;
 use App\Http\Controllers\Api\V1\PersonController;
 use App\Http\Controllers\Api\V1\ProductionController;
+use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\SearchController;
 use App\Http\Controllers\Api\V1\TheatreController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +19,8 @@ Route::prefix('v1')->group(function () {
     Route::get('theatres/{theatre}', [TheatreController::class, 'show']);
     Route::get('people/{person}', [PersonController::class, 'show']);
     Route::get('search', SearchController::class);
+    Route::get('productions/{production}/reviews', [ReviewController::class, 'index']);
+    Route::get('users/{username}', [ProfileController::class, 'show']);
 
     // Accounts.
     Route::middleware('throttle:10,1')->group(function () {
@@ -27,5 +32,23 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::delete('me', [AuthController::class, 'destroy']); // GDPR: delete account and all activity
+
+        // Your theatre life.
+        Route::get('me/diary', [ProfileController::class, 'diary']);
+        Route::get('me/watchlist', [ProfileController::class, 'watchlist']);
+        Route::get('me/ratings', [ProfileController::class, 'ratings']);
+
+        Route::prefix('productions/{production}')->controller(ActivityController::class)->group(function () {
+            Route::put('rating', 'rate');
+            Route::delete('rating', 'unrate');
+            Route::put('review', 'review')->middleware('throttle:reviews');
+            Route::delete('review', 'unreview');
+            Route::post('diary', 'logVisit');
+            Route::put('watchlist', 'watch');
+            Route::delete('watchlist', 'unwatch');
+            Route::post('log', 'log')->middleware('throttle:reviews');
+        });
+        Route::delete('diary/{entry}', [ActivityController::class, 'deleteVisit']);
+        Route::post('reviews/{review}/report', [ReviewController::class, 'report'])->middleware('throttle:10,1');
     });
 });

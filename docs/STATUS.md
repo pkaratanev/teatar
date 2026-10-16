@@ -37,20 +37,17 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Credits and posters, second pass: read cast, director and poster from each theatre's production pages
+- [ ] Your-theatre-life API: rate (½–5★), review with spoiler flag, mark "seen" with a date, watchlist, profile with diary and stats — with tests
 
-**Pick up here (2026-10-16):** start the credits/posters pass. Plan: a second adapter method per theatre
-that reads a production page (we already store its `source_url`) and returns author, director, cast with
-roles and a poster URL; the importer fills only missing data. Same routine as the programmes: save a real
-production page from the browser as a fixture, test, then the Live sources run. Pages known so far:
-Народен `/bg/predstavlenie/{slug}`, Сатира `/show/{slug}` (cast with roles), МГТ `/spektakli/{slug}`,
-Театър „София“ `/repertoires/{id}/{slug}`, Възраждане `/portfolio/{slug}`, Théatro `/portfolio_page/{slug}`,
-Сълза и смях `/site/play/{id}`, Театър 199 `/bg/plays/p/{id}-{slug}`, ТБА and Младежки `{slug}___{id}`.
+**Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
+cast/poster pass is parked under "Later" below.
 
 **Waiting on Preslav:** the two open decisions below (Сфумато, Нов театър НДК), and running it locally once.
 
 ## Next up
 
+- [ ] App screens for the above: sign in / sign up, rate + review sheet on the production page, diary and profile tabs
+- [ ] Theatre filter on the Programme screen
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
 ## Build milestones
@@ -61,7 +58,7 @@ production page from the browser as a fixture, test, then the Live sources run. 
 - [x] Local Postgres via `compose.yaml`
 - [ ] Preslav runs it locally once (`composer setup`, Expo Go on a phone); commit `composer.lock` + `package-lock.json`
 
-### 2. Catalogue and data — in progress
+### 2. Catalogue and data — enough for the MVP (paused)
 - [x] Tables, Filament admin for catalogue, adapter framework, idempotent importer, nightly sync, CSV adapter
 - [x] Seeder for the 12 launch theatres
 - [x] Adapter: Българска армия (`TbaAdapter`)
@@ -74,7 +71,6 @@ production page from the browser as a fixture, test, then the Live sources run. 
 - [x] Adapter: Младежки театър (`MladezhkiAdapter`: windows-1251 table, month heading check; Nov–Dec published, so no ticket-shop fallback needed). Guest-title parsing shared in `GuestTitle`
 - [x] Adapter: Театър 199 (`Theatre199Adapter`: pages until empty, featured block + cards, year inferred)
 - [x] Adapter: Сатира (`SatirataAdapter`: Next.js `__NEXT_DATA__` JSON per month; prices in €, ePayGO ticket links, age rating)
-- [ ] Театър „София“ sold-out rows have no time or stage, so they're skipped; read them from the production pages (`/repertoires/{id}`) later
 - [x] Shared date helper `BulgarianDate`: month names (full, abbreviated, English), weekday, year inference
 - [x] Guest performances listed under the host theatre (`productions.is_guest` + optional `visiting_company`)
 - [x] Programme sources researched for all 12 (Data sources table)
@@ -82,8 +78,6 @@ production page from the browser as a fixture, test, then the Live sources run. 
 - [x] Live check green: 9 of 10 adapters return real programmes (717 performances across 9 theatres, ~6–10 weeks ahead); Младежки театър reported as known-blocked
 - [x] Adapters for 10 of 12 launch theatres (only Сфумато and Нов театър НДК left, both waiting on decisions)
 - [x] Director credits from programme listings where shown (Théatro, Възраждане)
-- [ ] Cast and remaining credits from theatres' production pages
-- [ ] Posters (theatres' own production pages)
 - [x] Admin dashboard: headline stats, sync health per theatre (last run, upcoming count, programme known until), "needs data" list for productions playing in 30 days
 - [x] Admin smoke tests: dashboard and every resource page load for an admin; non-admins get 403
 - [ ] Display casing for ALL-CAPS titles ("СЪН В ЗИМНА НОЩ", "ТЕАТЪР") — several sites shout; keep the source title, show a tidy one
@@ -143,6 +137,12 @@ Findings that shape the code:
 - Entase is not a shortcut: organiser pages load events by JavaScript and the API needs a key per organiser. Individual `entase.com/book?eid=` pages are readable, so ticket links can still be kept.
 - tba.art.bg, mlt.bg and sfumato.info share URL patterns (`slug___id`) and ids with theatre.art.bg — the same vendor runs them. We take only bare facts from each theatre's own programme page.
 
+## Later (parked)
+
+- [ ] Cast, director and poster from each theatre's production pages (Сатира's `__NEXT_DATA__` has a full credits block with roles; Народен, МГТ, Театър „София“, Théatro, Възраждане, Сълза и смях, 199 have production pages). Directors already come from Théatro and Възраждане listings; admins can fill the rest in Filament
+- [ ] Posters: a rights question too (they belong to the theatres) — decide whether to link, ask for press kits, or use placeholders
+- [ ] Театър „София“ sold-out rows (no time in the listing)
+
 ## After the MVP (not before)
 
 ### Preslav tests
@@ -181,6 +181,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Preslav: stop adding adapters, enough data for now. Cast/poster pass parked; moving to accounts, ratings, reviews, diary and watchlist.
 - **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests. The tests caught 3 real bugs: Filament closures must name their parameter `$query` (the reviews list crashed), widgets were lazy, and `canAccessPanel` returned null for new users. Noted in CLAUDE.md.
 - **2026-10-15** — Live check green after the encoding fix: Българска армия 144 performances (18 guest); 717 performances across the 9 reachable theatres. (Earlier entries miscounted theatres by one from Театър „София“ on, and I first reported 817 — corrected here.)
 - **2026-10-15** — First live run from GitHub Actions: 9 of 11 adapters OK (e.g. Народен 160 performances to 31 Dec, Сатира 93, Възраждане 70). Българска армия: UTF-8 body with a windows-1251 meta tag got converted twice — fixed. Младежки театър: Cloudflare blocks datacenter IPs; its ticket shop needs a login, so no alternative public source.
