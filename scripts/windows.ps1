@@ -113,7 +113,9 @@ Set-Location $mobile
 Write-Utf8 (Join-Path $mobile '.env') @("EXPO_PUBLIC_API_URL=http://${ip}:8000/api/v1")
 
 Step 'Installing app dependencies'
-Run 'npm install' { npm install --no-audit --no-fund }
+# npm.cmd / npx.cmd, not npm / npx: those resolve to npm.ps1, which Windows' default
+# execution policy refuses to run.
+Run 'npm install' { npm.cmd install --no-audit --no-fund }
 
 Write-Host ''
 Write-Host '------------------------------------------------------------------' -ForegroundColor Green
@@ -128,4 +130,4 @@ Write-Host ' Stop: Ctrl+C here, and close the API window.'
 Write-Host '------------------------------------------------------------------' -ForegroundColor Green
 Write-Host ''
 
-npx expo start
+npx.cmd expo start

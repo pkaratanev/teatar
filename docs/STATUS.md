@@ -217,6 +217,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — First real run of the Windows script: backend set up fine; it stopped at `npm` because Windows blocks `npm.ps1` by default. Now calls `npm.cmd` / `npx.cmd`.
 - **2026-10-16** — `scripts/windows.ps1`: one-line setup and start on Windows (installs Git/Node/Herd, SQLite backend, demo data, API + Expo). CI parses it.
 - **2026-10-16** — Profile editing (name, bio; `PATCH /me` + 3 tests) and deep links with a share icon on production, theatre, person and user pages. Reminders now also open the production when the tap starts the app; 404s show "not found" instead of retrying.
 - **2026-10-16** — STATUS review: each MVP goal now says where the build stands; cast data added to open decisions.
