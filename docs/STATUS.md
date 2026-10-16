@@ -28,7 +28,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 
 **Your theatre life**
 - [ ] Sign up and sign in with email; delete account — *built*
-- [ ] Sign in with Google — *not started; Preslav gets the Google OAuth key later. Plan: free Google Cloud OAuth client (Android, iOS and web client ids), backend `auth/social` verifying the Google token with Socialite, app button with Google sign-in. Native Google sign-in doesn't run in Expo Go, so testing it needs a development build (`eas init`, free plan). Apple sign-in still comes with the store accounts, since the App Store requires it once Google is offered*
+- [ ] Sign in with Google — *not started; Preslav gets the Google OAuth key later. Plan: free Google Cloud OAuth client (Android, iOS and web client ids), backend `auth/social` verifying the Google token with Socialite (`laravel/socialite` is already in composer.json and the lock file; no route yet), app button with Google sign-in. Native Google sign-in doesn't run in Expo Go, so testing it needs a development build (`eas init`, free plan). Apple sign-in still comes with the store accounts, since the App Store requires it once Google is offered*
 - [ ] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist — *built*
 - [ ] Profile: diary by date, stats for the year, ratings histogram — *built*
 
@@ -63,7 +63,7 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 descriptions (see MVP goals; none started yet).
 
 **Waiting on Preslav:** the walk-through, and the open decisions below (cast data, Сфумато,
-Нов театър НДК, box-office links, app name, store accounts).
+Нов театър НДК, box-office links, app name, store accounts, Apple sign-in timing).
 
 **Screenshots:** `.github/workflows/screens.yml` runs by hand (Actions → Screenshots) or locally (README):
 web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch.
@@ -83,6 +83,7 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [ ] Code style: Pint fails in CI but is non-blocking (`continue-on-error`), so CI looks green. Run `vendor/bin/pint` once on a machine with Composer, commit, then make the step blocking
 - [ ] Cast for most productions: waiting on the decision under Open decisions
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
+- [ ] Live sources check hasn't run since the Varna adapters were added (last run 2026-10-15; next scheduled Monday). Run it by hand (Actions → Live sources) to confirm `dramavarna` and `vnpuppet` against the real sites
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
 ## Build milestones
@@ -155,7 +156,8 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 
 Use whatever public source works: each theatre's own site first, then public ticketing listings
 (Entase, Eventim, Bilet.bg, ePayGO) and other public pages. Take bare facts only (title, date, time,
-stage, cast, author). Contact theatres only for what we can't find — decide that after the MVP.
+stage, cast, author). Exception: posters and short descriptions, imported for testing only, with permission
+asked before launch. Contact theatres only for what we can't find — decide that after the MVP.
 
 The one source to keep out is theatre.art.bg itself: its terms forbid copying and its catalogue is
 protected by the EU database right (see investigation). Everything else is fair game for facts.
@@ -220,7 +222,7 @@ Findings that shape the code:
 - Budget to launch on both stores (checked 2026-10-16): Google Play 25 USD once + Apple 99 USD/year (local equivalent, about €99) ≈ 124 USD the first year, 99 USD/year after. Expo Free plan is enough (15 Android + 15 iOS cloud builds a month, 1,000 update users; slow queue) — Starter (19 USD/month) only if the queue gets annoying. No Mac needed: iOS builds run on EAS. Hosting (Laravel Cloud) is separate
 - [ ] Before the public launch: ask each theatre whose posters and descriptions we import for permission (most want the promotion); remove any that say no
 - [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form
-- [ ] Sign in with Apple — Preslav: after the App Store launch, to-do only. Note: Apple's review guideline 4.8 asks for Sign in with Apple (or a similar privacy-focused login) when an app offers Google sign-in, so the first iOS submission may be rejected without it; Android isn't affected. Needs the Apple Developer account. Backend `auth/social` verifies the provider token with Socialite; app buttons via `expo-apple-authentication` and Google sign-in. Apple sign-in is required by the App Store once Google is offered
+- [ ] Sign in with Apple — Preslav: after the App Store launch, to-do only. Note: Apple's review guideline 4.8 asks for Sign in with Apple (or a similar privacy-focused login) when an app offers Google sign-in, so the first iOS submission may be rejected without it; Android isn't affected. Needs the Apple Developer account. Backend `auth/social` verifies the provider token with Socialite; app button via `expo-apple-authentication`
 - [ ] Store rules already covered by the MVP: in-app account deletion, reporting user content
 - [ ] Bulgarian store listings, screenshots, age rating
 - [ ] TestFlight → external beta; Play internal → closed test (14 days) → production
@@ -237,12 +239,14 @@ Findings that shape the code:
 - [ ] Нов театър НДК looks closed: replace it in the launch set? Candidates: Театър „Азарян“ (НДК), Топлоцентрала, Столичен куклен театър
 - [ ] App name (placeholder: Teatar)
 - [ ] Store developer accounts: individual or company
+- [ ] Sign in with Apple timing: Google sign-in is now an MVP goal, but Apple is set for after the App Store launch. Apple's guideline 4.8 will likely reject an iOS build that offers Google without Apple. Options: (a) build Apple sign-in before the first iOS submission (needs the paid account, which comes then anyway); (b) hide the Google button on iOS until Apple is ready; (c) submit as is and risk a rejection. Recommendation: (a), it's a small task once the account exists
 - [ ] Box-office links: theatres without per-show ticket links (Българска армия, Младежки, 199, Зад канала, Куклен театър Варна) show no "Билети" button. Claude looks up each theatre's ticket page and adds it to the seeder, or Preslav fills "Каса / билети" in the admin
 
 ## Log
 
 Newest first. One line per working session.
 
+- **2026-10-16** — PM review: docs match the code (new MVP goals all unbuilt; CI green on main). plan.md and CLAUDE.md now record descriptions, Google sign-in, location city and the review list; Apple sign-in timing added to Open decisions; Live sources re-run for Varna added to Next up.
 - **2026-10-16** — To-do (not started): manual review queue in the admin for productions with missing data.
 - **2026-10-16** — To-dos only, nothing started: descriptions (option c: theatres' own text for testing, permission before launch), Google sign-in (Preslav gets the key later), Apple sign-in after the App Store launch.
 - **2026-10-16** — Preslav added three MVP goals: Google sign-in, nearest city from the phone's location, production descriptions. Descriptions need a decision (theatre text is copyrighted prose).
