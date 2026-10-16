@@ -78,6 +78,7 @@ Apple/Google sign-in (need the store accounts).
 First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] Windows script stopped at `npm` (execution policy blocks `npm.ps1`) — fixed, uses `npm.cmd` / `npx.cmd`
 - [x] App crashed on start in Expo Go on Android: importing `expo-notifications` throws there, which broke every screen — fixed, notifications load only in dev/store builds
+- [x] After the restyle, Metro failed on Windows ("reading 'transformFile'"): the real error was `Cannot find module 'babel-preset-expo'` — our new babel.config uses it, so it is now a direct devDependency
 - [x] After the fix: the app works; the styling is the problem (generic Material look) — restyle under "Now"
 
 ## Next up
@@ -226,6 +227,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Windows bundling fix: `babel-preset-expo` added as a direct devDependency (npm had nested it under `expo/`, out of Babel's reach).
 - **2026-10-16** — Restyle round 2: typographic posters, day headings, fixes; ready for Preslav to check on the phone.
 - **2026-10-16** — Restyle started: React Native Paper → NativeWind 4 + own components (`src/ui`), dark theme, new fonts and icons; web build + CI screenshot workflow so Claude can see the screens.
 - **2026-10-16** — First phone run: the app crashed at start in Expo Go on Android (expo-notifications import). Push code now loads lazily and only outside Expo Go.
