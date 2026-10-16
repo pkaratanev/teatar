@@ -48,14 +48,28 @@ export async function registerForPush(): Promise<void> {
   }
 }
 
-/** Tapping a reminder opens the production. Returns an unsubscribe function. */
+/**
+ * Tapping a reminder opens the production, whether the app was running or
+ * was started by the tap. Returns an unsubscribe function.
+ */
 export function listenForNotificationTaps(): () => void {
-  const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+  let handled: string | null = null;
+
+  const open = (response: Notifications.NotificationResponse | null) => {
+    if (!response || response.notification.request.identifier === handled) return;
+    handled = response.notification.request.identifier;
     const id = response.notification.request.content.data?.productionId;
     if (typeof id === 'number' || typeof id === 'string') {
       router.push({ pathname: '/production/[id]', params: { id: String(id) } });
     }
-  });
+  };
+
+  // App started from the notification: the listener below was not yet registered when it was tapped.
+  Notifications.getLastNotificationResponseAsync()
+    .then(open)
+    .catch(() => undefined);
+
+  const sub = Notifications.addNotificationResponseReceivedListener(open);
 
   return () => sub.remove();
 }

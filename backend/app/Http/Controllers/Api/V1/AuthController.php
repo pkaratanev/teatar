@@ -62,6 +62,27 @@ class AuthController extends Controller
         return new UserResource($request->user());
     }
 
+    /** Profile editing: display name and bio. Username and email stay fixed for now. */
+    public function update(Request $request): UserResource
+    {
+        $data = $request->validate([
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'bio' => ['sometimes', 'nullable', 'string', 'max:500'],
+        ]);
+
+        if (array_key_exists('name', $data)) {
+            $data['name'] = trim($data['name']);
+        }
+        if (array_key_exists('bio', $data)) {
+            $data['bio'] = filled($data['bio']) ? trim($data['bio']) : null;
+        }
+
+        $user = $request->user();
+        $user->update($data);
+
+        return new UserResource($user);
+    }
+
     public function logout(Request $request): Response
     {
         $request->user()->currentAccessToken()->delete();

@@ -10,20 +10,22 @@ import { useAuth } from '@/src/auth';
 import { LogSheet } from '@/src/components/LogSheet';
 import { ReviewCard } from '@/src/components/ReviewCard';
 import { Stars } from '@/src/components/Stars';
+import { ShareButton } from '@/src/components/ShareButton';
 import { ErrorState, Loading } from '@/src/components/States';
 import { formatDay, formatPrice, formatStars, formatTime, guestLabel } from '@/src/format';
+import { links } from '@/src/links';
 
 export default function ProductionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const productionId = Number(id);
   const { user } = useAuth();
-  const { data, isLoading, isError, refetch } = useProduction(productionId);
+  const { data, isLoading, isError, error, refetch } = useProduction(productionId);
   const reviews = useReviews(productionId);
   const watchlist = useWatchlist(productionId);
   const [logging, setLogging] = useState(false);
 
   if (isLoading) return <Loading />;
-  if (isError || !data) return <ErrorState onRetry={refetch} />;
+  if (isError || !data) return <ErrorState onRetry={refetch} error={error} />;
 
   const { production: p, me } = data;
   const needAccount = () => router.push('/sign-in');
@@ -34,7 +36,14 @@ export default function ProductionScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
-      <Stack.Screen options={{ title: p.title }} />
+      <Stack.Screen
+        options={{
+          title: p.title,
+          headerRight: () => (
+            <ShareButton text={[p.title, p.theatre?.name].filter(Boolean).join(' — ')} url={links.production(p.id)} />
+          ),
+        }}
+      />
 
       <View style={styles.header}>
         <Image source={p.poster_url} style={styles.poster} contentFit="cover" />

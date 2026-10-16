@@ -46,8 +46,9 @@ development build, and the "nightly sync for a week" goal needs a machine runnin
 CI covers the backend (tests on Postgres), the admin pages, and the app (typecheck + a full Metro
 bundle), but nobody has run the app on a phone yet.
 
-**Claude, while waiting:** small items from Next up (profile editing, deep links), nothing that
-changes what Preslav is testing.
+**Claude, while waiting:** profile editing and deep links are done (they're in the first test too).
+Nothing else is queued that doesn't need a decision from Preslav; Claude waits for test findings rather
+than adding features.
 
 **How to test (Preslav):**
 1. `docker compose up -d`
@@ -55,6 +56,8 @@ changes what Preslav is testing.
 3. Admin: http://localhost:8000/admin as `admin@teatar.test` / `password`
 4. `cd mobile && cp .env.example .env` (set your computer's LAN IP), `npm install`, `npx expo start`, open in Expo Go (SDK 57)
 5. Sign in as `admin@teatar.test` / `password` (or `maria.p@demo.teatar.test`) and walk through the screen map
+   (new since the map: "Редактирай профила" on the Profile tab, and a share icon on production, theatre,
+   person and user pages; in Expo Go the shared link starts with `exp://` and opens only on a phone running the dev server)
 6. Note anything broken or confusing under "Test findings" below, or just tell Claude
 
 **Not covered by the first test:** push reminders (need `eas init` and a development build) and
@@ -69,8 +72,6 @@ _Empty until the first run._
 ## Next up
 
 - [ ] Cast for most productions: waiting on the decision under Open decisions
-- [ ] Edit your own profile (name, bio) in the app
-- [ ] Deep links `teatar://production/{id}` for sharing
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
@@ -114,7 +115,7 @@ _Empty until the first run._
 - [x] Theatre filter on the Programme screen (chips, hides theatres with nothing scheduled)
 - [x] Infinite scroll on Programme, Diary and Feed
 - [ ] Generate API types from Scramble and replace hand-written ones
-- [ ] Deep links `teatar://production/{id}`
+- [x] Deep links: `teatar://production/{id}`, `/theatre/{id}`, `/person/{id}`, `/user/{username}`; share icon on those pages; Back from a deep-linked page goes to the tabs; dead links show "not found"
 
 ### 4. Accounts, rating, diary
 - [x] Email register / login / logout / delete account (API)
@@ -122,6 +123,7 @@ _Empty until the first run._
 - [x] Rate, review, "seen" diary, watchlist, one-tap log — API with tests (`ActivityController`, `TheatreLog`)
 - [x] Profile API: public profile with stats (this year, histogram, favourite theatre, most-seen actor); me/diary, me/watchlist, me/ratings
 - [x] Same in the app: "Видях" sheet (date, ½–5★ tap input, review, spoiler switch), watchlist toggle, my rating and dates on the production page, review feed with hidden spoilers
+- [x] Edit profile (name, bio up to 500 chars): `PATCH /me` with tests, "Редактирай профила" screen; username and email stay fixed
 - [x] Diary tab (grouped by month) and Profile tab: stats tiles, ratings histogram, favourite theatre, most-seen actor, watchlist with next date, sign out, delete account; public `/user/[username]`
 
 ### 5. Social, push, moderation
@@ -187,6 +189,7 @@ Findings that shape the code:
 - [ ] Scheduler (nightly sync) and a queue worker
 - [ ] Deploy runs `php artisan migrate --force`; deploy on push to `main` when CI is green
 - [ ] Domain and HTTPS for API and admin; first production admin user
+- [ ] Web links for sharing (`https://<domain>/production/{id}`): iOS Universal Links + Android App Links, plus a simple web page for people without the app. Until then shared links are `teatar://…` and only open where the app is installed
 - [ ] Error tracking, uptime check, backups
 
 ### Store releases
@@ -212,6 +215,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Profile editing (name, bio; `PATCH /me` + 3 tests) and deep links with a share icon on production, theatre, person and user pages. Reminders now also open the production when the tap starts the app; 404s show "not found" instead of retrying.
 - **2026-10-16** — STATUS review: each MVP goal now says where the build stands; cast data added to open decisions.
 - **2026-10-16** — CI now also bundles the Android app with Metro. MVP feature-complete; handed over for the first test run.
 - **2026-10-16** — Setup fix: `composer setup` now publishes Filament's CSS/JS and links storage; without it the admin would load unstyled. CI checks the assets are published.

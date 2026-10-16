@@ -6,14 +6,16 @@ import { Button, List, Text } from 'react-native-paper';
 
 import { useTheatre } from '@/src/api/hooks';
 import { ProductionRow } from '@/src/components/ProductionRow';
+import { ShareButton } from '@/src/components/ShareButton';
 import { ErrorState, Loading } from '@/src/components/States';
+import { links } from '@/src/links';
 
 export default function TheatreScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: t, isLoading, isError, refetch } = useTheatre(Number(id));
+  const { data: t, isLoading, isError, error, refetch } = useTheatre(Number(id));
 
   if (isLoading) return <Loading />;
-  if (isError || !t) return <ErrorState onRetry={refetch} />;
+  if (isError || !t) return <ErrorState onRetry={refetch} error={error} />;
 
   const mapUrl =
     t.lat !== null && t.lng !== null
@@ -24,7 +26,7 @@ export default function TheatreScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
-      <Stack.Screen options={{ title: t.name }} />
+      <Stack.Screen options={{ title: t.name, headerRight: () => <ShareButton text={t.name} url={links.theatre(t.id)} /> }} />
       <View style={styles.header}>
         <Text variant="headlineSmall">{t.name}</Text>
         {t.address && <Text style={styles.muted}>{t.address}</Text>}

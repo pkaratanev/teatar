@@ -15,7 +15,10 @@ type AuthState = {
   signUp: (r: Registration) => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
+  updateProfile: (changes: ProfileChanges) => Promise<void>;
 };
+
+type ProfileChanges = { name?: string; bio?: string | null };
 
 const AuthContext = createContext<AuthState | null>(null);
 
@@ -88,7 +91,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await endSession();
   }, [endSession]);
 
-  const value = useMemo(() => ({ user, signIn, signUp, signOut, deleteAccount }), [user, signIn, signUp, signOut, deleteAccount]);
+  const updateProfile = useCallback(
+    async (changes: ProfileChanges) => {
+      const r = await api<{ data: User }>('/me', { method: 'PATCH', body: JSON.stringify(changes) });
+      setUser(r.data);
+      // Name and bio show on the profile, reviews and feed.
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['me', 'feed'] });
+    },
+    [queryClient],
+  );
+
+  const value = useMemo(
+    () => ({ user, signIn, signUp, signOut, deleteAccount, updateProfile }),
+    [user, signIn, signUp, signOut, deleteAccount, updateProfile],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -7,20 +7,22 @@ import { usePerson } from '@/src/api/hooks';
 import type { PersonCredit } from '@/src/api/types';
 import { FollowButton } from '@/src/components/FollowButton';
 import { ProductionRow } from '@/src/components/ProductionRow';
+import { ShareButton } from '@/src/components/ShareButton';
 import { ErrorState, Loading } from '@/src/components/States';
+import { links } from '@/src/links';
 
 export default function PersonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, isError, refetch } = usePerson(Number(id));
+  const { data, isLoading, isError, error, refetch } = usePerson(Number(id));
 
   if (isLoading) return <Loading />;
-  if (isError || !data) return <ErrorState onRetry={refetch} />;
+  if (isError || !data) return <ErrorState onRetry={refetch} error={error} />;
 
   const { person, social } = data;
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
-      <Stack.Screen options={{ title: person.name }} />
+      <Stack.Screen options={{ title: person.name, headerRight: () => <ShareButton text={person.name} url={links.person(person.id)} /> }} />
       <View style={styles.header}>
         <Image source={person.headshot_url} style={styles.photo} contentFit="cover" />
         <Text variant="headlineSmall" style={styles.name}>

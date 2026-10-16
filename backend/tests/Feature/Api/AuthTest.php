@@ -30,3 +30,29 @@ it('deletes the account and everything attached to it', function () {
 
     expect(User::find($user->id))->toBeNull();
 });
+
+it('edits the display name and bio', function () {
+    $user = User::factory()->create(['name' => 'Мария', 'bio' => null]);
+
+    $this->actingAs($user)->patchJson('/api/v1/me', ['name' => '  Мария Петрова ', 'bio' => 'Ходя на театър всяка седмица.'])
+        ->assertOk()
+        ->assertJsonPath('data.name', 'Мария Петрова')
+        ->assertJsonPath('data.bio', 'Ходя на театър всяка седмица.');
+
+    $this->actingAs($user)->patchJson('/api/v1/me', ['bio' => '   '])->assertOk()->assertJsonPath('data.bio', null);
+    expect($user->fresh()->name)->toBe('Мария Петрова');
+});
+
+it('rejects an empty name, an overlong bio and other fields', function () {
+    $user = User::factory()->create(['username' => 'maria', 'email' => 'maria@example.test']);
+
+    $this->actingAs($user)->patchJson('/api/v1/me', ['name' => ''])->assertUnprocessable()->assertJsonValidationErrors('name');
+    $this->actingAs($user)->patchJson('/api/v1/me', ['bio' => str_repeat('а', 501)])->assertUnprocessable()->assertJsonValidationErrors('bio');
+
+    $this->actingAs($user)->patchJson('/api/v1/me', ['username' => 'hacker', 'email' => 'x@example.test'])->assertOk();
+    expect($user->fresh())->username->toBe('maria')->email->toBe('maria@example.test');
+});
+
+it('needs a signed-in user to edit a profile', function () {
+    $this->patchJson('/api/v1/me', ['name' => 'Х'])->assertUnauthorized();
+});

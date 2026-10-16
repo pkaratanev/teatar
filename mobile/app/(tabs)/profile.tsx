@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Dialog, List, Portal, Text } from 'react-native-paper';
@@ -29,17 +30,24 @@ export default function ProfileScreen() {
       <ProfileView
         profile={profile.data}
         header={
-          watching.length > 0 ? (
-            <List.Section title="Искам да гледам">
-              {watching.map((p) => (
-                <ProductionRow
-                  key={p.id}
-                  production={p}
-                  detail={p.next_performance_at ? `Следващо: ${formatDay(p.next_performance_at)}` : 'Няма обявени дати'}
-                />
-              ))}
-            </List.Section>
-          ) : null
+          <>
+            <View style={styles.edit}>
+              <Button mode="contained-tonal" icon="pencil" compact onPress={() => router.push('/edit-profile')}>
+                Редактирай профила
+              </Button>
+            </View>
+            {watching.length > 0 && (
+              <List.Section title="Искам да гледам">
+                {watching.map((p) => (
+                  <ProductionRow
+                    key={p.id}
+                    production={p}
+                    detail={p.next_performance_at ? `Следващо: ${formatDay(p.next_performance_at)}` : 'Няма обявени дати'}
+                  />
+                ))}
+              </List.Section>
+            )}
+          </>
         }
         footer={
           <View style={styles.account}>
@@ -85,4 +93,5 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   account: { padding: 16, gap: 8 },
+  edit: { paddingHorizontal: 16, paddingBottom: 8, alignItems: 'flex-start' },
 });
