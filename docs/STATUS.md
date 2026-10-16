@@ -18,7 +18,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 **Catalogue (what's on)**
 - [x] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *checked by Preslav 2026-10-16: 10 adapters, month view loads more on scroll; the week-long nightly run is its own goal under Stable*
 - [x] Guest performances are listed too, under the host theatre, marked with the visiting company — *checked by Preslav 2026-10-16*
-- [ ] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *built 2026-10-16*
+- [x] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *checked by Preslav 2026-10-16, including after closing the app*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [ ] Manual review in the admin, productions only for now — *not started (Preslav, 2026-10-16: don't launch with wrong data). A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
 - [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
@@ -63,8 +63,8 @@ the programme again: for fresh programmes and posters run `php artisan teatar:de
 Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `password`. Screen map: link at the top.
 
 **Built 2026-10-16, to check:**
-- [ ] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
-- [ ] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
+- [x] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
+- [ ] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster) — Varna checked
 - [ ] Admin (`/admin`): Синхронизации has "Обнови всички" and "График" (time, pause) at the top and the next run under
   the title; the dashboard shows "Проблеми със синхронизацията" only when a theatre's last sync failed, found nothing or
   is over 36 hours old, and the menu item gets a red count. Locally the buttons only queue jobs: run
