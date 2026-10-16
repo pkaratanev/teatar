@@ -21,7 +21,7 @@ it('creates productions, stages and performances from scraped rows', function ()
         scraped('Албион', '2026-11-04 19:30', 'Камерна сцена'),
     ]);
 
-    expect($stats)->toBe(['found' => 3, 'upserted' => 3, 'productions_created' => 2])
+    expect($stats)->toBe(['found' => 3, 'upserted' => 3, 'productions_created' => 2, 'posters' => 0])
         ->and($theatre->productions()->count())->toBe(2)
         ->and($theatre->stages()->pluck('name')->sort()->values()->all())->toBe(['Голяма сцена', 'Камерна сцена'])
         ->and(Performance::count())->toBe(3);
@@ -34,7 +34,7 @@ it('is idempotent when the same programme is imported twice', function () {
     app(ProgrammeImporter::class)->import($theatre, $rows);
     $second = app(ProgrammeImporter::class)->import($theatre, $rows);
 
-    expect($second)->toBe(['found' => 2, 'upserted' => 0, 'productions_created' => 0])
+    expect($second)->toBe(['found' => 2, 'upserted' => 0, 'productions_created' => 0, 'posters' => 0])
         ->and(Performance::count())->toBe(2);
 });
 
