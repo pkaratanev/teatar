@@ -44,10 +44,10 @@ class ProductionReviewResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return Production::query()
+        return parent::getEloquentQuery()
             ->where('needs_review', true)
             ->with('theatre')
-            ->withDataChecks()
+            ->scopes(['withDataChecks'])
             ->withMin(['performances as next_at' => fn (Builder $q) => $q->where('starts_at', '>=', now())->where('is_cancelled', false)], 'starts_at');
     }
 
