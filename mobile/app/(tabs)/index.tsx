@@ -7,7 +7,7 @@ import type { Performance, ProgrammeRange } from '@/src/api/types';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { Empty, ErrorState, Loading } from '@/src/components/States';
-import { dayKey, formatDay, formatTime } from '@/src/format';
+import { dayKey, formatDayHeading, formatTime } from '@/src/format';
 import { Chip, colors, Segmented, Text } from '@/src/ui';
 
 export default function ProgrammeScreen() {
@@ -26,7 +26,7 @@ export default function ProgrammeScreen() {
       const key = dayKey(p.starts_at);
       byDay.set(key, [...(byDay.get(key) ?? []), p]);
     }
-    return [...byDay.values()].map((items) => ({ title: formatDay(items[0].starts_at), data: items }));
+    return [...byDay.values()].map((items) => ({ title: formatDayHeading(items[0].starts_at), data: items }));
   }, [items]);
 
   return (

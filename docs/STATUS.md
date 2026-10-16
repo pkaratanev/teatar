@@ -51,8 +51,9 @@ Paper to NativeWind (Tailwind) with our own Reusables-style components in `mobil
 curtain red + gold stars, Playfair Display headings, Inter text, lucide icons. Each push to `main` runs
 `.github/workflows/screens.yml`: web build + API with demo data + Playwright → phone-sized screenshots on
 the `screenshots` branch (`git fetch origin screenshots`), so Claude can see every screen.
-- [ ] Every screen moved off Paper; CI green
-- [ ] Screenshot pass: fix what looks wrong
+- [x] Every screen moved off Paper; CI green
+- [x] Screenshot pipeline works (first run: all 13 screens, no console errors)
+- [ ] Screenshot pass: fix what looks wrong — round 1: typographic posters (no production has a poster yet), button wrap, tab label clipping, edit-profile empty when opened by link, day headings
 - [ ] Preslav checks the look on his phone (`git pull`, `npm.cmd install`, `npx.cmd expo start --clear`)
 
 **How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):

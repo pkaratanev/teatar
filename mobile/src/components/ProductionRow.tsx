@@ -22,7 +22,7 @@ export function ProductionRow({ production, detail, children }: Props) {
   return (
     <Link href={{ pathname: '/production/[id]', params: { id: production.id } }} asChild>
       <Pressable className="flex-row gap-3.5 px-4 py-2.5 active:bg-card">
-        <Poster uri={production.poster_url} width={60} radius={6} />
+        <Poster uri={production.poster_url} title={production.title} width={60} radius={6} />
         <View className="flex-1 justify-center gap-0.5">
           {detail && (
             <Text variant="small" className="font-body-semibold text-primary">

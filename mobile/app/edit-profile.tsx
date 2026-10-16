@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
 import { fieldErrors, useAuth } from '@/src/auth';
@@ -15,6 +15,15 @@ export default function EditProfileScreen() {
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [failed, setFailed] = useState(false);
+  const filled = useRef(!!user);
+
+  useEffect(() => {
+    if (user && !filled.current) {
+      filled.current = true;
+      setName(user.name);
+      setBio(user.bio ?? '');
+    }
+  }, [user]);
 
   if (!user) {
     return (

@@ -1,11 +1,12 @@
 import { Tabs } from 'expo-router';
+import type { ColorValue } from 'react-native';
 import { BookOpen, Drama, Search, User, Users, type LucideIcon } from 'lucide-react-native';
 
 import { colors } from '@/src/ui';
 
 const icon =
   (Icon: LucideIcon) =>
-  ({ color, focused }: { color: string; focused: boolean }) => <Icon size={22} color={color} strokeWidth={focused ? 2.25 : 1.75} />;
+  ({ color, focused }: { color: ColorValue; focused: boolean }) => <Icon size={22} color={String(color)} strokeWidth={focused ? 2.25 : 1.75} />;
 
 export default function TabsLayout() {
   return (
@@ -14,7 +15,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.foreground,
         tabBarInactiveTintColor: colors.faint,
-        tabBarLabelStyle: { fontFamily: 'Inter_500Medium', fontSize: 11 },
+        tabBarLabelStyle: { fontFamily: 'Inter_500Medium', fontSize: 11, lineHeight: 15 },
         tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
         sceneStyle: { backgroundColor: colors.background },
       }}

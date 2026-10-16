@@ -7,6 +7,17 @@ export function formatDay(iso: string): string {
   );
 }
 
+/** Programme day heading: "Днес · петък, 16 октомври", "Утре · …", or just "събота, 24 октомври". */
+export function formatDayHeading(iso: string): string {
+  const long = new Intl.DateTimeFormat('bg-BG', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ })
+    .format(new Date(iso))
+    .replace(/\s*г\.$/, '');
+  const key = dayKey(iso);
+  if (key === dayKey(new Date().toISOString())) return `Днес · ${long}`;
+  if (key === dayKey(new Date(Date.now() + 86_400_000).toISOString())) return `Утре · ${long}`;
+  return long;
+}
+
 /** "19:00" */
 export function formatTime(iso: string): string {
   return new Intl.DateTimeFormat('bg-BG', { hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(new Date(iso));

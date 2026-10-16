@@ -51,7 +51,7 @@ export function ReviewCard({
       {production ? (
         <Link href={{ pathname: '/production/[id]', params: { id: production.id } }} asChild>
           <Pressable>
-            <Poster uri={production.poster_url} width={44} radius={4} />
+            <Poster uri={production.poster_url} title={production.title} width={44} radius={4} />
           </Pressable>
         </Link>
       ) : author ? (

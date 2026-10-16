@@ -59,7 +59,7 @@ export default function ProductionScreen() {
           </>
         )}
         <View className="flex-row gap-4 px-4 pb-5 pt-2">
-          <Poster uri={p.poster_url} width={118} radius={8} />
+          <Poster uri={p.poster_url} title={p.title} width={118} radius={8} />
           <View className="flex-1 justify-end gap-1.5">
             <Text variant="title">{p.title}</Text>
             {p.author && <Text className="text-foreground/80">{p.author}</Text>}
@@ -102,7 +102,7 @@ export default function ProductionScreen() {
         )}
 
         <View className="flex-row gap-3">
-          <Button className="flex-1" icon={Check} onPress={() => (user ? setLogging(true) : needAccount())}>
+          <Button className="px-6" icon={Check} onPress={() => (user ? setLogging(true) : needAccount())}>
             {me?.seen_on.length ? 'Гледах пак' : 'Видях'}
           </Button>
           <Button
