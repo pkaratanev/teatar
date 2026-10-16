@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { SectionList, StyleSheet, View } from 'react-native';
-import { SegmentedButtons, Text } from 'react-native-paper';
+import { ScrollView, SectionList, StyleSheet, View } from 'react-native';
+import { Chip, SegmentedButtons, Text } from 'react-native-paper';
 
-import { useProgramme } from '@/src/api/hooks';
+import { useProgramme, useTheatres } from '@/src/api/hooks';
 import type { Performance, ProgrammeRange } from '@/src/api/types';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { Empty, ErrorState, Loading } from '@/src/components/States';
@@ -10,7 +10,9 @@ import { dayKey, formatDay, formatTime } from '@/src/format';
 
 export default function ProgrammeScreen() {
   const [range, setRange] = useState<ProgrammeRange>('week');
-  const { data, isLoading, isError, refetch, isRefetching } = useProgramme(range);
+  const [theatreId, setTheatreId] = useState<number | undefined>(undefined);
+  const theatres = useTheatres();
+  const { data, isLoading, isError, refetch, isRefetching } = useProgramme(range, theatreId);
 
   const sections = useMemo(() => {
     const byDay = new Map<string, Performance[]>();
@@ -33,6 +35,18 @@ export default function ProgrammeScreen() {
           { value: 'month', label: 'Месец' },
         ]}
       />
+      {(theatres.data?.length ?? 0) > 1 && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipBar} contentContainerStyle={styles.chips}>
+          <Chip selected={theatreId === undefined} onPress={() => setTheatreId(undefined)} showSelectedOverlay>
+            Всички театри
+          </Chip>
+          {theatres.data?.map((t) => (
+            <Chip key={t.id} selected={theatreId === t.id} onPress={() => setTheatreId(theatreId === t.id ? undefined : t.id)} showSelectedOverlay>
+              {shortName(t.name)}
+            </Chip>
+          ))}
+        </ScrollView>
+      )}
       {isLoading ? (
         <Loading />
       ) : isError ? (
@@ -65,8 +79,16 @@ export default function ProgrammeScreen() {
   );
 }
 
+/** "Театър „Българска армия“" → "Българска армия" for compact chips. */
+function shortName(name: string): string {
+  const quoted = name.match(/[„"“]([^“”"]+)[“”"]/);
+  return quoted ? quoted[1] : name;
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  tabs: { margin: 16 },
+  tabs: { marginHorizontal: 16, marginTop: 16, marginBottom: 8 },
+  chipBar: { flexGrow: 0 },
+  chips: { gap: 8, paddingHorizontal: 16, paddingBottom: 8 },
   day: { paddingHorizontal: 16, paddingVertical: 6, opacity: 0.7, textTransform: 'capitalize' },
 });

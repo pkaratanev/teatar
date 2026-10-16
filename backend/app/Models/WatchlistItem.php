@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $production_id
+ * @property-read User $user
+ * @property-read Production $production
+ */
 #[Fillable(['user_id', 'production_id', 'reminded_at'])]
 class WatchlistItem extends Model
 {

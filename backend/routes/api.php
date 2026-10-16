@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::delete('me', [AuthController::class, 'destroy']); // GDPR: delete account and all activity
+        Route::put('me/push-token', [AuthController::class, 'pushToken']);
 
         // Your theatre life.
         Route::get('me/diary', [ProfileController::class, 'diary']);

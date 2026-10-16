@@ -37,7 +37,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Theatre filter on the Programme screen
+- [ ] Seed realistic demo data for testing: a few users, ratings, reviews, follows and diary entries on top of the real programme (`php artisan db:seed --class=DemoActivitySeeder`)
 
 **Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
 cast/poster pass is parked under "Later" below.
@@ -46,7 +46,6 @@ cast/poster pass is parked under "Later" below.
 
 ## Next up
 
-- [ ] Watchlist push reminder 7 days before a date: backend job + Expo push token registration (needs a dev build on the phone to test)
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
@@ -86,7 +85,7 @@ cast/poster pass is parked under "Later" below.
 - [x] API: programme, production, person, theatre, search
 - [x] Screens: Programme, Search, Production, Person, Theatre (first pass)
 - [x] "гостува …" label on visiting productions
-- [ ] Theatre filter on the Programme screen
+- [x] Theatre filter on the Programme screen (chips)
 - [ ] Generate API types from Scramble and replace hand-written ones
 - [ ] Deep links `teatar://production/{id}`
 
@@ -103,7 +102,8 @@ cast/poster pass is parked under "Later" below.
 - [x] Report a review (API)
 - [x] Report a review from the app (reason menu)
 - [x] Follow users and people, feed of followed users' reviews, likes (API with tests + app: Лента tab, Следвай buttons, ♥ on reviews)
-- [ ] Watchlist push (Expo Push)
+- [x] Watchlist push: daily job (10:00 Sofia) for shows within 7 days, once per 3 weeks; token registered after the first "Искам да гледам"; tapping opens the production
+- [ ] Push needs `eas init` (project id) and a development build to test on a phone — Expo Go can't receive pushes
 
 ### 6. Stabilise
 - [ ] Run the nightly sync for a week; fix every failure
@@ -184,6 +184,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Theatre filter chips on the Programme screen. Watchlist push reminders (backend job + app registration); testable only with a dev build.
 - **2026-10-16** — Social: follow users and people, feed, likes (counts recomputed from the table). Polymorphic columns now use short names (user, person, production, theatre).
 - **2026-10-16** — Apple/Google sign-in moved to Store releases: Sign in with Apple needs the paid developer account, which comes after the MVP. Email sign-in is enough for testing. Social (follow, feed, likes) is Now.
 - **2026-10-16** — App side of your theatre life: sign in/up, log-a-visit sheet, watchlist, review feed with spoilers and reporting, Diary and Profile tabs, public profiles. Typechecked in CI; not yet run on a phone.

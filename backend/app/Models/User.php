@@ -17,6 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $id
  * @property bool $is_admin
  * @property \Illuminate\Support\Carbon|null $shadow_banned_at
+ * @property string|null $expo_push_token
  */
 #[Fillable(['name', 'username', 'email', 'password', 'bio', 'apple_id', 'google_id', 'expo_push_token'])]
 #[Hidden(['password', 'remember_token', 'apple_id', 'google_id', 'expo_push_token'])]

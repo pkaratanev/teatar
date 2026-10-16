@@ -69,6 +69,15 @@ class AuthController extends Controller
         return response()->noContent();
     }
 
+    /** The app registers its Expo push token after the user allows notifications; null turns pushes off. */
+    public function pushToken(Request $request): Response
+    {
+        $data = $request->validate(['token' => ['nullable', 'string', 'max:255', 'regex:/^(Exponent|Expo)PushToken\[[^\]]+\]$/']]);
+        $request->user()->forceFill(['expo_push_token' => $data['token'] ?? null])->save();
+
+        return response()->noContent();
+    }
+
     /** GDPR: deleting the account cascades to ratings, reviews, diary, watchlist and follows. */
     public function destroy(Request $request): Response
     {

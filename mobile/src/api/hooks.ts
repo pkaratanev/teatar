@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { registerForPush } from '../push';
 import { api } from './client';
 import type {
   DiaryEntry,
@@ -109,9 +110,12 @@ export function useRate(productionId: number) {
 }
 
 export function useWatchlist(productionId: number) {
-  return useProductionMutation(productionId, (on: boolean) =>
-    api<{ data: MyProductionState }>(`/productions/${productionId}/watchlist`, json(on ? 'PUT' : 'DELETE')),
-  );
+  return useProductionMutation(productionId, async (on: boolean) => {
+    const result = await api<{ data: MyProductionState }>(`/productions/${productionId}/watchlist`, json(on ? 'PUT' : 'DELETE'));
+    // Reminders are what the watchlist is for: ask for notifications the first time.
+    if (on) void registerForPush();
+    return result;
+  });
 }
 
 export function useDeleteReview(productionId: number) {
@@ -166,6 +170,14 @@ export function useLike(review: { id: number }) {
       client.invalidateQueries({ queryKey: ['me', 'feed'] });
       client.invalidateQueries({ queryKey: ['profile'] });
     },
+  });
+}
+
+export function useTheatres() {
+  return useQuery({
+    queryKey: ['theatres'],
+    queryFn: () => api<{ data: Theatre[] }>('/theatres').then((r) => r.data),
+    staleTime: 60 * 60_000,
   });
 }
 
