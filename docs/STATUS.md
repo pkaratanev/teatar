@@ -186,6 +186,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Setup fix: `composer setup` now publishes Filament's CSS/JS and links storage; without it the admin would load unstyled. CI checks the assets are published.
 - **2026-10-16** — Pre-test fix: Programme, Diary and Feed only showed the first API page (Месец stopped at 50 performances); now infinite scroll. Theatre chips hide theatres with nothing scheduled.
 - **2026-10-16** — `teatar:demo` for testing: real programme plus demo people and activity. The default seeder no longer mixes fake productions into the real theatres.
 - **2026-10-16** — Published a screen map of the app (link at the top) for Preslav, who hasn't run the app yet.
