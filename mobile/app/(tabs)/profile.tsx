@@ -1,25 +1,36 @@
 import { router } from 'expo-router';
+import { LogOut, Pencil, Trash2 } from 'lucide-react-native';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Dialog, List, Portal, Text } from 'react-native-paper';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMyWatchlist, useProfile } from '@/src/api/hooks';
 import { useAuth } from '@/src/auth';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { ProfileView } from '@/src/components/ProfileView';
+import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { SignInPrompt } from '@/src/components/SignInPrompt';
 import { ErrorState, Loading } from '@/src/components/States';
 import { formatDay } from '@/src/format';
+import { Button, Dialog, Section, Text } from '@/src/ui';
 
 export default function ProfileScreen() {
   const { user, signOut, deleteAccount } = useAuth();
   const profile = useProfile(user?.username);
   const watchlist = useMyWatchlist(!!user);
+  const insets = useSafeAreaInsets();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   if (user === undefined) return <Loading />;
-  if (!user) return <SignInPrompt text="Оценки, ревюта, дневник и списък „Искам да гледам“ — всичко на едно място." />;
+  if (!user) {
+    return (
+      <View className="flex-1 bg-background">
+        <ScreenHeader title="Профил" />
+        <SignInPrompt text="Оценки, ревюта, дневник и списък „Искам да гледам“ — всичко на едно място." />
+      </View>
+    );
+  }
   if (profile.isLoading) return <Loading />;
   if (profile.isError || !profile.data) return <ErrorState onRetry={profile.refetch} />;
 
@@ -29,48 +40,49 @@ export default function ProfileScreen() {
     <>
       <ProfileView
         profile={profile.data}
+        topInset={insets.top}
+        actions={
+          <Button variant="secondary" size="sm" icon={Pencil} onPress={() => router.push('/edit-profile')}>
+            Редактирай
+          </Button>
+        }
         header={
-          <>
-            <View style={styles.edit}>
-              <Button mode="contained-tonal" icon="pencil" compact onPress={() => router.push('/edit-profile')}>
-                Редактирай профила
-              </Button>
-            </View>
-            {watching.length > 0 && (
-              <List.Section title="Искам да гледам">
-                {watching.map((p) => (
-                  <ProductionRow
-                    key={p.id}
-                    production={p}
-                    detail={p.next_performance_at ? `Следващо: ${formatDay(p.next_performance_at)}` : 'Няма обявени дати'}
-                  />
-                ))}
-              </List.Section>
-            )}
-          </>
+          watching.length > 0 && (
+            <Section title="Искам да гледам">
+              {watching.map((p) => (
+                <ProductionRow
+                  key={p.id}
+                  production={p}
+                  detail={p.next_performance_at ? `Следващо: ${formatDay(p.next_performance_at)}` : 'Няма обявени дати'}
+                />
+              ))}
+            </Section>
+          )
         }
         footer={
-          <View style={styles.account}>
-            <Button mode="outlined" onPress={signOut}>
+          <View className="mt-8 gap-3 px-4">
+            <Button variant="outline" icon={LogOut} onPress={signOut}>
               Изход
             </Button>
-            <Button textColor="#B3261E" onPress={() => setConfirmDelete(true)}>
-              Изтрий профила
+            <Button variant="ghost" size="sm" icon={Trash2} iconColor="#F0525A" onPress={() => setConfirmDelete(true)}>
+              <Text className="font-body-semibold text-[13px] text-destructive">Изтрий профила</Text>
             </Button>
           </View>
         }
       />
 
-      <Portal>
-        <Dialog visible={confirmDelete} onDismiss={() => setConfirmDelete(false)}>
-          <Dialog.Title>Изтриване на профила</Dialog.Title>
-          <Dialog.Content>
-            <Text>Профилът и всичко в него — оценки, ревюта, дневник и списък — ще бъдат изтрити завинаги.</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setConfirmDelete(false)}>Отказ</Button>
+      <Dialog
+        visible={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        title="Изтриване на профила"
+        actions={
+          <>
+            <Button variant="ghost" size="sm" onPress={() => setConfirmDelete(false)}>
+              Отказ
+            </Button>
             <Button
-              textColor="#B3261E"
+              variant="destructive"
+              size="sm"
               loading={deleting}
               onPress={async () => {
                 setDeleting(true);
@@ -82,16 +94,13 @@ export default function ProfileScreen() {
                 }
               }}
             >
-              Изтрий
+              Изтрий завинаги
             </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+          </>
+        }
+      >
+        <Text variant="muted">Профилът и всичко в него — оценки, ревюта, дневник и списък — ще бъдат изтрити завинаги.</Text>
+      </Dialog>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  account: { padding: 16, gap: 8 },
-  edit: { paddingHorizontal: 16, paddingBottom: 8, alignItems: 'flex-start' },
-});

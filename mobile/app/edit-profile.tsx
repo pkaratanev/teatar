@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
-import { Button, HelperText, Text, TextInput } from 'react-native-paper';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
 import { fieldErrors, useAuth } from '@/src/auth';
+import { Avatar, Button, Field, Text } from '@/src/ui';
 
 const BIO_MAX = 500;
 
@@ -17,7 +17,11 @@ export default function EditProfileScreen() {
   const [failed, setFailed] = useState(false);
 
   if (!user) {
-    return <Text style={styles.content}>Влезте, за да редактирате профила си.</Text>;
+    return (
+      <View className="flex-1 bg-background p-6">
+        <Text variant="muted">Влезте, за да редактирате профила си.</Text>
+      </View>
+    );
   }
 
   const unchanged = name.trim() === user.name && (bio.trim() || null) === (user.bio ?? null);
@@ -40,49 +44,39 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <TextInput mode="outlined" label="Име" value={name} onChangeText={setName} autoComplete="name" maxLength={255} />
-        <HelperText type="error" visible={!!errors.name}>
-          {errors.name}
-        </HelperText>
+    <KeyboardAvoidingView className="flex-1 bg-background" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView contentContainerClassName="gap-5 p-6" keyboardShouldPersistTaps="handled">
+        <View className="items-center gap-1">
+          <Avatar name={name || user.name} size={72} />
+          <Text variant="muted" className="mt-2">
+            @{user.username}
+          </Text>
+        </View>
 
-        <TextInput
-          mode="outlined"
+        <Field label="Име" value={name} onChangeText={setName} autoComplete="name" maxLength={255} error={errors.name} />
+        <Field
           label="За мен"
           value={bio}
           onChangeText={setBio}
           multiline
-          numberOfLines={5}
           maxLength={BIO_MAX}
-          style={styles.bio}
+          error={errors.bio}
+          hint={`${bio.length}/${BIO_MAX}`}
+          placeholder="Какво обичате да гледате?"
         />
-        <HelperText type={errors.bio ? 'error' : 'info'} visible>
-          {errors.bio ?? `${bio.length}/${BIO_MAX}`}
-        </HelperText>
 
-        <Text variant="bodySmall" style={styles.muted}>
-          Потребителското име (@{user.username}) не може да се променя.
-        </Text>
+        <Text variant="caption">Потребителското име не може да се променя.</Text>
 
         {failed && (
-          <HelperText type="error" visible>
+          <Text variant="caption" className="text-destructive">
             Не успяхме да запазим промените. Опитайте пак.
-          </HelperText>
+          </Text>
         )}
 
-        <Button mode="contained" onPress={save} loading={busy} disabled={busy || unchanged || !name.trim()} style={styles.save}>
+        <Button onPress={save} loading={busy} disabled={unchanged || !name.trim()}>
           Запази
         </Button>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  content: { padding: 16 },
-  bio: { minHeight: 120 },
-  muted: { opacity: 0.6 },
-  save: { marginTop: 16 },
-});

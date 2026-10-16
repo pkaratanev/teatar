@@ -42,3 +42,4 @@ yarn-error.*
 
 # Written by scripts/windows.ps1 (your LAN IP)
 .env
+web-dist/

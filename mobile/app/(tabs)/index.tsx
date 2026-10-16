@@ -1,12 +1,14 @@
+import { CalendarX } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { ScrollView, SectionList, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Chip, SegmentedButtons, Text } from 'react-native-paper';
+import { ActivityIndicator, ScrollView, SectionList, View } from 'react-native';
 
 import { useProgramme, useTheatres } from '@/src/api/hooks';
 import type { Performance, ProgrammeRange } from '@/src/api/types';
 import { ProductionRow } from '@/src/components/ProductionRow';
+import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { Empty, ErrorState, Loading } from '@/src/components/States';
 import { dayKey, formatDay, formatTime } from '@/src/format';
+import { Chip, colors, Segmented, Text } from '@/src/ui';
 
 export default function ProgrammeScreen() {
   const [range, setRange] = useState<ProgrammeRange>('week');
@@ -28,35 +30,40 @@ export default function ProgrammeScreen() {
   }, [items]);
 
   return (
-    <View style={styles.screen}>
-      <SegmentedButtons
-        style={styles.tabs}
-        value={range}
-        onValueChange={(v) => setRange(v as ProgrammeRange)}
-        buttons={[
-          { value: 'tonight', label: 'Тази вечер' },
-          { value: 'week', label: 'Седмица' },
-          { value: 'month', label: 'Месец' },
-        ]}
-      />
+    <View className="flex-1 bg-background">
+      <ScreenHeader title="Програма">
+        <Segmented
+          className="mt-4"
+          value={range}
+          onChange={setRange}
+          options={[
+            { value: 'tonight', label: 'Тази вечер' },
+            { value: 'week', label: 'Седмица' },
+            { value: 'month', label: 'Месец' },
+          ]}
+        />
+      </ScreenHeader>
       {playing.length > 1 && (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipBar} contentContainerStyle={styles.chips}>
-          <Chip selected={theatreId === undefined} onPress={() => setTheatreId(undefined)} showSelectedOverlay>
-            Всички театри
-          </Chip>
-          {playing.map((t) => (
-            <Chip key={t.id} selected={theatreId === t.id} onPress={() => setTheatreId(theatreId === t.id ? undefined : t.id)} showSelectedOverlay>
-              {shortName(t.name)}
-            </Chip>
-          ))}
-        </ScrollView>
+        <View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 px-4 pb-3">
+            <Chip label="Всички театри" selected={theatreId === undefined} onPress={() => setTheatreId(undefined)} />
+            {playing.map((t) => (
+              <Chip
+                key={t.id}
+                label={shortName(t.name)}
+                selected={theatreId === t.id}
+                onPress={() => setTheatreId(theatreId === t.id ? undefined : t.id)}
+              />
+            ))}
+          </ScrollView>
+        </View>
       )}
       {isLoading ? (
         <Loading />
       ) : isError ? (
         <ErrorState onRetry={refetch} />
       ) : sections.length === 0 ? (
-        <Empty message="Няма представления в този период." />
+        <Empty icon={CalendarX} message="Няма представления в този период." />
       ) : (
         <SectionList
           sections={sections}
@@ -65,12 +72,15 @@ export default function ProgrammeScreen() {
           refreshing={isRefetching && !isFetchingNextPage}
           onEndReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={isFetchingNextPage ? <ActivityIndicator style={styles.more} /> : null}
+          ListFooterComponent={isFetchingNextPage ? <ActivityIndicator className="p-4" color={colors.primary} /> : null}
+          contentContainerClassName="pb-6"
           stickySectionHeadersEnabled
           renderSectionHeader={({ section }) => (
-            <Text variant="titleSmall" style={styles.day}>
-              {section.title}
-            </Text>
+            <View className="border-b border-border bg-background px-4 pb-2 pt-4">
+              <Text variant="overline" className="text-foreground">
+                {section.title}
+              </Text>
+            </View>
           )}
           renderItem={({ item }) =>
             item.production ? (
@@ -91,12 +101,3 @@ function shortName(name: string): string {
   const quoted = name.match(/[„"“]([^“”"]+)[“”"]/);
   return quoted ? quoted[1] : name;
 }
-
-const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  tabs: { marginHorizontal: 16, marginTop: 16, marginBottom: 8 },
-  chipBar: { flexGrow: 0 },
-  more: { padding: 16 },
-  chips: { gap: 8, paddingHorizontal: 16, paddingBottom: 8 },
-  day: { paddingHorizontal: 16, paddingVertical: 6, opacity: 0.7, textTransform: 'capitalize' },
-});

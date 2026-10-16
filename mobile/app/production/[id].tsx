@@ -1,19 +1,22 @@
 import { Image } from 'expo-image';
 import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Divider, List, Text } from 'react-native-paper';
+import { Bookmark, Check, Clock, Landmark, Ticket } from 'lucide-react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { useProduction, useReviews, useWatchlist } from '@/src/api/hooks';
+import type { Credit, Performance } from '@/src/api/types';
 import { useAuth } from '@/src/auth';
 import { LogSheet } from '@/src/components/LogSheet';
+import { Poster } from '@/src/components/Poster';
 import { ReviewCard } from '@/src/components/ReviewCard';
-import { Stars } from '@/src/components/Stars';
 import { ShareButton } from '@/src/components/ShareButton';
+import { RatingBadge, Stars } from '@/src/components/Stars';
 import { ErrorState, Loading } from '@/src/components/States';
-import { formatDay, formatPrice, formatStars, formatTime, guestLabel } from '@/src/format';
+import { formatPrice, formatTime, guestLabel } from '@/src/format';
 import { links } from '@/src/links';
+import { Avatar, Button, colors, Section, Separator, Text } from '@/src/ui';
 
 export default function ProductionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -23,6 +26,7 @@ export default function ProductionScreen() {
   const reviews = useReviews(productionId);
   const watchlist = useWatchlist(productionId);
   const [logging, setLogging] = useState(false);
+  const [moreSynopsis, setMoreSynopsis] = useState(false);
 
   if (isLoading) return <Loading />;
   if (isError || !data) return <ErrorState onRetry={refetch} error={error} />;
@@ -33,147 +37,206 @@ export default function ProductionScreen() {
   const directors = p.credits.filter((c) => c.role_type === 'director');
   const cast = p.credits.filter((c) => c.role_type === 'actor');
   const crew = p.credits.filter((c) => c.role_type !== 'actor' && c.role_type !== 'director');
+  const guest = guestLabel(p);
+  const facts = [p.running_time_minutes && `${p.running_time_minutes} мин.`, p.age_advisory].filter(Boolean).join(' · ');
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <ScrollView className="flex-1 bg-background" contentContainerClassName="pb-12">
       <Stack.Screen
         options={{
-          title: p.title,
-          headerRight: () => (
-            <ShareButton text={[p.title, p.theatre?.name].filter(Boolean).join(' — ')} url={links.production(p.id)} />
-          ),
+          title: '',
+          headerRight: () => <ShareButton text={[p.title, p.theatre?.name].filter(Boolean).join(' — ')} url={links.production(p.id)} />,
         }}
       />
 
-      <View style={styles.header}>
-        <Image source={p.poster_url} style={styles.poster} contentFit="cover" />
-        <View style={styles.headerText}>
-          <Text variant="headlineSmall">{p.title}</Text>
-          {p.author && <Text variant="bodyLarge">{p.author}</Text>}
-          {guestLabel(p) && (
-            <Text variant="bodyMedium" style={styles.muted}>
-              {guestLabel(p)}
-            </Text>
-          )}
-          {p.theatre && (
-            <Link href={{ pathname: '/theatre/[id]', params: { id: p.theatre.id } }}>
-              <Text variant="bodyMedium" style={styles.link}>
+      {/* Hero: the poster, blurred and dimmed behind the real one. */}
+      <View className="overflow-hidden">
+        {p.poster_url && (
+          <>
+            <Image source={p.poster_url} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} contentFit="cover" blurRadius={40} />
+            <View className="absolute inset-0 bg-background/75" />
+            <View className="absolute bottom-0 left-0 right-0 h-16 bg-background/60" />
+          </>
+        )}
+        <View className="flex-row gap-4 px-4 pb-5 pt-2">
+          <Poster uri={p.poster_url} width={118} radius={8} />
+          <View className="flex-1 justify-end gap-1.5">
+            <Text variant="title">{p.title}</Text>
+            {p.author && <Text className="text-foreground/80">{p.author}</Text>}
+            {directors.length > 0 && (
+              <Text variant="muted">
+                реж. <Text variant="small" className="font-body-semibold text-foreground">{directors.map((d) => d.person.name).join(', ')}</Text>
+              </Text>
+            )}
+            {facts ? (
+              <View className="flex-row items-center gap-1.5">
+                <Clock size={13} color={colors.muted} />
+                <Text variant="caption">{facts}</Text>
+              </View>
+            ) : null}
+          </View>
+        </View>
+      </View>
+
+      <View className="gap-4 px-4">
+        {p.theatre && (
+          <Link href={{ pathname: '/theatre/[id]', params: { id: p.theatre.id } }} asChild>
+            <Pressable className="flex-row items-center gap-2 self-start">
+              <Landmark size={15} color={colors.muted} />
+              <Text variant="small" className="font-body-medium">
                 {p.theatre.name}
               </Text>
-            </Link>
-          )}
-          <Text variant="bodySmall" style={styles.muted}>
-            {[p.age_advisory, p.running_time_minutes && `${p.running_time_minutes} мин.`].filter(Boolean).join(' · ')}
-          </Text>
-          {p.rating_average !== null && (
-            <Text variant="titleMedium">
-              {formatStars(p.rating_average)} <Text style={styles.muted}>({p.ratings_count})</Text>
-            </Text>
-          )}
+            </Pressable>
+          </Link>
+        )}
+        {guest && <Text variant="caption">{guest}</Text>}
+
+        {p.rating_average !== null && (
+          <View className="flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+            <Text className="font-display text-[32px] leading-10 text-gold">{p.rating_average.toFixed(1).replace('.', ',')}</Text>
+            <View className="gap-0.5">
+              <Stars halfStars={Math.round(p.rating_average * 2)} size={14} />
+              <Text variant="caption">{ratingsLabel(p.ratings_count)}</Text>
+            </View>
+          </View>
+        )}
+
+        <View className="flex-row gap-3">
+          <Button className="flex-1" icon={Check} onPress={() => (user ? setLogging(true) : needAccount())}>
+            {me?.seen_on.length ? 'Гледах пак' : 'Видях'}
+          </Button>
+          <Button
+            className="flex-1"
+            variant="secondary"
+            icon={Bookmark}
+            iconFilled={me?.on_watchlist}
+            iconColor={me?.on_watchlist ? colors.gold : undefined}
+            loading={watchlist.isPending}
+            onPress={() => (user ? watchlist.mutate(!me?.on_watchlist) : needAccount())}
+          >
+            {me?.on_watchlist ? 'В списъка' : 'Искам да гледам'}
+          </Button>
         </View>
-      </View>
 
-      <View style={styles.actions}>
-        <Button mode="contained" icon="check" onPress={() => (user ? setLogging(true) : needAccount())}>
-          {me?.seen_on.length ? 'Гледах пак' : 'Видях'}
-        </Button>
-        <Button
-          mode={me?.on_watchlist ? 'contained-tonal' : 'outlined'}
-          icon={me?.on_watchlist ? 'bookmark' : 'bookmark-outline'}
-          loading={watchlist.isPending}
-          onPress={() => (user ? watchlist.mutate(!me?.on_watchlist) : needAccount())}
-        >
-          {me?.on_watchlist ? 'В списъка' : 'Искам да гледам'}
-        </Button>
-      </View>
+        {me && (me.half_stars || me.seen_on.length > 0) ? (
+          <View className="flex-row items-center gap-2">
+            <Text variant="caption">Вие:</Text>
+            <Stars halfStars={me.half_stars} size={13} />
+            {me.seen_on.length > 0 && (
+              <Text variant="caption">гледано {me.seen_on.map((d) => d.split('-').reverse().join('.')).join(', ')}</Text>
+            )}
+          </View>
+        ) : null}
 
-      {me && (me.half_stars || me.seen_on.length > 0) && (
-        <View style={styles.mine}>
-          <Stars halfStars={me.half_stars} size={18} />
-          {me.seen_on.length > 0 && (
-            <Text variant="bodySmall" style={styles.muted}>
-              Гледано: {me.seen_on.map((d) => d.split('-').reverse().join('.')).join(', ')}
+        {p.synopsis && (
+          <Pressable onPress={() => setMoreSynopsis(!moreSynopsis)}>
+            <Text className="text-[15px] leading-[23px] text-foreground/85" numberOfLines={moreSynopsis ? undefined : 5}>
+              {p.synopsis}
             </Text>
-          )}
-        </View>
-      )}
-
-      {p.synopsis && <Text style={styles.block}>{p.synopsis}</Text>}
+            {!moreSynopsis && p.synopsis.length > 280 && (
+              <Text variant="small" className="mt-1 font-body-semibold text-muted">
+                Още
+              </Text>
+            )}
+          </Pressable>
+        )}
+      </View>
 
       <LogSheet productionId={p.id} title={p.title} me={me} visible={logging} onDismiss={() => setLogging(false)} />
 
       {p.upcoming_performances.length > 0 && (
-        <List.Section title="Предстоящи представления">
-          {p.upcoming_performances.map((perf) => (
-            <List.Item
-              key={perf.id}
-              title={`${formatDay(perf.starts_at)}, ${formatTime(perf.starts_at)}`}
-              description={[perf.stage, formatPrice(perf.price_from, perf.price_to)].filter(Boolean).join(' · ')}
-              right={() => {
-                const url = perf.ticket_url ?? p.box_office_url;
-                return url ? (
-                  <Button compact onPress={() => WebBrowser.openBrowserAsync(url)}>
-                    Билети
-                  </Button>
-                ) : null;
-              }}
-            />
-          ))}
-        </List.Section>
+        <Section title="Предстоящи представления">
+          <View className="mx-4 overflow-hidden rounded-2xl border border-border bg-card">
+            {p.upcoming_performances.map((perf, i) => (
+              <View key={perf.id}>
+                {i > 0 && <Separator />}
+                <PerformanceRow perf={perf} fallbackUrl={p.box_office_url} />
+              </View>
+            ))}
+          </View>
+        </Section>
       )}
 
-      <Divider />
-      <CreditList title="Режисьор" credits={directors} />
       <CreditList title="Актьори" credits={cast} showCharacter />
-      <CreditList title="Екип" credits={crew} showRole />
+      <CreditList title="Екип" credits={[...directors, ...crew]} showRole />
 
-      <Divider />
-      <List.Section title={`Ревюта${reviews.data?.meta.total ? ` (${reviews.data.meta.total})` : ''}`}>
+      <Section title={`Ревюта${reviews.data?.meta.total ? ` · ${reviews.data.meta.total}` : ''}`}>
         {reviews.data?.data.length ? (
-          reviews.data.data.map((r) => <ReviewCard key={r.id} review={r} />)
+          reviews.data.data.map((r, i) => (
+            <View key={r.id}>
+              {i > 0 && <Separator className="ml-16" />}
+              <ReviewCard review={r} />
+            </View>
+          ))
         ) : (
-          <Text style={[styles.block, styles.muted]}>Все още няма ревюта. Бъдете първи!</Text>
+          <Text variant="muted" className="px-4">
+            Все още няма ревюта. Бъдете първи!
+          </Text>
         )}
-      </List.Section>
+      </Section>
     </ScrollView>
   );
 }
 
-function CreditList({
-  title,
-  credits,
-  showCharacter,
-  showRole,
-}: {
-  title: string;
-  credits: { person: { id: number; name: string }; role_label: string; character_name: string | null }[];
-  showCharacter?: boolean;
-  showRole?: boolean;
-}) {
-  if (credits.length === 0) return null;
+function PerformanceRow({ perf, fallbackUrl }: { perf: Performance; fallbackUrl: string | null }) {
+  const url = perf.ticket_url ?? fallbackUrl;
+  const date = new Date(perf.starts_at);
+  const day = new Intl.DateTimeFormat('bg-BG', { day: 'numeric', timeZone: 'Europe/Sofia' }).format(date);
+  const month = new Intl.DateTimeFormat('bg-BG', { month: 'short', timeZone: 'Europe/Sofia' }).format(date).replace('.', '');
+  const weekday = new Intl.DateTimeFormat('bg-BG', { weekday: 'long', timeZone: 'Europe/Sofia' }).format(date);
+  const price = formatPrice(perf.price_from, perf.price_to);
 
   return (
-    <List.Section title={title}>
-      {credits.map((c, i) => (
-        <Link key={`${c.person.id}-${i}`} href={{ pathname: '/person/[id]', params: { id: c.person.id } }} asChild>
-          <List.Item
-            title={c.person.name}
-            description={showCharacter ? c.character_name : showRole ? c.role_label : undefined}
-          />
-        </Link>
-      ))}
-    </List.Section>
+    <View className="flex-row items-center gap-3 px-4 py-3">
+      <View className="w-11 items-center">
+        <Text className="font-display text-[22px] leading-7">{day}</Text>
+        <Text variant="caption" className="uppercase">
+          {month}
+        </Text>
+      </View>
+      <View className="flex-1">
+        <Text className="font-body-semibold capitalize">
+          {weekday}, {formatTime(perf.starts_at)}
+        </Text>
+        <Text variant="caption" numberOfLines={1}>
+          {[perf.stage, price].filter(Boolean).join(' · ') || ' '}
+        </Text>
+      </View>
+      {url && (
+        <Button size="sm" variant="outline" icon={Ticket} onPress={() => WebBrowser.openBrowserAsync(url)}>
+          Билети
+        </Button>
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingBottom: 32 },
-  header: { flexDirection: 'row', gap: 16, padding: 16 },
-  poster: { width: 110, height: 165, borderRadius: 8, backgroundColor: '#ddd' },
-  headerText: { flex: 1, gap: 4 },
-  block: { paddingHorizontal: 16, paddingBottom: 8, lineHeight: 22 },
-  link: { textDecorationLine: 'underline' },
-  actions: { flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingBottom: 8, flexWrap: 'wrap' },
-  mine: { paddingHorizontal: 16, paddingBottom: 12, gap: 4 },
-  muted: { opacity: 0.6 },
-});
+function CreditList({ title, credits, showCharacter, showRole }: { title: string; credits: Credit[]; showCharacter?: boolean; showRole?: boolean }) {
+  if (credits.length === 0) return null;
+
+  return (
+    <Section title={title}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-4 px-4">
+        {credits.map((c, i) => (
+          <Link key={`${c.person.id}-${i}`} href={{ pathname: '/person/[id]', params: { id: c.person.id } }} asChild>
+            <Pressable className="w-[84px] items-center gap-1.5 active:opacity-75">
+              <Avatar name={c.person.name} size={64} />
+              <Text variant="small" className="text-center font-body-medium leading-[17px]" numberOfLines={2}>
+                {c.person.name}
+              </Text>
+              {(showCharacter ? c.character_name : showRole ? c.role_label : null) && (
+                <Text variant="caption" className="text-center" numberOfLines={2}>
+                  {showCharacter ? c.character_name : c.role_label}
+                </Text>
+              )}
+            </Pressable>
+          </Link>
+        ))}
+      </ScrollView>
+    </Section>
+  );
+}
+
+function ratingsLabel(n: number): string {
+  return n === 1 ? '1 оценка' : `${n} оценки`;
+}

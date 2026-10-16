@@ -1,25 +1,29 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import type { ComponentProps } from 'react';
-import type { ColorValue } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { BookOpen, Drama, Search, User, Users, type LucideIcon } from 'lucide-react-native';
 
-type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
+import { colors } from '@/src/ui';
 
 const icon =
-  (name: IconName) =>
-  ({ color, size }: { color: ColorValue; size: number }) => <MaterialCommunityIcons name={name} color={color} size={size} />;
+  (Icon: LucideIcon) =>
+  ({ color, focused }: { color: string; focused: boolean }) => <Icon size={22} color={color} strokeWidth={focused ? 2.25 : 1.75} />;
 
 export default function TabsLayout() {
-  const theme = useTheme();
-
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: theme.colors.primary }}>
-      <Tabs.Screen name="index" options={{ title: 'Програма', tabBarIcon: icon('drama-masks') }} />
-      <Tabs.Screen name="search" options={{ title: 'Търсене', tabBarIcon: icon('magnify') }} />
-      <Tabs.Screen name="feed" options={{ title: 'Лента', tabBarIcon: icon('account-group-outline') }} />
-      <Tabs.Screen name="diary" options={{ title: 'Дневник', tabBarIcon: icon('notebook-outline') }} />
-      <Tabs.Screen name="profile" options={{ title: 'Профил', tabBarIcon: icon('account-circle-outline') }} />
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.foreground,
+        tabBarInactiveTintColor: colors.faint,
+        tabBarLabelStyle: { fontFamily: 'Inter_500Medium', fontSize: 11 },
+        tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
+        sceneStyle: { backgroundColor: colors.background },
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: 'Програма', tabBarIcon: icon(Drama) }} />
+      <Tabs.Screen name="search" options={{ title: 'Търсене', tabBarIcon: icon(Search) }} />
+      <Tabs.Screen name="feed" options={{ title: 'Лента', tabBarIcon: icon(Users) }} />
+      <Tabs.Screen name="diary" options={{ title: 'Дневник', tabBarIcon: icon(BookOpen) }} />
+      <Tabs.Screen name="profile" options={{ title: 'Профил', tabBarIcon: icon(User) }} />
     </Tabs>
   );
 }

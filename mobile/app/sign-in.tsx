@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
+import { Drama } from 'lucide-react-native';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
-import { Button, HelperText, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
 import { fieldErrors, useAuth } from '@/src/auth';
+import { Button, colors, Field, Segmented, Text } from '@/src/ui';
 
 /** Sign in or create an account. Apple and Google sign-in come next (STATUS). */
 export default function SignInScreen() {
@@ -39,16 +40,22 @@ export default function SignInScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text variant="bodyLarge" style={styles.lead}>
-          Влезте, за да оценявате, пишете ревюта и водите дневник на гледаното.
-        </Text>
+    <KeyboardAvoidingView className="flex-1 bg-background" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView contentContainerClassName="gap-5 px-6 pb-10 pt-4" keyboardShouldPersistTaps="handled">
+        <View className="items-center gap-3 pb-2">
+          <View className="h-16 w-16 items-center justify-center rounded-full bg-card">
+            <Drama size={30} color={colors.primary} />
+          </View>
+          <Text variant="display">Teatar</Text>
+          <Text variant="muted" className="text-center">
+            Оценявайте постановки, пишете ревюта и водете дневник на гледаното.
+          </Text>
+        </View>
 
-        <SegmentedButtons
+        <Segmented
           value={mode}
-          onValueChange={(v) => setMode(v as 'in' | 'up')}
-          buttons={[
+          onChange={setMode}
+          options={[
             { value: 'in', label: 'Вход' },
             { value: 'up', label: 'Регистрация' },
           ]}
@@ -56,61 +63,48 @@ export default function SignInScreen() {
 
         {mode === 'up' && (
           <>
-            <TextInput mode="outlined" label="Име" value={name} onChangeText={setName} autoComplete="name" style={styles.field} />
-            <HelperText type="error" visible={!!errors.name}>
-              {errors.name}
-            </HelperText>
-            <TextInput
-              mode="outlined"
+            <Field label="Име" value={name} onChangeText={setName} autoComplete="name" error={errors.name} />
+            <Field
               label="Потребителско име"
               value={username}
               onChangeText={setUsername}
               autoCapitalize="none"
               autoCorrect={false}
+              error={errors.username}
+              hint="Латински букви, цифри, точка и долна черта."
             />
-            <HelperText type={errors.username ? 'error' : 'info'} visible>
-              {errors.username ?? 'Латински букви, цифри, точка и долна черта.'}
-            </HelperText>
           </>
         )}
 
-        <TextInput
-          mode="outlined"
+        <Field
           label="Имейл"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
           autoComplete="email"
           keyboardType="email-address"
-          style={mode === 'in' ? styles.field : undefined}
+          error={errors.email}
         />
-        <HelperText type="error" visible={!!errors.email}>
-          {errors.email}
-        </HelperText>
-
-        <TextInput
-          mode="outlined"
+        <Field
           label="Парола"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoComplete={mode === 'in' ? 'current-password' : 'new-password'}
+          error={errors.password}
+          onSubmitEditing={submit}
         />
-        <HelperText type="error" visible={!!errors.password || failed}>
-          {errors.password ?? 'Нещо се обърка. Проверете връзката и опитайте пак.'}
-        </HelperText>
 
-        <Button mode="contained" onPress={submit} loading={busy} disabled={busy}>
+        {failed && (
+          <Text variant="caption" className="text-destructive">
+            Нещо се обърка. Проверете връзката и опитайте пак.
+          </Text>
+        )}
+
+        <Button onPress={submit} loading={busy} className="mt-1">
           {mode === 'in' ? 'Вход' : 'Създай профил'}
         </Button>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  content: { padding: 20, gap: 4 },
-  lead: { marginBottom: 16 },
-  field: { marginTop: 16 },
-});

@@ -12,9 +12,9 @@ type NotificationResponse = import('expo-notifications').NotificationResponse;
  * Expo Go can't do push, and on Android just importing expo-notifications
  * there throws ("Cannot find native module ExpoTopicSubscriptionModule"),
  * which took every screen down. So the module is only loaded, lazily, in a
- * development or store build.
+ * development or store build (never on web).
  */
-const pushAvailable = Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
+const pushAvailable = Platform.OS !== 'web' && Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
 
 let loaded: Promise<NotificationsModule | null> | null = null;
 

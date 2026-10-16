@@ -1,14 +1,15 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, List, Text } from 'react-native-paper';
+import { Landmark, MapPin, Ticket } from 'lucide-react-native';
+import { ScrollView, View } from 'react-native';
 
 import { useTheatre } from '@/src/api/hooks';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { ShareButton } from '@/src/components/ShareButton';
 import { ErrorState, Loading } from '@/src/components/States';
 import { links } from '@/src/links';
+import { Button, colors, Section, Text } from '@/src/ui';
 
 export default function TheatreScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,36 +26,37 @@ export default function TheatreScreen() {
         : null;
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      <Stack.Screen options={{ title: t.name, headerRight: () => <ShareButton text={t.name} url={links.theatre(t.id)} /> }} />
-      <View style={styles.header}>
-        <Text variant="headlineSmall">{t.name}</Text>
-        {t.address && <Text style={styles.muted}>{t.address}</Text>}
-        <View style={styles.actions}>
-          {mapUrl && (
-            <Button mode="outlined" icon="map-marker" onPress={() => Linking.openURL(mapUrl)}>
-              Карта
+    <ScrollView className="flex-1 bg-background" contentContainerClassName="pb-12">
+      <Stack.Screen options={{ title: '', headerRight: () => <ShareButton text={t.name} url={links.theatre(t.id)} /> }} />
+      <View className="gap-3 px-4 pb-2 pt-2">
+        <View className="h-14 w-14 items-center justify-center rounded-2xl bg-card">
+          <Landmark size={26} color={colors.primary} />
+        </View>
+        <Text variant="title">{t.name}</Text>
+        {(t.address || t.city) && (
+          <View className="flex-row items-center gap-1.5">
+            <MapPin size={14} color={colors.muted} />
+            <Text variant="muted">{[t.address, t.city].filter(Boolean).join(', ')}</Text>
+          </View>
+        )}
+        <View className="mt-1 flex-row gap-3">
+          {t.box_office_url && (
+            <Button className="flex-1" icon={Ticket} onPress={() => WebBrowser.openBrowserAsync(t.box_office_url!)}>
+              Билети
             </Button>
           )}
-          {t.box_office_url && (
-            <Button mode="contained" icon="ticket" onPress={() => WebBrowser.openBrowserAsync(t.box_office_url!)}>
-              Билети
+          {mapUrl && (
+            <Button className="flex-1" variant="secondary" icon={MapPin} onPress={() => Linking.openURL(mapUrl)}>
+              Карта
             </Button>
           )}
         </View>
       </View>
-      <List.Section title="На репертоар">
+      <Section title={`На репертоар${t.productions?.length ? ` · ${t.productions.length}` : ''}`}>
         {(t.productions ?? []).map((p) => (
           <ProductionRow key={p.id} production={p} />
         ))}
-      </List.Section>
+      </Section>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  content: { paddingBottom: 32 },
-  header: { padding: 16, gap: 6 },
-  actions: { flexDirection: 'row', gap: 8, marginTop: 8 },
-  muted: { opacity: 0.6 },
-});

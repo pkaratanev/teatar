@@ -1,0 +1,72 @@
+name: Screenshots
+
+# Builds the app for the web, runs it against a local API with demo data and saves a phone-sized
+# screenshot of each screen to the `screenshots` branch (git fetch origin screenshots).
+on:
+  push:
+    branches: [main]
+    paths: ["mobile/**", "backend/**", ".github/workflows/screens.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: screenshots
+  cancel-in-progress: true
+
+jobs:
+  screens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite, intl, exif, gd
+          coverage: none
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: API with demo data (SQLite)
+        working-directory: backend
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress
+          grep -v '^DB_' .env.example > .env && echo 'DB_CONNECTION=sqlite' >> .env
+          touch database/database.sqlite
+          php artisan key:generate
+          php artisan migrate --force
+          php artisan teatar:demo --no-interaction 2>&1 | tail -25
+          php artisan storage:link --force
+          nohup php artisan serve --host=127.0.0.1 --port=8000 > ../api.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/api/v1/theatres > /dev/null && break; sleep 1; done
+
+      - name: Web build
+        working-directory: mobile
+        env:
+          EXPO_PUBLIC_API_URL: http://localhost:8000/api/v1
+          CI: "1"
+        run: |
+          npm install --no-audit --no-fund > npm.log 2>&1 || { grep -E "npm (error|ERR)" npm.log | head -40; exit 1; }
+          npx expo export --platform web --output-dir web-dist 2>&1 | tail -30
+          nohup npx --yes serve@14 -s web-dist -l 8081 > ../web.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:8081 > /dev/null && break; sleep 1; done
+
+      - name: Screenshots
+        working-directory: mobile
+        run: |
+          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y > /dev/null && npm install --no-audit --no-fund playwright@1 > /dev/null
+          npx playwright install --with-deps chromium > /dev/null
+          cp $GITHUB_WORKSPACE/mobile/e2e/screenshots.mjs . && OUT=$GITHUB_WORKSPACE/shots node screenshots.mjs || true
+
+      - name: Publish to the screenshots branch
+        if: always()
+        run: |
+          mkdir -p shots
+          cp api.log web.log shots/ 2>/dev/null || true
+          cd shots
+          git init -q -b screenshots
+          git config user.name ci && git config user.email ci@example.com
+          git add -A && git commit -qm "Screenshots of ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" screenshots

@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP built, waiting for Preslav's first test run · **Then:** fixes → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP works on Preslav's phone; restyling the app (NativeWind) · **Then:** fixes → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -46,9 +46,14 @@ development build, and the "nightly sync for a week" goal needs a machine runnin
 CI covers the backend (tests on Postgres), the admin pages, and the app (typecheck + a full Metro
 bundle), but nobody has run the app on a phone yet.
 
-**Claude, while waiting:** profile editing and deep links are done (they're in the first test too).
-Nothing else is queued that doesn't need a decision from Preslav; Claude waits for test findings rather
-than adding features.
+**Restyle (in progress):** first test: everything works, the look doesn't. Moving the app from React Native
+Paper to NativeWind (Tailwind) with our own Reusables-style components in `mobile/src/ui/` — dark theme,
+curtain red + gold stars, Playfair Display headings, Inter text, lucide icons. Each push to `main` runs
+`.github/workflows/screens.yml`: web build + API with demo data + Playwright → phone-sized screenshots on
+the `screenshots` branch (`git fetch origin screenshots`), so Claude can see every screen.
+- [ ] Every screen moved off Paper; CI green
+- [ ] Screenshot pass: fix what looks wrong
+- [ ] Preslav checks the look on his phone (`git pull`, `npm.cmd install`, `npx.cmd expo start --clear`)
 
 **How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):
 `irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
@@ -72,6 +77,7 @@ Apple/Google sign-in (need the store accounts).
 First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] Windows script stopped at `npm` (execution policy blocks `npm.ps1`) — fixed, uses `npm.cmd` / `npx.cmd`
 - [x] App crashed on start in Expo Go on Android: importing `expo-notifications` throws there, which broke every screen — fixed, notifications load only in dev/store builds
+- [x] After the fix: the app works; the styling is the problem (generic Material look) — restyle under "Now"
 
 ## Next up
 
@@ -219,6 +225,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Restyle started: React Native Paper → NativeWind 4 + own components (`src/ui`), dark theme, new fonts and icons; web build + CI screenshot workflow so Claude can see the screens.
 - **2026-10-16** — First phone run: the app crashed at start in Expo Go on Android (expo-notifications import). Push code now loads lazily and only outside Expo Go.
 - **2026-10-16** — First real run of the Windows script: backend set up fine; it stopped at `npm` because Windows blocks `npm.ps1` by default. Now calls `npm.cmd` / `npx.cmd`.
 - **2026-10-16** — `scripts/windows.ps1`: one-line setup and start on Windows (installs Git/Node/Herd, SQLite backend, demo data, API + Expo). CI parses it.

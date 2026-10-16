@@ -1,11 +1,13 @@
 import { Link, router } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Button, IconButton, Menu, Snackbar, Text } from 'react-native-paper';
+import { EyeOff, Flag, Heart, MoreHorizontal } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 import { useLike, useReport } from '@/src/api/hooks';
 import type { ReportReason, Review } from '@/src/api/types';
 import { useAuth } from '@/src/auth';
+import { Avatar, colors, ListItem, Sheet, Text } from '@/src/ui';
+import { Poster } from './Poster';
 import { Stars } from './Stars';
 
 const REASONS: { value: ReportReason; label: string }[] = [
@@ -35,84 +37,105 @@ export function ReviewCard({
   const [menu, setMenu] = useState(false);
   const [thanks, setThanks] = useState(false);
 
+  useEffect(() => {
+    if (!thanks) return;
+    const t = setTimeout(() => setThanks(false), 3000);
+    return () => clearTimeout(t);
+  }, [thanks]);
+
+  const author = review.user;
+  const production = showProduction ? review.production : null;
+
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={styles.headerText}>
-          {showProduction && review.production ? (
-            <Link href={{ pathname: '/production/[id]', params: { id: review.production.id } }}>
-              <Text variant="labelLarge">{review.production.title}</Text>
-            </Link>
-          ) : review.user ? (
-            <Link href={{ pathname: '/user/[username]', params: { username: review.user.username } }}>
-              <Text variant="labelLarge">{review.user.name}</Text>
-            </Link>
-          ) : null}
-          {showProduction && showAuthor && review.user && (
-            <Link href={{ pathname: '/user/[username]', params: { username: review.user.username } }}>
-              <Text variant="bodySmall" style={styles.muted}>
-                {review.user.name}
-              </Text>
-            </Link>
+    <View className="flex-row gap-3 px-4 py-4">
+      {production ? (
+        <Link href={{ pathname: '/production/[id]', params: { id: production.id } }} asChild>
+          <Pressable>
+            <Poster uri={production.poster_url} width={44} radius={4} />
+          </Pressable>
+        </Link>
+      ) : author ? (
+        <Link href={{ pathname: '/user/[username]', params: { username: author.username } }} asChild>
+          <Pressable>
+            <Avatar name={author.name} size={36} />
+          </Pressable>
+        </Link>
+      ) : null}
+
+      <View className="flex-1 gap-1.5">
+        <View className="flex-row items-start gap-2">
+          <View className="flex-1 gap-0.5">
+            {production ? (
+              <Link href={{ pathname: '/production/[id]', params: { id: production.id } }}>
+                <Text className="font-body-semibold">{production.title}</Text>
+              </Link>
+            ) : author ? (
+              <Link href={{ pathname: '/user/[username]', params: { username: author.username } }}>
+                <Text className="font-body-semibold">{author.name}</Text>
+              </Link>
+            ) : null}
+            <View className="flex-row items-center gap-2">
+              <Stars halfStars={review.half_stars ?? null} size={13} />
+              {production && showAuthor && author && (
+                <Link href={{ pathname: '/user/[username]', params: { username: author.username } }}>
+                  <Text variant="caption">от {author.name}</Text>
+                </Link>
+              )}
+            </View>
+          </View>
+          {user && !review.is_mine && (
+            <Pressable hitSlop={10} onPress={() => setMenu(true)} accessibilityLabel="Още" className="pt-0.5">
+              <MoreHorizontal size={18} color={colors.faint} />
+            </Pressable>
           )}
-          <Stars halfStars={review.half_stars ?? null} size={14} />
         </View>
-        {user && !review.is_mine && (
-          <Menu visible={menu} onDismiss={() => setMenu(false)} anchor={<IconButton icon="dots-vertical" size={18} onPress={() => setMenu(true)} />}>
-            {REASONS.map((r) => (
-              <Menu.Item
-                key={r.value}
-                title={`Докладвай: ${r.label}`}
-                onPress={() => {
-                  setMenu(false);
-                  report.mutate({ reviewId: review.id, reason: r.value }, { onSuccess: () => setThanks(true) });
-                }}
-              />
-            ))}
-          </Menu>
+
+        {revealed ? (
+          <Text className="text-[15px] leading-[22px] text-foreground/90">{review.body}</Text>
+        ) : (
+          <Pressable
+            onPress={() => setRevealed(true)}
+            role="button"
+            className="flex-row items-center gap-2 self-start rounded-lg bg-elevated px-3 py-2"
+          >
+            <EyeOff size={14} color={colors.muted} />
+            <Text variant="muted">Съдържа спойлери. Докоснете, за да прочетете.</Text>
+          </Pressable>
         )}
-      </View>
 
-      {revealed ? (
-        <Text variant="bodyMedium">{review.body}</Text>
-      ) : (
-        <Pressable onPress={() => setRevealed(true)} accessibilityRole="button">
-          <Text variant="bodyMedium" style={styles.spoiler}>
-            Съдържа спойлери. Докоснете, за да прочетете.
-          </Text>
-        </Pressable>
-      )}
-
-      {!review.is_mine && (
-        <View style={styles.likeRow}>
-          <Button
-            compact
-            icon={liked ? 'heart' : 'heart-outline'}
+        <View className="flex-row items-center gap-4 pt-0.5">
+          <Pressable
+            hitSlop={8}
+            className="flex-row items-center gap-1.5"
+            disabled={review.is_mine}
             onPress={() => (user ? like.mutate(!liked) : router.push('/sign-in'))}
             accessibilityLabel={liked ? 'Махни харесването' : 'Харесай'}
           >
-            {likes > 0 ? String(likes) : 'Харесай'}
-          </Button>
+            <Heart size={15} color={liked ? colors.primary : colors.faint} fill={liked ? colors.primary : 'transparent'} />
+            <Text variant="caption" className={liked ? 'text-primary' : undefined}>
+              {likes > 0 ? String(likes) : review.is_mine ? '' : 'Харесай'}
+            </Text>
+          </Pressable>
+          {thanks && <Text variant="caption">Благодарим! Ще прегледаме ревюто.</Text>}
         </View>
-      )}
-      {review.is_mine && likes > 0 && (
-        <Text variant="bodySmall" style={styles.muted}>
-          ♥ {likes}
-        </Text>
-      )}
+      </View>
 
-      <Snackbar visible={thanks} onDismiss={() => setThanks(false)} duration={3000}>
-        Благодарим! Ще прегледаме ревюто.
-      </Snackbar>
+      <Sheet visible={menu} onClose={() => setMenu(false)} title="Докладвай ревюто">
+        <View className="-mx-5 pb-2">
+          {REASONS.map((r) => (
+            <ListItem
+              key={r.value}
+              icon={Flag}
+              title={r.label}
+              right={null}
+              onPress={() => {
+                setMenu(false);
+                report.mutate({ reviewId: review.id, reason: r.value }, { onSuccess: () => setThanks(true) });
+              }}
+            />
+          ))}
+        </View>
+      </Sheet>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: { paddingHorizontal: 16, paddingVertical: 12, gap: 6 },
-  header: { flexDirection: 'row', alignItems: 'center' },
-  headerText: { flex: 1, gap: 2 },
-  spoiler: { fontStyle: 'italic', opacity: 0.6 },
-  likeRow: { flexDirection: 'row', marginLeft: -8 },
-  muted: { opacity: 0.6 },
-});

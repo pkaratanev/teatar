@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
 const TOKEN_KEY = 'teatar.token';
@@ -12,10 +13,27 @@ export class ApiError extends Error {
   }
 }
 
+// SecureStore has no web version; the web build (used for screenshots in CI) keeps the token in localStorage.
+const web = Platform.OS === 'web';
+
+function local<T>(fn: (s: Storage) => T): T | null {
+  try {
+    return fn(globalThis.localStorage);
+  } catch {
+    return null;
+  }
+}
+
 export const tokenStore = {
-  get: () => SecureStore.getItemAsync(TOKEN_KEY),
-  set: (token: string) => SecureStore.setItemAsync(TOKEN_KEY, token),
-  clear: () => SecureStore.deleteItemAsync(TOKEN_KEY),
+  get: async () => (web ? local((s) => s.getItem(TOKEN_KEY)) : SecureStore.getItemAsync(TOKEN_KEY)),
+  set: async (token: string) => {
+    if (web) local((s) => s.setItem(TOKEN_KEY, token));
+    else await SecureStore.setItemAsync(TOKEN_KEY, token);
+  },
+  clear: async () => {
+    if (web) local((s) => s.removeItem(TOKEN_KEY));
+    else await SecureStore.deleteItemAsync(TOKEN_KEY);
+  },
 };
 
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {

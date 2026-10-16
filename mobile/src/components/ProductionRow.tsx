@@ -1,51 +1,55 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import type { ReactNode } from 'react';
+import { Pressable, View } from 'react-native';
 
 import type { ProductionSummary } from '@/src/api/types';
-import { formatStars, guestLabel } from '@/src/format';
+import { guestLabel } from '@/src/format';
+import { Text } from '@/src/ui';
+import { Poster } from './Poster';
+import { RatingBadge } from './Stars';
 
 type Props = {
   production: ProductionSummary;
-  /** Extra line under the title, e.g. "19:00 · Голяма сцена". */
+  /** Line above the title, e.g. "19:00 · Голяма сцена". */
   detail?: string;
+  /** Extra content under the text, e.g. the user's own stars. */
+  children?: ReactNode;
 };
 
-export function ProductionRow({ production, detail }: Props) {
+export function ProductionRow({ production, detail, children }: Props) {
+  const guest = guestLabel(production);
+
   return (
     <Link href={{ pathname: '/production/[id]', params: { id: production.id } }} asChild>
-      <Pressable style={styles.row}>
-        <Image source={production.poster_url} style={styles.poster} contentFit="cover" />
-        <View style={styles.text}>
-          {detail && <Text variant="labelLarge">{detail}</Text>}
-          <Text variant="titleMedium" numberOfLines={2}>
+      <Pressable className="flex-row gap-3.5 px-4 py-2.5 active:bg-card">
+        <Poster uri={production.poster_url} width={60} radius={6} />
+        <View className="flex-1 justify-center gap-0.5">
+          {detail && (
+            <Text variant="small" className="font-body-semibold text-primary">
+              {detail}
+            </Text>
+          )}
+          <Text className="font-body-semibold text-[16px] leading-[21px]" numberOfLines={2}>
             {production.title}
           </Text>
           {production.theatre && (
-            <Text variant="bodyMedium" style={styles.muted} numberOfLines={1}>
+            <Text variant="muted" numberOfLines={1}>
               {production.theatre.name}
             </Text>
           )}
-          {guestLabel(production) && (
-            <Text variant="bodySmall" style={styles.muted} numberOfLines={1}>
-              {guestLabel(production)}
+          {guest && (
+            <Text variant="caption" numberOfLines={1}>
+              {guest}
             </Text>
           )}
           {production.rating_average !== null && (
-            <Text variant="bodySmall">
-              {formatStars(production.rating_average)} · {production.ratings_count}
-            </Text>
+            <View className="mt-0.5">
+              <RatingBadge average={production.rating_average} count={production.ratings_count} />
+            </View>
           )}
+          {children}
         </View>
       </Pressable>
     </Link>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 10, gap: 12 },
-  poster: { width: 56, height: 84, borderRadius: 6, backgroundColor: '#ddd' },
-  text: { flex: 1, justifyContent: 'center', gap: 2 },
-  muted: { opacity: 0.7 },
-});
