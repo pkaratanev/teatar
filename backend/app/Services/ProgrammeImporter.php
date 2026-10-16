@@ -12,8 +12,11 @@ use App\Models\Production;
 use App\Models\Stage;
 use App\Models\Theatre;
 use App\Support\Cyrillic;
+use App\Support\TheatreHttp;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Turns an adapter's raw performances into catalogue rows. Idempotent:
@@ -21,15 +24,20 @@ use Illuminate\Support\Str;
  */
 class ProgrammeImporter
 {
+    /** Posters bigger than this are skipped; theatre sites sometimes link print-size files. */
+    public const MAX_POSTER_BYTES = 8 * 1024 * 1024;
+
     /**
      * @param  iterable<ScrapedPerformance>  $scraped
-     * @return array{found: int, upserted: int, productions_created: int}
+     * @return array{found: int, upserted: int, productions_created: int, posters: int}
      */
     public function import(Theatre $theatre, iterable $scraped): array
     {
-        $stats = ['found' => 0, 'upserted' => 0, 'productions_created' => 0];
+        $stats = ['found' => 0, 'upserted' => 0, 'productions_created' => 0, 'posters' => 0];
+        /** @var array<int, array{Production, string}> $posters production id → [production, poster url] */
+        $posters = [];
 
-        DB::transaction(function () use ($theatre, $scraped, &$stats) {
+        DB::transaction(function () use ($theatre, $scraped, &$stats, &$posters) {
             foreach ($scraped as $item) {
                 $stats['found']++;
 
@@ -50,6 +58,11 @@ class ProgrammeImporter
 
                 if ($item->director !== null) {
                     $this->ensureDirector($production, $item->director);
+                }
+
+                // Only for productions without one, so an admin's upload is never replaced.
+                if ($item->posterUrl !== null && ! isset($posters[$production->id]) && ! $production->hasMedia('poster')) {
+                    $posters[$production->id] = [$production, $item->posterUrl];
                 }
 
                 $stage = $item->stage
@@ -75,7 +88,48 @@ class ProgrammeImporter
             }
         });
 
+        // Downloads happen after the transaction, so a slow image server doesn't hold the database.
+        foreach ($posters as [$production, $url]) {
+            $stats['posters'] += (int) $this->attachPoster($production, $url);
+        }
+
         return $stats;
+    }
+
+    /**
+     * The theatre's own poster, stored once with its source URL. A failed download is logged and
+     * skipped: a missing poster must never fail the programme import.
+     */
+    private function attachPoster(Production $production, string $url): bool
+    {
+        try {
+            $response = TheatreHttp::client()->accept('image/*')->get($url);
+            $type = (string) $response->header('Content-Type');
+            $body = $response->body();
+
+            if (! $response->successful() || ! str_starts_with($type, 'image/') || $body === '' || strlen($body) > self::MAX_POSTER_BYTES) {
+                Log::info("Poster skipped for production {$production->id}: {$url} (HTTP {$response->status()}, {$type}, ".strlen($body).' bytes)');
+
+                return false;
+            }
+
+            $extension = match (true) {
+                str_contains($type, 'png') => 'png',
+                str_contains($type, 'webp') => 'webp',
+                default => 'jpg',
+            };
+
+            $production->addMediaFromString($body)
+                ->usingFileName("{$production->slug}.{$extension}")
+                ->withCustomProperties(['source_url' => $url])
+                ->toMediaCollection('poster');
+
+            return true;
+        } catch (Throwable $e) {
+            Log::warning("Poster failed for production {$production->id}: {$url}: {$e->getMessage()}");
+
+            return false;
+        }
     }
 
     /**

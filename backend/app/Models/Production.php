@@ -51,7 +51,19 @@ class Production extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('card')->width(400)->height(600);
+        // Made right away: local setups run no queue worker, and a queued conversion would never appear.
+        $this->addMediaConversion('card')->width(400)->height(600)->nonQueued();
+    }
+
+    /** The card-sized poster, or the original while the resized copy doesn't exist. */
+    public function posterUrl(): ?string
+    {
+        $media = $this->getFirstMedia('poster');
+        if ($media === null) {
+            return null;
+        }
+
+        return $media->hasGeneratedConversion('card') ? $media->getUrl('card') : $media->getUrl();
     }
 
     /** @return BelongsTo<Theatre, $this> */

@@ -25,7 +25,8 @@ it('parses each performance of the month with stage, credits and a ticket link',
         ->and($first->author)->toBe('по романа на Борислав Вълов – Ей Бо')
         ->and($first->director)->toBe('Стоян Радев Ге. К.')
         ->and($first->sourceUrl)->toBe('https://dramavarna.com/index.php/bg/program-and-tickets?event=953')
-        ->and($first->ticketUrl)->toStartWith('https://fccvarna.bg/');
+        ->and($first->ticketUrl)->toStartWith('https://fccvarna.bg/')
+        ->and($first->posterUrl)->toBe('https://dramavarna.com/images/operaevents/953_509_zashtoto_v_tvoite_ochi_poster.jpg');
 
     // Three Пепеляшка shows on one day, each with its own time.
     expect($rows->where('title', 'ИСТОРИЯТА НА ПЕПЕЛЯШКА')->map(fn ($r) => $r->startsAt->format('d H:i'))->values()->all())

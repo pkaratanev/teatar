@@ -205,7 +205,8 @@ Findings that shape the code:
 ## Later (parked)
 
 - [ ] Cast, director and poster from each theatre's production pages (Сатира's `__NEXT_DATA__` has a full credits block with roles; Народен, МГТ, Театър „София“, Théatro, Възраждане, Сълза и смях, 199 have production pages). Directors already come from Théatro and Възраждане listings; admins can fill the rest in Filament
-- [ ] Posters: a rights question too (they belong to the theatres) — decide whether to link, ask for press kits, or use placeholders
+- [x] Posters, decided 2026-10-16 (Preslav): import the theatres' own posters now for testing; ask permission before launch (task under Store releases). Built for Народен театър and Драматичен театър Варна, whose programme pages show them. Stored once per production with `source_url`; never replaces an admin upload; productions without one keep the typographic poster
+- [ ] Posters for the rest: Зад канала, Сатира, Театър „София“ and others show them only on production pages (one extra request per production); Вазраждане's are filled by JavaScript. Куклен театър Варна has them in its feed but its 300 s crawl delay rules out extra requests
 - [ ] Театър „София“ sold-out rows (no time in the listing)
 
 ## After the MVP (not before)
@@ -231,6 +232,7 @@ Findings that shape the code:
 - [ ] Final app name, icon, splash, bundle id (placeholder `bg.teatar.app`)
 - [ ] `eas.json` profiles (`development`, `preview`, `production`); EAS Build, Submit, Update
 - Budget to launch on both stores (checked 2026-10-16): Google Play 25 USD once + Apple 99 USD/year (local equivalent, about €99) ≈ 124 USD the first year, 99 USD/year after. Expo Free plan is enough (15 Android + 15 iOS cloud builds a month, 1,000 update users; slow queue) — Starter (19 USD/month) only if the queue gets annoying. No Mac needed: iOS builds run on EAS. Hosting (Laravel Cloud) is separate
+- [ ] Before the public launch: ask each theatre whose posters we import for permission (most want the promotion); remove any that say no
 - [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form
 - [ ] Sign in with Apple and Google: needs the Apple Developer account and a Google OAuth client, so it comes with the store accounts. Backend `auth/social` verifies the provider token with Socialite; app buttons via `expo-apple-authentication` and Google sign-in. Apple sign-in is required by the App Store once Google is offered
 - [ ] Store rules already covered by the MVP: in-app account deletion, reporting user content
@@ -249,6 +251,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Posters: the importer downloads the theatre's own poster when the programme shows one (Народен театър, Драматичен театър Варна), once per production; resized copy made right away (no queue worker locally). Permission from theatres is a pre-launch task.
 - **2026-10-16** — City switcher is now always shown (it hid itself when the city list failed to load, which looked like it was missing on Preslav's phone) and reloads the list when opened.
 - **2026-10-16** — Fix: `teatar:demo` crashed on a second run on SQLite (diary dates); `DiaryEntry::record()` used by the app and the seeder.
 - **2026-10-16** — Screenshot workflow no longer runs on every push (slow); run it by hand or locally (README → Screenshots).

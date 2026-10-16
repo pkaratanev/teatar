@@ -5,6 +5,7 @@ namespace App\Adapters;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
+use App\Support\AbsoluteUrl;
 use App\Support\BulgarianDate;
 use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
@@ -16,7 +17,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * {website}/index.php/bg/program-and-tickets?month=M&year=Y lists one month, "Представления във
  * Варна" by default (tours are a separate filter). Each day is <li id="li-YYYY-MM-DD"> with one
  * .event-block per performance: stage, "19:00 - 21:00", title link (?event=N), author line,
- * director, and ticket providers (ФКЦ, Eventim, Grabo).
+ * director, poster, and ticket providers (ФКЦ, Eventim, Grabo).
  */
 class DramaVarnaAdapter implements TheatreAdapter
 {
@@ -37,14 +38,14 @@ class DramaVarnaAdapter implements TheatreAdapter
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");
             }
 
-            yield from $this->parse($response->body(), $month->year, $month->month);
+            yield from $this->parse($response->body(), $month->year, $month->month, $base);
         }
     }
 
     /**
      * @return list<ScrapedPerformance>
      */
-    public function parse(string $html, ?int $year = null, ?int $month = null): array
+    public function parse(string $html, ?int $year = null, ?int $month = null, string $base = self::DEFAULT_BASE_URL): array
     {
         $crawler = new Crawler($html);
         $heading = $crawler->filter('#calendar .current-month');
@@ -83,6 +84,7 @@ class DramaVarnaAdapter implements TheatreAdapter
                     sourceUrl: (string) $link->attr('href') ?: null,
                     author: self::author($block),
                     director: self::director($block),
+                    posterUrl: AbsoluteUrl::from($block->filter('a.photo img')->count() ? $block->filter('a.photo img')->attr('src') : null, $base),
                 );
             }
         }
