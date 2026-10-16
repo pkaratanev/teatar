@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP walk-through done for everything built (12 of 26 MVP goals ticked) · **Next:** build the rest (descriptions first) · **Then:** final test → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP walk-through done for everything built (12 of 26 MVP goals ticked) · **Next:** build the rest (city from location first) · **Then:** final test → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -21,7 +21,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [x] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *checked by Preslav 2026-10-16, including after closing the app*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [x] Manual review in the admin, productions only for now — *checked 2026-10-16 by Claude in the admin while Preslav watched. Каталог → За преглед: importers flag productions they create ("Нова") or add data to ("Променена"); each row shows what's missing (Автор, Режисьор, Актьори, Плакат, Описание); "Попълни" opens the edit form; "Прегледано" (per row, in bulk, on the edit page) records who and when. Default filter: playing within 30 days; the menu badge counts those*
-- [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
+- [ ] Productions have a short description — *skipped for now (Preslav, 2026-10-16: "skip description for now"); not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
 - [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked by Preslav 2026-10-16 (chip names: see Test findings)*
 - [ ] On first start the app picks the nearest city from the phone's location (asks permission; София if refused or far from every city); the user can still switch — *not built: `expo-location` + a centre point per city (theatres have no coordinates yet), works in Expo Go*
 - [x] Production, person and theatre pages; "Билети" opens the theatre's own box office — *checked by Preslav 2026-10-16; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
@@ -59,7 +59,7 @@ pane while he watched ([testing.md](testing.md)). Left unticked until they can b
 development build), the week of nightly syncs (needs a machine running the scheduler), moved/cancelled shows
 (need a real change on a theatre's site), and the sign-off goals under Stable.
 
-**Next to build:** descriptions (Next up, 2). Then city from location, which needs one new npm package:
+**Next to build:** city from location (descriptions skipped for now, Preslav 2026-10-16). It needs one new npm package:
 before Claude starts it, Preslav runs `npx.cmd expo install expo-location` in `mobile/` and pushes, so the lock
 file comes from his machine.
 
@@ -99,7 +99,7 @@ Walk-through, 2026-10-16:
 Build order for the unbuilt MVP goals (Preslav can reorder). Items 2 and 3 need no new decisions:
 
 1. [x] **Manual review list** in the admin: built and checked 2026-10-16
-2. [ ] **Descriptions** (option c): read each theatre's own description where its programme or production page has one, store it as `synopsis` with its source URL, never over an admin's text; productions without one appear in the review list
+2. [ ] **Descriptions** — skipped for now (Preslav, 2026-10-16). When picked up (option c): read each theatre's own description where its programme or production page has one, store it as `synopsis` with its source URL, never over an admin's text; productions without one appear in the review list
 3. [ ] **City from location**: needs `expo-location` (Preslav runs `npx.cmd expo install expo-location` in `mobile/` and pushes the lock file) and a centre point per city (a `lat`/`lng` per city, or the average of its theatres once they have coordinates)
 4. [ ] **"Already seen" onboarding** once the fallback question is answered (MVP features from the research, 6)
 5. [ ] **Weekly push, yearly goal, "Отивам", tags** once their open questions are answered
@@ -333,6 +333,8 @@ A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — Decided (Preslav): skip descriptions for now; city from location is next.
 
 - **2026-10-16** — STATUS brought up to date after the walk-through: stage line, Now rewritten, milestone 8 for today's fixes; next is descriptions.
 
