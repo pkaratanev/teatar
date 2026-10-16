@@ -2,10 +2,9 @@ name: Screenshots
 
 # Builds the app for the web, runs it against a local API with demo data and saves a phone-sized
 # screenshot of each screen to the `screenshots` branch (git fetch origin screenshots).
+# Run by hand only (Actions → Screenshots → Run workflow), e.g. after a UI change. Locally:
+# see "Screenshots" in README.md.
 on:
-  push:
-    branches: [main]
-    paths: ["mobile/**", "backend/**", ".github/workflows/screens.yml"]
   workflow_dispatch:
 
 permissions:

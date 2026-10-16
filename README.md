@@ -50,6 +50,23 @@ npm install
 npx expo start                       # scan the QR code with Expo Go
 ```
 
+## Screenshots
+
+`mobile/e2e/screenshots.mjs` opens the web build in a phone-sized Chromium and saves a picture of every
+screen to `mobile/shots/`. Start the API with demo data first (`php artisan teatar:demo`, `php artisan serve`),
+then in `mobile/` (PowerShell):
+
+```
+npx.cmd expo export --platform web --output-dir web-dist
+npx.cmd --yes serve@14 -s web-dist -l 8081          # leave running; the rest in a second window
+npm.cmd install --no-save playwright@1
+npx.cmd playwright install chromium
+node e2e/screenshots.mjs
+```
+
+The same run is available on GitHub by hand: Actions → Screenshots → Run workflow (results on the
+`screenshots` branch).
+
 ## Programme data
 
 Programme data comes from public sources (see docs/plan.md). A theatre's `adapter` (set in

@@ -58,7 +58,7 @@ its robots.txt asks). `php artisan teatar:demo` pulls both. Search stays across 
 
 **Restyle — done.** React Native Paper → NativeWind (Tailwind) with our own Reusables-style components in
 `mobile/src/ui/`: dark theme, curtain red + gold stars, Playfair Display headings, Inter text, lucide icons,
-typographic posters when a production has no image. Each push to `main` runs `.github/workflows/screens.yml`:
+typographic posters when a production has no image. `.github/workflows/screens.yml` (run by hand since 2026-10-16; also runs locally, see README):
 web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch
 (`git fetch origin screenshots`), so Claude can check every screen after a UI change.
 - [x] Every screen moved off Paper; CI green
@@ -248,6 +248,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Screenshot workflow no longer runs on every push (slow); run it by hand or locally (README → Screenshots).
 - **2026-10-16** — Second city: Varna with 2 theatres (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър), `GET /cities`, city switcher in the Programme header. Both sites allow our bot; the puppet theatre's crawl delay means one request per run.
 - **2026-10-16** — Launch budget researched: about 124 USD the first year (Play 25 once, Apple 99/year), Expo Free plan is enough. Noted under Store releases.
 - **2026-10-16** — Lock files committed, copied from Preslav's working Windows install. They pin Symfony 8.1, which needs PHP 8.4, so CI, the Windows script and the README now require PHP 8.4.
