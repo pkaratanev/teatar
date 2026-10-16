@@ -65,11 +65,13 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 **Built 2026-10-16, to check:**
 - [x] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
 - [x] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
-- [x] Admin: "Обнови всички" (12 queued; a second click skips them all), "График" (time change shown under the title and in the notification), checked 2026-10-16
+- [x] Admin: "Обнови всички" (12 queued; a second click skips them all), "График" (time change shown under the title and in the notification), checked 2026-10-16; the 12 queued jobs ran fine with `php artisan queue:work` on Preslav's PC
 - [x] Restyle (NativeWind + own components, dark theme): checked, looks good
 
 **Not started, in the MVP:** manual review list, descriptions, city from location, Google sign-in (waiting on the
 key), and five of the six research features (onboarding, "Отивам", yearly goal, weekly push, tags). Order under Next up.
+
+**How to test a feature:** [testing.md](testing.md) (phone checks one at a time; the rest in the browser pane at http://localhost:8000/app).
 
 **Waiting on Preslav:** the walk-through; the Google OAuth key; the research features' open questions; the open
 decisions below (cast data, Сфумато, Нов театър НДК, box-office links, app name, store accounts).
@@ -327,6 +329,8 @@ A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — How we test written down in `docs/testing.md` (linked from CLAUDE.md and Now). Queued syncs ran fine with `queue:work` locally.
 
 - **2026-10-16** — Walk-through with Preslav: Sofia programme, guests, Varna, browse/search, pages and posters checked on his phone; accounts, rating/review/diary/watchlist, profile, social and moderation checked by Claude in the web build (served by the local API at `/app`) while he watched. Five small findings logged.
 

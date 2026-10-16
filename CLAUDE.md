@@ -8,6 +8,11 @@ Letterboxd-style app for Bulgarian theatre. Solo developer (Preslav), familiar w
 2. Before finishing, update `docs/STATUS.md` in the same commit as the work: tick items, move "Now",
    add new tasks you discovered, and add one line to the Log.
 
+## Testing a feature by hand
+
+Follow [docs/testing.md](docs/testing.md): phone checks one at a time with Preslav, everything else driven by
+Claude in the desktop app's browser pane against the web build at http://localhost:8000/app.
+
 ## Layout
 
 - `backend/` — Laravel 13: API `/api/v1` (Sanctum), Filament 5 admin `/admin`, adapters in `app/Adapters`.
