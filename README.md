@@ -20,7 +20,7 @@ irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1
 ```
 
 **By hand:**
-Needs PHP 8.3+, Composer, Node 22, and Docker (or Herd / Postgres.app) for Postgres.
+Needs PHP 8.4+, Composer, Node 22, and Docker (or Herd / Postgres.app) for Postgres.
 
 ```bash
 docker compose up -d                 # Postgres 17 on :5432 (teatar / teatar)

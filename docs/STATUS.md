@@ -229,7 +229,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
-- **2026-10-16** — Lock files committed, copied from Preslav's working Windows install.
+- **2026-10-16** — Lock files committed, copied from Preslav's working Windows install. They pin Symfony 8.1, which needs PHP 8.4, so CI, the Windows script and the README now require PHP 8.4.
 - **2026-10-16** — Preslav: the restyled app looks great on his phone. Restyle closed; the phone run goal ticked; next is his walk through the MVP goals.
 - **2026-10-16** — Windows bundling fix: `babel-preset-expo` added as a direct devDependency (npm had nested it under `expo/`, out of Babel's reach).
 - **2026-10-16** — Restyle round 2: typographic posters, day headings, fixes; ready for Preslav to check on the phone.

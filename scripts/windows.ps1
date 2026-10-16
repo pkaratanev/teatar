@@ -51,7 +51,7 @@ Need 'php' 'BeyondCode.Herd' 'Laravel Herd (PHP + Composer)' 'Open the Herd app 
 Need 'composer' 'BeyondCode.Herd' 'Laravel Herd (PHP + Composer)' 'Open the Herd app once from the Start menu.'
 
 $phpVersion = (& php -r 'echo PHP_VERSION;')
-if ([version]$phpVersion -lt [version]'8.3') { throw "PHP $phpVersion found; Teatar needs 8.3 or newer. In Herd, switch the global PHP version to 8.3+." }
+if ([version]$phpVersion -lt [version]'8.4') { throw "PHP $phpVersion found; Teatar needs 8.4 or newer. In Herd, switch the global PHP version to 8.4+." }
 if (-not ((& php -m) -contains 'pdo_sqlite')) { throw "PHP $phpVersion has no pdo_sqlite extension. Enable it in php.ini (or use Herd's PHP)." }
 Write-Host "git, node $(node -v), PHP $phpVersion, composer: OK"
 
