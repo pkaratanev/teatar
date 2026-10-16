@@ -259,8 +259,8 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 
 - [ ] **6. "Already seen" onboarding for the user's city** — *exploring* · Size: S
   - Goal: after sign-up and city choice, a grid of long-running productions in that city; tap to mark seen, optionally rate.
-  - Decided 2026-10-16 (Preslav): onboarding marks are real diary entries with no date (replaces the "seen before" flag idea and its two follow-ups). The user can add the date later. Undated entries can't count in a year's stats; the diary lists them in their own group ("Без дата").
-  - Open: admin-picked list or "most performances in the last N months"? (The import only has history since mid-October 2026, so an automatic list is thin for a while.) Can it be skipped and reached later from the profile? Do undated entries show the production as seen on its page and count towards "most-seen actor"? (Normal diary entries do both.)
+  - Decided 2026-10-16 (Preslav): onboarding marks are real diary entries with no date (replaces the "seen before" flag idea and its two follow-ups). The user can add the date later. Undated entries can't count in a year's stats; the diary lists them in their own group ("Без дата"). Otherwise they count as seen like any diary entry: the production shows as seen on its page, and they count in the all-time stats (most-seen actor, favourite theatre, ratings histogram).
+  - Open: admin-picked list or "most performances in the last N months"? (The import only has history since mid-October 2026, so an automatic list is thin for a while.) Can it be skipped and reached later from the profile?
   - Depends on: one-tap log (built); the user's city on the server (see 5); `diary_entries.seen_on` made nullable, with stats, the diary list and the "Видях" sheet handling a missing date.
 
 - [ ] **4. "I'm going": add to the phone calendar, then a next-day "How was it?" push** — *exploring* · Size: S–M
@@ -298,7 +298,7 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 
 Newest first. One line per working session.
 
-- **2026-10-16** — Decided (Preslav): onboarding logs real diary entries with no date (date can be added later), instead of a "seen before" flag.
+- **2026-10-16** — Decided (Preslav): onboarding logs real diary entries with no date (date can be added later), instead of a "seen before" flag. They count as seen everywhere except the year's stats.
 - **2026-10-16** — Decided (Preslav): "seen before" marks don't show on the production page and don't count towards most-seen actor.
 - **2026-10-16** — Exploration list added (6 post-MVP candidates). Decided (Preslav): match moved performances after each sync instead of new rows; city saved on the user; onboarding uses a "seen before" flag (to confirm); `expo-calendar` if needed; push features built as if working, tested later.
 - **2026-10-16** — Decided (Preslav): no local sync, `teatar:demo` seeds the data. Sync management scoped: sync-all button, stuck runs, dashboard alerts, schedule time and pause in the admin. Four to-dos under Next up, not started.
