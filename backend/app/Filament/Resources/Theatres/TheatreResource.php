@@ -44,6 +44,8 @@ class TheatreResource extends Resource
                 TextInput::make('name')->label('Име')->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn ($state, Set $set, ?Theatre $record) => $record ? null : $set('slug', Str::slug((string) $state))),
+                TextInput::make('short_name')->label('Кратко име')->maxLength(40)
+                    ->helperText('За бутоните с театри в приложението, напр. „Народен театър“. Празно: пълното име.'),
                 TextInput::make('slug')->required()->unique(ignoreRecord: true),
                 TextInput::make('city')->label('Град')->default('София')->required(),
                 TextInput::make('address')->label('Адрес'),

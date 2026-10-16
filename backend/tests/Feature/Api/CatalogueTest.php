@@ -100,3 +100,20 @@ it('lists cities with active theatres, biggest programme first', function () {
         ->assertJsonPath('data.1.theatres_count', 2)
         ->assertJsonPath('data.1.upcoming_count', 1);
 });
+
+it('gives each theatre a short name for chips, falling back to the full name', function () {
+    \App\Models\Theatre::factory()->create(['name' => 'Народен театър „Иван Вазов“', 'short_name' => 'Народен театър']);
+    \App\Models\Theatre::factory()->create(['name' => 'Théatro', 'short_name' => null]);
+
+    $names = collect($this->getJson('/api/v1/theatres?city=София')->assertOk()->json('data'))->pluck('short_name', 'name');
+
+    expect($names['Народен театър „Иван Вазов“'])->toBe('Народен театър')
+        ->and($names['Théatro'])->toBe('Théatro');
+});
+
+it('seeds short names for the launch theatres', function () {
+    $this->seed(\Database\Seeders\LaunchTheatresSeeder::class);
+
+    expect(\App\Models\Theatre::whereNull('short_name')->count())->toBe(0)
+        ->and(\App\Models\Theatre::where('slug', \Illuminate\Support\Str::slug('Народен театър „Иван Вазов“'))->value('short_name'))->toBe('Народен театър');
+});

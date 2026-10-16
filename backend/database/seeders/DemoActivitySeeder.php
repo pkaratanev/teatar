@@ -123,7 +123,7 @@ class DemoActivitySeeder extends Seeder
             Rating::updateOrCreate(['user_id' => $user->id, 'production_id' => $production->id], ['half_stars' => $halfStars]);
 
             if (mt_rand(1, 100) <= 45) {
-                [$body, $spoilers] = $this->reviewText($halfStars);
+                [$body, $spoilers] = $this->reviewText($halfStars, $user->id * 31 + $production->id);
                 $review = Review::updateOrCreate(
                     ['user_id' => $user->id, 'production_id' => $production->id],
                     ['body' => $body, 'has_spoilers' => $spoilers],
@@ -152,18 +152,18 @@ class DemoActivitySeeder extends Seeder
         return 7;
     }
 
-    /** @return array{0: string, 1: bool} */
-    private function reviewText(int $halfStars): array
+    /**
+     * The text is picked by user and production, not at random: the seeded generator gave one demo user
+     * the same sentence on every production, which looked odd in the feed.
+     *
+     * @return array{0: string, 1: bool}
+     */
+    private function reviewText(int $halfStars, int $pick): array
     {
-        if (mt_rand(1, 100) <= 15) {
-            $pool = self::REVIEWS['spoiler'];
-
-            return [$pool[array_rand($pool)], true];
-        }
-
-        $band = $halfStars >= 8 ? 'high' : ($halfStars >= 5 ? 'mid' : 'low');
+        $spoiler = mt_rand(1, 100) <= 15;
+        $band = $spoiler ? 'spoiler' : ($halfStars >= 8 ? 'high' : ($halfStars >= 5 ? 'mid' : 'low'));
         $pool = self::REVIEWS[$band];
 
-        return [$pool[array_rand($pool)], false];
+        return [$pool[$pick % count($pool)], $spoiler];
     }
 }

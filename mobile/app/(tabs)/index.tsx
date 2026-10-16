@@ -54,7 +54,7 @@ export default function ProgrammeScreen() {
             {playing.map((t) => (
               <Chip
                 key={t.id}
-                label={shortName(t.name)}
+                label={t.short_name ?? t.name}
                 selected={theatreId === t.id}
                 onPress={() => setTheatreId(theatreId === t.id ? undefined : t.id)}
               />
@@ -98,12 +98,4 @@ export default function ProgrammeScreen() {
       )}
     </View>
   );
-}
-
-/** "Театър „Българска армия“" → "Българска армия", "Държавен куклен театър – Варна" → "Куклен театър". */
-function shortName(name: string): string {
-  const quoted = name.match(/[„"“]([^“”"]+)[“”"]/);
-  if (quoted) return quoted[1];
-  const short = name.replace(/^Държавен\s+/u, '').replace(/\s+[–-]\s+\S+$/u, '');
-  return short.charAt(0).toUpperCase() + short.slice(1);
 }

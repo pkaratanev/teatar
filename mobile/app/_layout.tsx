@@ -56,6 +56,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerBackButtonDisplayMode: 'minimal',
+              headerBackTitle: 'Назад',
               headerStyle: { backgroundColor: colors.background },
               headerTintColor: colors.foreground,
               headerTitleStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 16 },
@@ -63,7 +64,8 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: colors.background },
             }}
           >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            {/* The title is what Back is called on the next screen (screen readers say "Назад, back", not "(tabs)"). */}
+            <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Назад' }} />
             <Stack.Screen name="production/[id]" options={{ title: '' }} />
             <Stack.Screen name="person/[id]" options={{ title: '' }} />
             <Stack.Screen name="theatre/[id]" options={{ title: '' }} />

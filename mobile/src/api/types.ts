@@ -90,6 +90,8 @@ export interface Theatre {
   id: number;
   slug: string;
   name: string;
+  /** For chips: "Народен театър". Falls back to the full name. */
+  short_name: string;
   city: string;
   address: string | null;
   lat: number | null;
