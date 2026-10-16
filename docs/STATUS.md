@@ -39,7 +39,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Seed realistic demo data for testing: a few users, ratings, reviews, follows and diary entries on top of the real programme (`php artisan db:seed --class=DemoActivitySeeder`)
+- [ ] Pre-test hardening: API checks for every screen's data (programme day grouping, empty states), and a review of what a first-time user sees
 
 **Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
 cast/poster pass is parked under "Later" below.
@@ -57,7 +57,7 @@ cast/poster pass is parked under "Later" below.
 - [x] Monorepo on GitHub: `backend/` (Laravel 13) + `mobile/` (Expo SDK 57)
 - [x] CI: Pint, Larastan, migrations on Postgres 17, Pest; mobile `tsc`
 - [x] Local Postgres via `compose.yaml`
-- [ ] Preslav runs it locally once (`composer setup`, Expo Go on a phone); commit `composer.lock` + `package-lock.json`
+- [ ] Preslav runs it locally once (`composer setup`, `php artisan teatar:demo`, Expo Go on a phone); commit `composer.lock` + `package-lock.json`
 
 ### 2. Catalogue and data — enough for the MVP (paused)
 - [x] Tables, Filament admin for catalogue, adapter framework, idempotent importer, nightly sync, CSV adapter
@@ -110,7 +110,7 @@ cast/poster pass is parked under "Later" below.
 ### 6. Stabilise
 - [ ] Run the nightly sync for a week; fix every failure
 - [ ] Test pass on iOS and Android devices; fix crashes
-- [ ] Seed a few real reviews so screens aren't empty
+- [x] `php artisan teatar:demo`: real programme + 12 demo people with ratings, reviews (some spoilers), diaries, watchlists, follows, likes; admin's own Feed/Diary/Profile filled too
 
 ## Data sources
 
@@ -186,6 +186,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — `teatar:demo` for testing: real programme plus demo people and activity. The default seeder no longer mixes fake productions into the real theatres.
 - **2026-10-16** — Published a screen map of the app (link at the top) for Preslav, who hasn't run the app yet.
 - **2026-10-16** — Theatre filter chips on the Programme screen. Watchlist push reminders (backend job + app registration); testable only with a dev build.
 - **2026-10-16** — Social: follow users and people, feed, likes (counts recomputed from the table). Polymorphic columns now use short names (user, person, production, theatre).

@@ -22,8 +22,17 @@ php artisan serve --host=0.0.0.0     # API on :8000, admin on :8000/admin
 php artisan test
 ```
 
-Local seeding creates the 12 launch theatres, fake productions for development, and an admin
-`admin@teatar.test` / `password`. Commit `composer.lock` after the first install.
+`composer setup` creates the launch theatres and an admin `admin@teatar.test` / `password`.
+Then, for a realistic test setup:
+
+```bash
+php artisan teatar:demo            # real programme from the theatres + 12 demo people with
+                                   # ratings, reviews, diaries, watchlists, follows and likes
+php artisan teatar:demo --offline  # same, with fake productions instead of the real programme
+```
+
+Demo people sign in as e.g. `maria.p@demo.teatar.test` / `password`. Commit `composer.lock`
+after the first install.
 
 ```bash
 cd mobile
