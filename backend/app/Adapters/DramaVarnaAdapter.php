@@ -125,8 +125,8 @@ class DramaVarnaAdapter implements TheatreAdapter
     /** The first ticket provider's link; some hrefs carry junk before the URL ("/ https://…"). */
     private static function ticketUrl(Crawler $block): ?string
     {
-        foreach ($block->filter('.providers a') as $a) {
-            if (preg_match('~https?://\S+~', (string) $a->getAttribute('href'), $m)) {
+        foreach ($block->filter('.providers a')->extract(['href']) as $href) {
+            if (preg_match('~https?://\S+~', (string) $href, $m)) {
                 return $m[0];
             }
         }
