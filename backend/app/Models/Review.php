@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property ReviewStatus $status
  * @property bool $has_spoilers
+ * @property int $user_id
+ * @property string $body
+ * @property int $likes_count
  * @property int|null $open_reports_count
  */
 #[Fillable(['user_id', 'production_id', 'body', 'has_spoilers', 'status'])]

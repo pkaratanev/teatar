@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int|null $performance_id
+ * @property \Illuminate\Support\Carbon $seen_on
+ */
 #[Fillable(['user_id', 'production_id', 'performance_id', 'seen_on'])]
 class DiaryEntry extends Model
 {
