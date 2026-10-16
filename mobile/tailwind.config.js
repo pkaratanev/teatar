@@ -5,6 +5,9 @@ const { colors } = require('./src/ui/colors');
 module.exports = {
   content: ['./app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   presets: [require('nativewind/preset')],
+  // The app is dark-only and uses no `dark:` classes. 'class' stops NativeWind's web build from throwing
+  // "Cannot manually set color scheme" when the browser changes the page's theme attribute.
+  darkMode: 'class',
   theme: {
     extend: {
       colors,
