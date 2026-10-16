@@ -22,7 +22,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [ ] Manual review in the admin, productions only for now — *not started (Preslav, 2026-10-16: don't launch with wrong data). A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
 - [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
-- [ ] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *built*
+- [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked by Preslav 2026-10-16 (chip names: see Test findings)*
 - [ ] On first start the app picks the nearest city from the phone's location (asks permission; София if refused or far from every city); the user can still switch — *not built: `expo-location` + a centre point per city (theatres have no coordinates yet), works in Expo Go*
 - [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
 
@@ -89,6 +89,9 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] After the fix: the app works; the styling is the problem (generic Material look) — restyled
 - [x] Running `php artisan teatar:demo` a second time crashed on SQLite (duplicate diary entry): SQLite stores a `date` cast as "Y-m-d 00:00:00", so the same-day lookup missed. Same bug would hit logging a show twice on one day in the app. Fixed with `DiaryEntry::record()` (matches with whereDate)
 - [x] Restyle checked on the phone: looks good (tab labels clipped only in the web screenshots, not on the phone)
+
+Walk-through, 2026-10-16:
+- [ ] Theatre chips on Програма use the quoted part of the name, so Народен театър shows as "Иван Вазов" (also Младежки → "Николай Бинев", 199 → "Валентин Стойчев", Сатира → "Алеко Константинов", Драма Варна → "Стоян Бъчваров"). Fix: a `short_name` column on theatres, filled by the seeder (Народен театър, Младежки театър, Театър 199, Сатира, …), editable in the admin, sent by the API and used for chips
 
 ## Next up
 
