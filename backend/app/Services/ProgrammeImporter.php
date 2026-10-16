@@ -106,7 +106,7 @@ class ProgrammeImporter
                 }
             }
 
-            if ($first !== null && $last !== null) {
+            if ($stats['found'] > 0) {
                 $this->reconcile($theatre, $first, $last, $seen, $created, $stats);
             }
         });
