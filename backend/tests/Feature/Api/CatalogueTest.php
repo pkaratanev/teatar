@@ -82,7 +82,9 @@ it('pages through a long programme', function () {
 
 it('lists cities with active theatres, biggest programme first', function () {
     $sofia = Production::factory()->for(Theatre::factory()->create(['city' => 'София']))->create();
-    Performance::factory()->for($sofia)->count(3)->create(['starts_at' => now()->addDays(2)]);
+    foreach ([1, 2, 3] as $day) {
+        Performance::factory()->for($sofia)->create(['starts_at' => now()->addDays($day)]);
+    }
     $varna = Production::factory()->for(Theatre::factory()->create(['city' => 'Варна']))->create();
     Performance::factory()->for($varna)->create(['starts_at' => now()->addDays(2)]);
     Performance::factory()->for($varna)->create(['starts_at' => now()->subDays(2)]); // past, not counted
