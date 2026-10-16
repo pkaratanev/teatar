@@ -24,7 +24,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
 - [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked by Preslav 2026-10-16 (chip names: see Test findings)*
 - [ ] On first start the app picks the nearest city from the phone's location (asks permission; София if refused or far from every city); the user can still switch — *not built: `expo-location` + a centre point per city (theatres have no coordinates yet), works in Expo Go*
-- [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
+- [x] Production, person and theatre pages; "Билети" opens the theatre's own box office — *checked by Preslav 2026-10-16; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
 
 **Your theatre life**
 - [ ] Sign up and sign in with email; delete account — *built*
@@ -64,7 +64,7 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 
 **Built 2026-10-16, to check:**
 - [x] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
-- [ ] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster) — Varna checked
+- [x] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
 - [ ] Admin (`/admin`): Синхронизации has "Обнови всички" and "График" (time, pause) at the top and the next run under
   the title; the dashboard shows "Проблеми със синхронизацията" only when a theatre's last sync failed, found nothing or
   is over 36 hours old, and the menu item gets a red count. Locally the buttons only queue jobs: run
