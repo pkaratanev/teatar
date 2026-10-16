@@ -22,6 +22,7 @@ class TheatreResource extends JsonResource
             'website' => $this->website,
             'box_office_url' => $this->box_office_url,
             'logo_url' => $this->getFirstMediaUrl('logo') ?: null,
+            'upcoming_count' => $this->when(array_key_exists('upcoming_count', $this->resource->getAttributes()), fn () => (int) $this->resource->getAttribute('upcoming_count')),
             'productions' => ProductionSummaryResource::collection($this->whenLoaded('productions')),
         ];
     }

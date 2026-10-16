@@ -15,7 +15,13 @@ class TheatreController extends Controller
         $city = $request->string('city', 'София')->toString();
 
         return TheatreResource::collection(
-            Theatre::where('is_active', true)->where('city', $city)->orderBy('name')->get()
+            Theatre::where('is_active', true)
+                ->where('city', $city)
+                ->withCount(['performances as upcoming_count' => fn ($q) => $q
+                    ->where('performances.starts_at', '>=', now())
+                    ->where('performances.is_cancelled', false)])
+                ->orderBy('name')
+                ->get()
         );
     }
 

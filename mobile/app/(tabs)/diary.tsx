@@ -19,7 +19,7 @@ export default function DiaryScreen() {
 
   const sections = useMemo(() => {
     const byMonth = new Map<string, DiaryEntry[]>();
-    for (const e of diary.data?.data ?? []) {
+    for (const e of diary.items) {
       const key = e.seen_on.slice(0, 7);
       byMonth.set(key, [...(byMonth.get(key) ?? []), e]);
     }
@@ -27,7 +27,7 @@ export default function DiaryScreen() {
       title: `${MONTHS[Number(key.slice(5, 7)) - 1]} ${key.slice(0, 4)}`,
       data,
     }));
-  }, [diary.data]);
+  }, [diary.items]);
 
   if (user === undefined) return <Loading />;
   if (!user) return <SignInPrompt text="Тук ще е дневникът на всичко, което сте гледали." />;
@@ -40,7 +40,9 @@ export default function DiaryScreen() {
       sections={sections}
       keyExtractor={(e) => String(e.id)}
       onRefresh={diary.refetch}
-      refreshing={diary.isRefetching}
+      refreshing={diary.isRefetching && !diary.isFetchingNextPage}
+      onEndReached={() => diary.hasNextPage && !diary.isFetchingNextPage && diary.fetchNextPage()}
+      onEndReachedThreshold={0.5}
       renderSectionHeader={({ section }) => (
         <Text variant="titleSmall" style={styles.month}>
           {section.title}

@@ -17,7 +17,7 @@ export default function FeedScreen() {
   if (feed.isLoading) return <Loading />;
   if (feed.isError) return <ErrorState onRetry={feed.refetch} />;
 
-  const reviews = feed.data?.data ?? [];
+  const reviews = feed.items;
   if (reviews.length === 0) {
     return <Empty message="Още няма нищо тук. Отворете профила на някого от ревютата и натиснете „Следвай“." />;
   }
@@ -27,7 +27,9 @@ export default function FeedScreen() {
       data={reviews}
       keyExtractor={(r) => String(r.id)}
       onRefresh={feed.refetch}
-      refreshing={feed.isRefetching}
+      refreshing={feed.isRefetching && !feed.isFetchingNextPage}
+      onEndReached={() => feed.hasNextPage && !feed.isFetchingNextPage && feed.fetchNextPage()}
+      onEndReachedThreshold={0.5}
       ItemSeparatorComponent={Divider}
       renderItem={({ item }) => <ReviewCard review={item} showProduction showAuthor />}
     />

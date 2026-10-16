@@ -55,3 +55,27 @@ it('searches productions, people and theatres', function () {
         ->assertJsonCount(1, 'productions')
         ->assertJsonCount(1, 'people');
 });
+
+it('lists theatres with how many performances are coming up', function () {
+    $busy = Theatre::factory()->create(['name' => 'А театър']);
+    Theatre::factory()->create(['name' => 'Б театър']);
+    Performance::factory()->for(Production::factory()->for($busy))->create(['starts_at' => now()->addDay()]);
+    Performance::factory()->for(Production::factory()->for($busy))->create(['starts_at' => now()->subDay()]);
+
+    $this->getJson('/api/v1/theatres')
+        ->assertOk()
+        ->assertJsonPath('data.0.upcoming_count', 1)
+        ->assertJsonPath('data.1.upcoming_count', 0);
+});
+
+it('pages through a long programme', function () {
+    $production = Production::factory()->create();
+    foreach (range(1, 60) as $i) {
+        Performance::factory()->for($production)->create(['starts_at' => now()->addHours($i)]);
+    }
+
+    $first = $this->getJson('/api/v1/performances?range=month')->assertOk();
+    expect($first->json('meta.last_page'))->toBe(2)->and($first->json('data'))->toHaveCount(50);
+
+    $this->getJson('/api/v1/performances?range=month&page=2')->assertOk()->assertJsonCount(10, 'data');
+});

@@ -91,6 +91,8 @@ export interface Theatre {
   website: string | null;
   box_office_url: string | null;
   logo_url: string | null;
+  /** Only on the theatre list: performances still to come. */
+  upcoming_count?: number;
   productions?: ProductionSummary[];
 }
 

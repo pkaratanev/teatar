@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { registerForPush } from '../push';
 import { api } from './client';
@@ -22,14 +22,24 @@ import type {
 
 const json = (method: string, body?: unknown): RequestInit => ({ method, body: body === undefined ? undefined : JSON.stringify(body) });
 
+/** Laravel paginated list → TanStack infinite query (page 1, 2, … until last_page). */
+function useInfiniteList<T>(queryKey: unknown[], path: string, enabled = true) {
+  const query = useInfiniteQuery({
+    queryKey,
+    queryFn: ({ pageParam }) => api<Paginated<T>>(`${path}${path.includes('?') ? '&' : '?'}page=${pageParam}`),
+    initialPageParam: 1,
+    getNextPageParam: (last) => (last.meta.current_page < last.meta.last_page ? last.meta.current_page + 1 : undefined),
+    enabled,
+  });
+
+  return { ...query, items: query.data?.pages.flatMap((p) => p.data) ?? [] };
+}
+
 export function useProgramme(range: ProgrammeRange, theatreId?: number) {
   const params = new URLSearchParams({ range });
   if (theatreId) params.set('theatre_id', String(theatreId));
 
-  return useQuery({
-    queryKey: ['programme', range, theatreId ?? null],
-    queryFn: () => api<Paginated<Performance>>(`/performances?${params}`),
-  });
+  return useInfiniteList<Performance>(['programme', range, theatreId ?? null], `/performances?${params}`);
 }
 
 /** The production, plus the signed-in user's own state ("me") when there is a session. */
@@ -52,11 +62,7 @@ export function useReviews(productionId: number) {
 }
 
 export function useMyDiary(enabled: boolean) {
-  return useQuery({
-    queryKey: ['me', 'diary'],
-    queryFn: () => api<Paginated<DiaryEntry>>('/me/diary'),
-    enabled,
-  });
+  return useInfiniteList<DiaryEntry>(['me', 'diary'], '/me/diary', enabled);
 }
 
 export function useMyWatchlist(enabled: boolean) {
@@ -138,11 +144,7 @@ export function usePerson(id: number) {
 }
 
 export function useFeed(enabled: boolean) {
-  return useQuery({
-    queryKey: ['me', 'feed'],
-    queryFn: () => api<Paginated<Review>>('/me/feed'),
-    enabled,
-  });
+  return useInfiniteList<Review>(['me', 'feed'], '/me/feed', enabled);
 }
 
 /** Follow a user (by username) or a person (by id). */
