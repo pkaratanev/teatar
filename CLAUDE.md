@@ -11,7 +11,7 @@ Letterboxd-style app for Bulgarian theatre. Solo developer (Preslav), familiar w
 ## Layout
 
 - `backend/` — Laravel 13: API `/api/v1` (Sanctum), Filament 5 admin `/admin`, adapters in `app/Adapters`.
-- `mobile/` — Expo SDK 57, Expo Router, TanStack Query, React Native Paper. UI text is Bulgarian.
+- `mobile/` — Expo SDK 57, Expo Router, TanStack Query, NativeWind + own components in `mobile/src/ui`. UI text is Bulgarian.
 - `docs/` — `STATUS.md` (tasks), `plan.md` (decisions), `investigation.md` (market and data research).
 
 ## Rules

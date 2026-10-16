@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP works on Preslav's phone; restyling the app (NativeWind) · **Then:** fixes → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone, restyle done · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -33,28 +33,28 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] Push reminder when a watchlisted production plays within 7 days — *built; testable only with a development build*
 
 **Stable**
-- [ ] Runs end to end on a laptop and on a real phone (Expo Go / dev build) against the local API — *not yet tried*
+- [x] Runs end to end on a laptop and on a real phone (Expo Go / dev build) against the local API — *done 2026-10-16: Windows PC + Android phone in Expo Go*
 - [ ] Nightly sync runs for a week with no unexplained failures in the admin's sync log — *needs a machine running the scheduler for a week*
 - [ ] CI green; every adapter has a saved-HTML test; core flows have API tests — *done in CI; tick at sign-off*
 - [ ] No known crash or data-loss bug open — *none known; the first test will tell*
 
 ## Now
 
-**The MVP is built and ready for Preslav's first test run.** Every MVP goal is built except cast data
-for most productions (decision below). Two goals need more than code: push reminders need a
-development build, and the "nightly sync for a week" goal needs a machine running the scheduler.
-CI covers the backend (tests on Postgres), the admin pages, and the app (typecheck + a full Metro
-bundle), but nobody has run the app on a phone yet.
+**Preslav walks through the MVP goals on his phone.** The app runs on his Windows PC + Android phone and the
+restyle is done ("app seems great"). Next: try each MVP goal above and tick the ones that work; log anything
+broken under "Test findings". Not testable yet: push reminders (need a development build) and the
+"nightly sync for a week" goal (needs a machine running the scheduler). Cast data for most productions
+still waits on a decision.
 
-**Restyle (in progress):** first test: everything works, the look doesn't. Moving the app from React Native
-Paper to NativeWind (Tailwind) with our own Reusables-style components in `mobile/src/ui/` — dark theme,
-curtain red + gold stars, Playfair Display headings, Inter text, lucide icons. Each push to `main` runs
-`.github/workflows/screens.yml`: web build + API with demo data + Playwright → phone-sized screenshots on
-the `screenshots` branch (`git fetch origin screenshots`), so Claude can see every screen.
+**Restyle — done.** React Native Paper → NativeWind (Tailwind) with our own Reusables-style components in
+`mobile/src/ui/`: dark theme, curtain red + gold stars, Playfair Display headings, Inter text, lucide icons,
+typographic posters when a production has no image. Each push to `main` runs `.github/workflows/screens.yml`:
+web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch
+(`git fetch origin screenshots`), so Claude can check every screen after a UI change.
 - [x] Every screen moved off Paper; CI green
-- [x] Screenshot pipeline works (first run: all 13 screens, no console errors)
-- [ ] Screenshot pass: fix what looks wrong — round 1: typographic posters (no production has a poster yet), button wrap, tab label clipping, edit-profile empty when opened by link, day headings. Round 2 looks right; tab labels look clipped at the bottom in the web screenshots (check on the phone)
-- [ ] Preslav checks the look on his phone (`git pull`, `npm.cmd install`, `npx.cmd expo start --clear`)
+- [x] Screenshot pipeline works (13 screens, no console errors)
+- [x] Two screenshot passes: typographic posters, button wrap, edit profile empty when opened by link, day headings
+- [x] Preslav checked the look on his phone: looks good
 
 **How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):
 `irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
@@ -71,7 +71,7 @@ the `screenshots` branch (`git fetch origin screenshots`), so Claude can see eve
 **Not covered by the first test:** push reminders (need `eas init` and a development build) and
 Apple/Google sign-in (need the store accounts).
 
-**Waiting on Preslav:** the first test run, and the open decisions below (cast data, Сфумато, Нов театър НДК).
+**Waiting on Preslav:** the MVP walk-through, and the open decisions below (cast data, Сфумато, Нов театър НДК, app name, store accounts).
 
 ## Test findings
 
@@ -79,7 +79,8 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] Windows script stopped at `npm` (execution policy blocks `npm.ps1`) — fixed, uses `npm.cmd` / `npx.cmd`
 - [x] App crashed on start in Expo Go on Android: importing `expo-notifications` throws there, which broke every screen — fixed, notifications load only in dev/store builds
 - [x] After the restyle, Metro failed on Windows ("reading 'transformFile'"): the real error was `Cannot find module 'babel-preset-expo'` — our new babel.config uses it, so it is now a direct devDependency
-- [x] After the fix: the app works; the styling is the problem (generic Material look) — restyle under "Now"
+- [x] After the fix: the app works; the styling is the problem (generic Material look) — restyled
+- [x] Restyle checked on the phone: looks good (tab labels clipped only in the web screenshots, not on the phone)
 
 ## Next up
 
@@ -94,7 +95,8 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] CI: Pint, Larastan, migrations on Postgres 17, Pest, Filament assets check; mobile `tsc` + Metro bundle of the Android app
 - [x] **Live sources** workflow: runs every adapter against the real sites (manual + weekly)
 - [x] Local Postgres via `compose.yaml`
-- [ ] Preslav runs it locally once (`composer setup`, `php artisan teatar:demo`, Expo Go on a phone); commit `composer.lock` + `package-lock.json`
+- [x] Preslav runs it locally once (`composer setup`, `php artisan teatar:demo`, Expo Go on a phone)
+- [ ] Commit `backend/composer.lock` and `mobile/package-lock.json` from Preslav's working install, so every install gets the same versions (can't be generated in the sandbox)
 
 ### 2. Catalogue and data — enough for the MVP (paused)
 - [x] Tables, Filament admin for catalogue, adapter framework, idempotent importer, nightly sync, CSV adapter
@@ -227,6 +229,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Preslav: the restyled app looks great on his phone. Restyle closed; the phone run goal ticked; next is his walk through the MVP goals.
 - **2026-10-16** — Windows bundling fix: `babel-preset-expo` added as a direct devDependency (npm had nested it under `expo/`, out of Babel's reach).
 - **2026-10-16** — Restyle round 2: typographic posters, day headings, fixes; ready for Preslav to check on the phone.
 - **2026-10-16** — Restyle started: React Native Paper → NativeWind 4 + own components (`src/ui`), dark theme, new fonts and icons; web build + CI screenshot workflow so Claude can see the screens.
