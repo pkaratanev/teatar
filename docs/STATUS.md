@@ -17,7 +17,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 
 **Catalogue (what's on)**
 - [x] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *checked by Preslav 2026-10-16: 10 adapters, month view loads more on scroll; the week-long nightly run is its own goal under Stable*
-- [ ] Guest performances are listed too, under the host theatre, marked with the visiting company — *built*
+- [x] Guest performances are listed too, under the host theatre, marked with the visiting company — *checked by Preslav 2026-10-16*
 - [ ] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *built 2026-10-16*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [ ] Manual review in the admin, productions only for now — *not started (Preslav, 2026-10-16: don't launch with wrong data). A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
