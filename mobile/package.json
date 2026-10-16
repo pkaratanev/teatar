@@ -9,7 +9,8 @@
     "ios": "expo start --ios",
     "typecheck": "tsc --noEmit",
     "api:types": "npx openapi-typescript ${API_URL:-http://localhost:8000}/docs/api.json -o src/api/schema.d.ts",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "web:local": "node scripts/web-local.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
