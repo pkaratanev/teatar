@@ -20,7 +20,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [x] Guest performances are listed too, under the host theatre, marked with the visiting company — *checked by Preslav 2026-10-16*
 - [x] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *checked by Preslav 2026-10-16, including after closing the app*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
-- [ ] Manual review in the admin, productions only for now — *built 2026-10-16, to check: Каталог → За преглед (see Now). Spec (Preslav, 2026-10-16: don't launch with wrong data): A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
+- [x] Manual review in the admin, productions only for now — *checked 2026-10-16 by Claude in the admin while Preslav watched: list with what's missing, "Попълни" to the edit form, "Прегледано" records who and when. Spec (Preslav, 2026-10-16: don't launch with wrong data): A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
 - [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
 - [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked by Preslav 2026-10-16 (chip names: see Test findings)*
 - [ ] On first start the app picks the nearest city from the phone's location (asks permission; София if refused or far from every city); the user can still switch — *not built: `expo-location` + a centre point per city (theatres have no coordinates yet), works in Expo Go*
@@ -68,7 +68,7 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 - [x] Admin: "Обнови всички" (12 queued; a second click skips them all), "График" (time change shown under the title and in the notification), checked 2026-10-16; the 12 queued jobs ran fine with `php artisan queue:work` on Preslav's PC
 - [x] Restyle (NativeWind + own components, dark theme): checked, looks good
 
-**Built, to check:** the review list in the admin (Каталог → За преглед): productions the importers created or added data to, with what's missing (Автор, Режисьор, Актьори, Плакат, Описание), "Попълни" to the edit form, "Прегледано" per row, in bulk and on the edit page (which also says who reviewed it and when); the menu badge counts the ones playing in 30 days. Theatre chips now show short names ("Народен театър"). Needs `php artisan migrate` (the Windows script does it), then `npm.cmd run web:local` for the browser build.
+**Checked 2026-10-16:** the admin review list (Каталог → За преглед), short theatre names on the chips, "Назад" on the back button, deep links in the local web build.
 
 **Not started, in the MVP:** descriptions, city from location, Google sign-in (waiting on the
 key), and five of the six research features (onboarding, "Отивам", yearly goal, weekly push, tags). Order under Next up.
@@ -103,7 +103,7 @@ Walk-through, 2026-10-16:
 
 Proposed order for the unbuilt MVP goals (Preslav can reorder). The first three need no new decisions:
 
-1. [x] **Manual review list** in the admin: built 2026-10-16, waiting for the check (Now)
+1. [x] **Manual review list** in the admin: built and checked 2026-10-16
 2. [ ] **Descriptions** (option c): read each theatre's own description where its programme or production page has one, store it as `synopsis` with its source URL, never over an admin's text; productions without one appear in the review list
 3. [ ] **City from location**: needs `expo-location` (a new npm package: Claude can add it with a one-off workflow that runs `npx expo install` and commits the lock file, or Preslav runs it) and a centre point per city
 4. [ ] **"Already seen" onboarding** once the fallback question is answered (MVP features from the research, 6)
@@ -331,6 +331,8 @@ A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — Review list, chip names, back label and web-build deep links checked in the browser pane. Next: descriptions.
 
 - **2026-10-16** — Built the admin review list ("За преглед": importer flags new and changed productions, shows what's missing, "Прегледано" records who and when; 9 tests). Fixed walk-through findings: short theatre names for chips, back label, varied demo reviews; the /app deep-link fallback is tested in CI. Poster file names for existing productions now use their slug (was blank).
 
