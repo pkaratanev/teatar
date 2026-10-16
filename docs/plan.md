@@ -12,7 +12,7 @@ This file is the current version; where they disagree, this file wins. Tasks and
 - App UI: NativeWind (Tailwind) with our own small component kit in `mobile/src/ui/`, dark theme only.
 - Hosting: Laravel Cloud (EU region) for the API, admin, scheduler and queue, paid for only after Preslav has
   tested the MVP. App builds via EAS to the App Store and Google Play.
-- Cities: Sofia (12 drama theatres; 10 with adapters) and Varna (2 theatres). A city is a column on `theatres`,
+- Cities: Sofia (10 drama theatres with adapters; Сфумато waits on permission, Нов театър НДК dropped) and Varna (2 theatres). A city is a column on `theatres`,
   so another city is data, not code.
 - Order of work: stable MVP (goals in STATUS.md) → Preslav tests → deploy to Laravel Cloud → store releases.
   No spending before the MVP is tested.
@@ -45,7 +45,8 @@ a review list in the admin until someone marks them checked (to-do, MVP goal in 
 | Queue: Redis + Horizon | Database queue (`QUEUE_CONNECTION=database`) | Enough at MVP scale; one less service to run |
 | Launch: 12 Sofia drama theatres; opera, musical and puppet theatres after launch | Sofia (10 with adapters) + Varna, including Варна's puppet theatre | Preslav wants a second city in the MVP to test switching. Puppet credits still use the generic roles |
 | #12 "Театро / Ателие 313 (pick one)" | Théatro | Its programme page was easy to read |
-| Сфумато and Нов театър НДК in the launch set | Not imported | Сфумато's robots.txt disallows crawling; НДК looks closed (Open decisions in STATUS) |
+| Сфумато and Нов театър НДК in the launch set | Сфумато: no adapter, permission asked; НДК dropped, no MVP replacement | Сфумато's robots.txt disallows crawling; НДК's space is registered as a shop with no reopening date (decided 16 Oct) |
+| Cast filled by admins and theatres | Cast and credits read from each theatre's production page (once, then monthly); admins fill the rest | Programme listings rarely name the cast (decided 16 Oct) |
 | Programme sources: each theatre's own site, contact theatres and Art.bg Net before launch | Any public source except theatre.art.bg; outreach after the MVP | Facts are free to take; outreach is slow and not needed to test |
 | Posters: ask theatres for press kits, placeholder until then | Theatres' own posters imported for testing; typographic poster otherwise; permission before launch | A placeholder for every show looked empty (decided 16 Oct) |
 | Descriptions not mentioned | Theatres' own short descriptions imported for testing; permission before launch | Productions looked empty without one (option c, decided 16 Oct) |
