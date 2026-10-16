@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { List, Text, useTheme } from 'react-native-paper';
 
 import type { Profile } from '@/src/api/types';
+import { FollowButton } from './FollowButton';
 import { ProductionRow } from './ProductionRow';
 import { ReviewCard } from './ReviewCard';
 
@@ -19,6 +20,17 @@ export function ProfileView({ profile, header, footer }: { profile: Profile; hea
           @{profile.username}
         </Text>
         {profile.bio && <Text style={styles.bio}>{profile.bio}</Text>}
+        <Text variant="bodySmall" style={styles.muted}>
+          {profile.followers_count} последователи · следва {profile.following_count}
+        </Text>
+        {!profile.is_me && (
+          <View style={styles.follow}>
+            <FollowButton
+              target={{ username: profile.username }}
+              state={{ is_following: profile.is_following, followers_count: profile.followers_count }}
+            />
+          </View>
+        )}
       </View>
       {header}
 
@@ -114,6 +126,7 @@ const styles = StyleSheet.create({
   content: { paddingBottom: 32 },
   head: { padding: 16, gap: 2 },
   bio: { marginTop: 8 },
+  follow: { flexDirection: 'row', marginTop: 8 },
   muted: { opacity: 0.6 },
   tiles: { flexDirection: 'row', paddingHorizontal: 8 },
   tile: { flex: 1, alignItems: 'center', paddingVertical: 8 },

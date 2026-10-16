@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from './client';
 import type {
   DiaryEntry,
+  FollowState,
   LogVisitInput,
   MyProductionState,
   Paginated,
@@ -17,6 +18,8 @@ import type {
   SearchResults,
   Theatre,
 } from './types';
+
+const json = (method: string, body?: unknown): RequestInit => ({ method, body: body === undefined ? undefined : JSON.stringify(body) });
 
 export function useProgramme(range: ProgrammeRange, theatreId?: number) {
   const params = new URLSearchParams({ range });
@@ -91,8 +94,6 @@ function useProductionMutation<TInput = void>(productionId: number, request: (in
   });
 }
 
-const json = (method: string, body?: unknown): RequestInit => ({ method, body: body === undefined ? undefined : JSON.stringify(body) });
-
 export function useLogVisit(productionId: number) {
   return useProductionMutation(productionId, (input: LogVisitInput) =>
     api<{ data: MyProductionState }>(`/productions/${productionId}/log`, json('POST', input)),
@@ -127,7 +128,44 @@ export function useReport() {
 export function usePerson(id: number) {
   return useQuery({
     queryKey: ['person', id],
-    queryFn: () => api<{ data: Person }>(`/people/${id}`).then((r) => r.data),
+    queryFn: () =>
+      api<{ data: Person; social: FollowState }>(`/people/${id}`).then((r) => ({ person: r.data, social: r.social })),
+  });
+}
+
+export function useFeed(enabled: boolean) {
+  return useQuery({
+    queryKey: ['me', 'feed'],
+    queryFn: () => api<Paginated<Review>>('/me/feed'),
+    enabled,
+  });
+}
+
+/** Follow a user (by username) or a person (by id). */
+export function useFollow(target: { username: string } | { personId: number }) {
+  const client = useQueryClient();
+  const path = 'username' in target ? `/users/${target.username}/follow` : `/people/${target.personId}/follow`;
+
+  return useMutation({
+    mutationFn: (on: boolean) => api<{ data: FollowState }>(path, json(on ? 'PUT' : 'DELETE')),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: 'username' in target ? ['profile'] : ['person', target.personId] });
+      client.invalidateQueries({ queryKey: ['me', 'feed'] });
+    },
+  });
+}
+
+export function useLike(review: { id: number }) {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (on: boolean) =>
+      api<{ data: { likes_count: number; liked_by_me: boolean } }>(`/reviews/${review.id}/like`, json(on ? 'PUT' : 'DELETE')),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['reviews'] });
+      client.invalidateQueries({ queryKey: ['me', 'feed'] });
+      client.invalidateQueries({ queryKey: ['profile'] });
+    },
   });
 }
 

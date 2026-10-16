@@ -17,6 +17,7 @@ export default function TabsLayout() {
     <Tabs screenOptions={{ tabBarActiveTintColor: theme.colors.primary }}>
       <Tabs.Screen name="index" options={{ title: 'Програма', tabBarIcon: icon('drama-masks') }} />
       <Tabs.Screen name="search" options={{ title: 'Търсене', tabBarIcon: icon('magnify') }} />
+      <Tabs.Screen name="feed" options={{ title: 'Лента', tabBarIcon: icon('account-group-outline') }} />
       <Tabs.Screen name="diary" options={{ title: 'Дневник', tabBarIcon: icon('notebook-outline') }} />
       <Tabs.Screen name="profile" options={{ title: 'Профил', tabBarIcon: icon('account-circle-outline') }} />
     </Tabs>

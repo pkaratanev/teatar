@@ -5,15 +5,18 @@ import { List, Text } from 'react-native-paper';
 
 import { usePerson } from '@/src/api/hooks';
 import type { PersonCredit } from '@/src/api/types';
+import { FollowButton } from '@/src/components/FollowButton';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { ErrorState, Loading } from '@/src/components/States';
 
 export default function PersonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: person, isLoading, isError, refetch } = usePerson(Number(id));
+  const { data, isLoading, isError, refetch } = usePerson(Number(id));
 
   if (isLoading) return <Loading />;
-  if (isError || !person) return <ErrorState onRetry={refetch} />;
+  if (isError || !data) return <ErrorState onRetry={refetch} />;
+
+  const { person, social } = data;
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
@@ -23,6 +26,7 @@ export default function PersonScreen() {
         <Text variant="headlineSmall" style={styles.name}>
           {person.name}
         </Text>
+        <FollowButton target={{ personId: person.id }} state={social} />
       </View>
       {person.bio && <Text style={styles.bio}>{person.bio}</Text>}
       <Credits title="Сега на сцена" credits={person.current} />

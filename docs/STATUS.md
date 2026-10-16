@@ -37,7 +37,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Social: follow users and people, feed of followed users' reviews, like a review (API + app)
+- [ ] Theatre filter on the Programme screen
 
 **Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
 cast/poster pass is parked under "Later" below.
@@ -46,7 +46,8 @@ cast/poster pass is parked under "Later" below.
 
 ## Next up
 
-- [ ] Theatre filter on the Programme screen
+- [ ] Watchlist push reminder 7 days before a date: backend job + Expo push token registration (needs a dev build on the phone to test)
+- [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
 ## Build milestones
@@ -101,7 +102,7 @@ cast/poster pass is parked under "Later" below.
 - [x] Moderation queue in Filament, shadow ban
 - [x] Report a review (API)
 - [x] Report a review from the app (reason menu)
-- [ ] Follow, feed, likes (Now)
+- [x] Follow users and people, feed of followed users' reviews, likes (API with tests + app: Лента tab, Следвай buttons, ♥ on reviews)
 - [ ] Watchlist push (Expo Push)
 
 ### 6. Stabilise
@@ -183,6 +184,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Social: follow users and people, feed, likes (counts recomputed from the table). Polymorphic columns now use short names (user, person, production, theatre).
 - **2026-10-16** — Apple/Google sign-in moved to Store releases: Sign in with Apple needs the paid developer account, which comes after the MVP. Email sign-in is enough for testing. Social (follow, feed, likes) is Now.
 - **2026-10-16** — App side of your theatre life: sign in/up, log-a-visit sheet, watchlist, review feed with spoilers and reporting, Diary and Profile tabs, public profiles. Typechecked in CI; not yet run on a phone.
 - **2026-10-16** — Your-theatre-life API with 16 feature tests: ratings, one editable review per show (hidden stays hidden), diary visits, watchlist, one-tap log, review feed and reports, profile stats. New accounts limited to 10 reviews/hour.

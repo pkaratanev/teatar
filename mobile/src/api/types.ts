@@ -129,6 +129,7 @@ export interface Review {
   user?: { username: string; name: string };
   production?: ProductionSummary;
   is_mine: boolean;
+  liked_by_me: boolean;
 }
 
 /** The signed-in user's own state for one production. */
@@ -163,6 +164,10 @@ export interface Profile {
   name: string;
   bio: string | null;
   joined_at: string | null;
+  followers_count: number;
+  following_count: number;
+  is_following: boolean;
+  is_me: boolean;
   stats: ProfileStats;
   recent_diary: DiaryEntry[];
   recent_reviews: Review[];
@@ -177,3 +182,8 @@ export interface LogVisitInput {
 }
 
 export type ReportReason = 'spam' | 'abuse' | 'spoiler' | 'other';
+
+export interface FollowState {
+  is_following: boolean;
+  followers_count: number;
+}
