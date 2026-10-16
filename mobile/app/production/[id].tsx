@@ -1,19 +1,32 @@
 import { Image } from 'expo-image';
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
+import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, List, Text } from 'react-native-paper';
 
-import { useProduction } from '@/src/api/hooks';
+import { useProduction, useReviews, useWatchlist } from '@/src/api/hooks';
+import { useAuth } from '@/src/auth';
+import { LogSheet } from '@/src/components/LogSheet';
+import { ReviewCard } from '@/src/components/ReviewCard';
+import { Stars } from '@/src/components/Stars';
 import { ErrorState, Loading } from '@/src/components/States';
 import { formatDay, formatPrice, formatStars, formatTime, guestLabel } from '@/src/format';
 
 export default function ProductionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: p, isLoading, isError, refetch } = useProduction(Number(id));
+  const productionId = Number(id);
+  const { user } = useAuth();
+  const { data, isLoading, isError, refetch } = useProduction(productionId);
+  const reviews = useReviews(productionId);
+  const watchlist = useWatchlist(productionId);
+  const [logging, setLogging] = useState(false);
 
   if (isLoading) return <Loading />;
-  if (isError || !p) return <ErrorState onRetry={refetch} />;
+  if (isError || !data) return <ErrorState onRetry={refetch} />;
+
+  const { production: p, me } = data;
+  const needAccount = () => router.push('/sign-in');
 
   const directors = p.credits.filter((c) => c.role_type === 'director');
   const cast = p.credits.filter((c) => c.role_type === 'actor');
@@ -51,9 +64,34 @@ export default function ProductionScreen() {
         </View>
       </View>
 
+      <View style={styles.actions}>
+        <Button mode="contained" icon="check" onPress={() => (user ? setLogging(true) : needAccount())}>
+          {me?.seen_on.length ? 'Гледах пак' : 'Видях'}
+        </Button>
+        <Button
+          mode={me?.on_watchlist ? 'contained-tonal' : 'outlined'}
+          icon={me?.on_watchlist ? 'bookmark' : 'bookmark-outline'}
+          loading={watchlist.isPending}
+          onPress={() => (user ? watchlist.mutate(!me?.on_watchlist) : needAccount())}
+        >
+          {me?.on_watchlist ? 'В списъка' : 'Искам да гледам'}
+        </Button>
+      </View>
+
+      {me && (me.half_stars || me.seen_on.length > 0) && (
+        <View style={styles.mine}>
+          <Stars halfStars={me.half_stars} size={18} />
+          {me.seen_on.length > 0 && (
+            <Text variant="bodySmall" style={styles.muted}>
+              Гледано: {me.seen_on.map((d) => d.split('-').reverse().join('.')).join(', ')}
+            </Text>
+          )}
+        </View>
+      )}
+
       {p.synopsis && <Text style={styles.block}>{p.synopsis}</Text>}
 
-      {/* Rating, review and "seen" arrive in the Accounts phase. */}
+      <LogSheet productionId={p.id} title={p.title} me={me} visible={logging} onDismiss={() => setLogging(false)} />
 
       {p.upcoming_performances.length > 0 && (
         <List.Section title="Предстоящи представления">
@@ -79,6 +117,15 @@ export default function ProductionScreen() {
       <CreditList title="Режисьор" credits={directors} />
       <CreditList title="Актьори" credits={cast} showCharacter />
       <CreditList title="Екип" credits={crew} showRole />
+
+      <Divider />
+      <List.Section title={`Ревюта${reviews.data?.meta.total ? ` (${reviews.data.meta.total})` : ''}`}>
+        {reviews.data?.data.length ? (
+          reviews.data.data.map((r) => <ReviewCard key={r.id} review={r} />)
+        ) : (
+          <Text style={[styles.block, styles.muted]}>Все още няма ревюта. Бъдете първи!</Text>
+        )}
+      </List.Section>
     </ScrollView>
   );
 }
@@ -117,5 +164,7 @@ const styles = StyleSheet.create({
   headerText: { flex: 1, gap: 4 },
   block: { paddingHorizontal: 16, paddingBottom: 8, lineHeight: 22 },
   link: { textDecorationLine: 'underline' },
+  actions: { flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingBottom: 8, flexWrap: 'wrap' },
+  mine: { paddingHorizontal: 16, paddingBottom: 12, gap: 4 },
   muted: { opacity: 0.6 },
 });

@@ -37,7 +37,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] App screens: sign in / sign up, log-a-visit sheet (date, stars, review, spoilers) and watchlist on the production page, review feed, Diary and Profile tabs
+- [ ] Sign in with Apple and Google (backend `auth/social` + app buttons; Apple is required by the App Store once Google is offered)
 
 **Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
 cast/poster pass is parked under "Later" below.
@@ -91,17 +91,16 @@ cast/poster pass is parked under "Later" below.
 
 ### 4. Accounts, rating, diary
 - [x] Email register / login / logout / delete account (API)
-- [ ] Sign in with Apple and Google
-- [ ] Sign-in screens in the app
+- [x] Sign-in / sign-up screen (email), token in SecureStore, auth context
 - [x] Rate, review, "seen" diary, watchlist, one-tap log — API with tests (`ActivityController`, `TheatreLog`)
 - [x] Profile API: public profile with stats (this year, histogram, favourite theatre, most-seen actor); me/diary, me/watchlist, me/ratings
-- [ ] Same in the app (Now)
-- [ ] Profile screen: diary, stats, histogram
+- [x] Same in the app: "Видях" sheet (date, ½–5★ tap input, review, spoiler switch), watchlist toggle, my rating and dates on the production page, review feed with hidden spoilers
+- [x] Diary tab (grouped by month) and Profile tab: stats tiles, ratings histogram, favourite theatre, most-seen actor, watchlist with next date, sign out, delete account; public `/user/[username]`
 
 ### 5. Social, push, moderation
 - [x] Moderation queue in Filament, shadow ban
 - [x] Report a review (API)
-- [ ] Report button in the app
+- [x] Report a review from the app (reason menu)
 - [ ] Follow, feed, likes
 - [ ] Watchlist push (Expo Push)
 
@@ -183,6 +182,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — App side of your theatre life: sign in/up, log-a-visit sheet, watchlist, review feed with spoilers and reporting, Diary and Profile tabs, public profiles. Typechecked in CI; not yet run on a phone.
 - **2026-10-16** — Your-theatre-life API with 16 feature tests: ratings, one editable review per show (hidden stays hidden), diary visits, watchlist, one-tap log, review feed and reports, profile stats. New accounts limited to 10 reviews/hour.
 - **2026-10-16** — Preslav: stop adding adapters, enough data for now. Cast/poster pass parked; moving to accounts, ratings, reviews, diary and watchlist.
 - **2026-10-15** — Admin dashboard (3 widgets) and the first admin smoke tests. The tests caught 3 real bugs: Filament closures must name their parameter `$query` (the reviews list crashed), widgets were lazy, and `canAccessPanel` returned null for new users. Noted in CLAUDE.md.

@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
+import { AuthProvider } from '@/src/auth';
 import { darkTheme, lightTheme } from '@/src/theme';
 
 const queryClient = new QueryClient({
@@ -15,6 +16,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthProvider>
       <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
         <StatusBar style="auto" />
         <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal' }}>
@@ -22,8 +24,11 @@ export default function RootLayout() {
           <Stack.Screen name="production/[id]" options={{ title: '' }} />
           <Stack.Screen name="person/[id]" options={{ title: '' }} />
           <Stack.Screen name="theatre/[id]" options={{ title: '' }} />
+          <Stack.Screen name="sign-in" options={{ title: 'Вход', presentation: 'modal' }} />
+          <Stack.Screen name="user/[username]" options={{ title: '' }} />
         </Stack>
       </PaperProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

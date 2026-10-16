@@ -29,6 +29,10 @@ export interface ProductionSummary {
   rating_average: number | null;
   ratings_count: number;
   theatre?: { id: number; name: string };
+  /** Only on the watchlist: next upcoming performance. */
+  next_performance_at?: string | null;
+  /** Only on "my ratings". */
+  my_half_stars?: number | null;
 }
 
 export interface Performance {
@@ -102,3 +106,74 @@ export interface Paginated<T> {
 }
 
 export type ProgrammeRange = 'tonight' | 'week' | 'month';
+
+// --- Your theatre life -------------------------------------------------------
+
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  bio: string | null;
+  email?: string;
+}
+
+export interface Review {
+  id: number;
+  body: string;
+  has_spoilers: boolean;
+  likes_count: number;
+  created_at: string;
+  updated_at: string;
+  /** The author's rating of the same production (1–10 half stars), when known. */
+  half_stars?: number | null;
+  user?: { username: string; name: string };
+  production?: ProductionSummary;
+  is_mine: boolean;
+}
+
+/** The signed-in user's own state for one production. */
+export interface MyProductionState {
+  half_stars: number | null;
+  rating: number | null;
+  review: Review | null;
+  seen_on: string[];
+  on_watchlist: boolean;
+}
+
+export interface DiaryEntry {
+  id: number;
+  seen_on: string; // YYYY-MM-DD
+  performance_id: number | null;
+  half_stars: number | null;
+  production: ProductionSummary;
+}
+
+export interface ProfileStats {
+  seen_total: number;
+  seen_this_year: number;
+  ratings_count: number;
+  /** Ten counts: [0] = ½★ … [9] = ★★★★★ */
+  ratings_histogram: number[];
+  favourite_theatre: { id: number; name: string; visits: number } | null;
+  most_seen_actor: { id: number; name: string; times: number } | null;
+}
+
+export interface Profile {
+  username: string;
+  name: string;
+  bio: string | null;
+  joined_at: string | null;
+  stats: ProfileStats;
+  recent_diary: DiaryEntry[];
+  recent_reviews: Review[];
+}
+
+export interface LogVisitInput {
+  seen_on?: string;
+  performance_id?: number | null;
+  half_stars?: number | null;
+  review?: string | null;
+  has_spoilers?: boolean;
+}
+
+export type ReportReason = 'spam' | 'abuse' | 'spoiler' | 'other';
