@@ -56,7 +56,7 @@ npx expo start                       # scan the QR code with Expo Go
 
 ## The app in a browser on your PC
 
-`npm run web:local` in `mobile/` (in PowerShell: `npm.cmd run web:local`) builds the web version into `backend/public/app`; with the API running, open
+`npm run web:local` in `mobile/` (in PowerShell: `npm.cmd run web:local`) builds the web version into `backend/public/app-build`; with the API running, open
 http://localhost:8000/app. It is served from the API's own address, so the browser makes no requests to another
 port (Claude's browser pane in the desktop app blocks those). Re-run it after pulling app changes. The phone keeps
 using Expo Go as before.

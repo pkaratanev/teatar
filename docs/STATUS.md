@@ -93,7 +93,7 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 
 Walk-through, 2026-10-16:
 - [x] Fixed: back button's accessibility label read "(tabs), back" (the route group's name); the tabs screen is now titled "Назад"
-- [ ] Local web build: opening a deep URL directly (e.g. `/app/sign-in`) gives Laravel's 404 on Preslav's PC, though `/app/` works; the `/app/{path}` fallback works in CI (new test), so Preslav's PC most likely has cached routes: `php artisan optimize:clear` in `backend/` should fix it. In-app navigation is fine. Web-only, testing aid
+- [x] Fixed: local web build gave a 404 for deep URLs such as `/app/sign-in`. Cause: with a `public/app` folder holding an index.html, PHP's built-in server treats /app as a script folder and Laravel sees `/sign-in`. The build now goes to `public/app-build` and a route serves it at /app (tested)
 - [ ] Web build only: posters don't load (poster URLs use the LAN address in `APP_URL`, which the browser pane blocks). Not an issue on the phone
 - [x] Fixed: demo users had the same review text on every production; now picked by user and production (re-run `php artisan teatar:demo` to refresh)
 - [x] "График" dialog's button said "Изпрати"; now "Запази"

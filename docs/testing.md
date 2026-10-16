@@ -25,7 +25,7 @@ Preslav answers, Claude ticks the goal or logs a finding under "Test findings" a
 For everything else Claude drives the web build in the Claude desktop app's browser pane, linked to the PC:
 
 1. Preslav runs, after pulling app changes: `cd C:\Users\Atlas\Projects\teatar\mobile` then `npm.cmd run web:local`.
-   This builds the web app into `backend/public/app`, served by the API at **http://localhost:8000/app**,
+   This builds the web app into `backend/public/app-build`, served by the API at **http://localhost:8000/app**,
    the same address as the API (the pane blocks requests to another port or to the LAN address).
 2. Claude opens http://localhost:8000/app in the pane (approve `localhost:8000` once), sets the mobile viewport,
    and clicks through the feature, reading the page text after each step. Navigate inside the app: opening a
