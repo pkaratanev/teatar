@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone (restyle, Varna, posters done) · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP walk-through done for everything built (12 of 26 MVP goals ticked) · **Next:** build the rest (descriptions first) · **Then:** final test → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -20,7 +20,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [x] Guest performances are listed too, under the host theatre, marked with the visiting company — *checked by Preslav 2026-10-16*
 - [x] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *checked by Preslav 2026-10-16, including after closing the app*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
-- [x] Manual review in the admin, productions only for now — *checked 2026-10-16 by Claude in the admin while Preslav watched: list with what's missing, "Попълни" to the edit form, "Прегледано" records who and when. Spec (Preslav, 2026-10-16: don't launch with wrong data): A production is flagged "needs review" when something is missing (author, director, cast, poster, description) or was just created by an importer; the admin gets a "За преглед" list with what's missing per row, an edit form to fill it in, and a "Прегледано" action that records who checked it and when. A later import that changes or adds data flags it again. Starting point: the dashboard's existing "needs data" widget (productions playing in the next 30 days missing author, director, cast or poster)*
+- [x] Manual review in the admin, productions only for now — *checked 2026-10-16 by Claude in the admin while Preslav watched. Каталог → За преглед: importers flag productions they create ("Нова") or add data to ("Променена"); each row shows what's missing (Автор, Режисьор, Актьори, Плакат, Описание); "Попълни" opens the edit form; "Прегледано" (per row, in bulk, on the edit page) records who and when. Default filter: playing within 30 days; the menu badge counts those*
 - [ ] Productions have a short description — *not started. Decided 2026-10-16 (option c): import the theatres' own descriptions for testing, like posters, and ask permission before launch. The app already shows `synopsis` when set*
 - [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked by Preslav 2026-10-16 (chip names: see Test findings)*
 - [ ] On first start the app picks the nearest city from the phone's location (asks permission; София if refused or far from every city); the user can still switch — *not built: `expo-location` + a centre point per city (theatres have no coordinates yet), works in Expo Go*
@@ -38,7 +38,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] Push reminder when a watchlisted production plays within 7 days — *built; testable only with a development build*
 
 **Added from the feature research** (Preslav, 2026-10-16: these are MVP, not after; details and open questions under "MVP features from the research")
-- [ ] A moved show keeps its performance id; a dropped show is marked cancelled — *built 2026-10-16 (importer matching, see Next up)*
+- [ ] A moved show keeps its performance id; a dropped show is marked cancelled — *built 2026-10-16 and covered by tests (milestone 7); tick when a real move or cancellation shows up in the sync log ("Преместени" / "Отменени" columns)*
 - [ ] "Already seen" onboarding: after sign-up, a grid of the city's most-reviewed productions to mark seen (diary entries without a date) — *not started; one open question (fallback while there are few reviews)*
 - [ ] "Отивам": add a performance to the phone's calendar; the next day one push "Как беше …?" opens the log sheet — *not started; needs `expo-calendar` and three answers*
 - [ ] Yearly theatre goal: set how many shows to see this year, progress from the diary — *not started; three open questions*
@@ -53,30 +53,25 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 
 ## Now
 
-**Preslav walks through the MVP goals on his phone** and ticks the ones that work; anything broken goes
-under "Test findings" (or just tell Claude). Not testable yet: push reminders (need a development build) and
-"nightly sync for a week" (needs a machine running the scheduler).
+**Walk-through of everything built is done** (2026-10-16): Preslav checked the catalogue goals on his phone; Claude
+checked accounts, rating, diary, profile, social, moderation, sync management and the review list in the browser
+pane while he watched ([testing.md](testing.md)). Left unticked until they can be tried: push reminders (need a
+development build), the week of nightly syncs (needs a machine running the scheduler), moved/cancelled shows
+(need a real change on a theatre's site), and the sign-off goals under Stable.
+
+**Next to build:** descriptions (Next up, 2). Then city from location, which needs one new npm package:
+before Claude starts it, Preslav runs `npx.cmd expo install expo-location` in `mobile/` and pushes, so the lock
+file comes from his machine.
 
 **How to run it (Windows):** `irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
 pulls the code, runs migrations, starts the API in its own window and Expo in this one. A re-run doesn't download
 the programme again: for fresh programmes and posters run `php artisan teatar:demo` in `backend/` (second window).
-Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `password`. Screen map: link at the top.
+Admin jobs (sync buttons) run with `php artisan queue:work`. Browser build for testing: `npm.cmd run web:local` in
+`mobile/`, then http://localhost:8000/app. Sign in as `admin@teatar.test` / `password` or
+`maria.p@demo.teatar.test` / `password`. Screen map: link at the top.
 
-**Built 2026-10-16, to check:**
-- [x] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
-- [x] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
-- [x] Admin: "Обнови всички" (12 queued; a second click skips them all), "График" (time change shown under the title and in the notification), checked 2026-10-16; the 12 queued jobs ran fine with `php artisan queue:work` on Preslav's PC
-- [x] Restyle (NativeWind + own components, dark theme): checked, looks good
-
-**Checked 2026-10-16:** the admin review list (Каталог → За преглед), short theatre names on the chips, "Назад" on the back button, deep links in the local web build.
-
-**Not started, in the MVP:** descriptions, city from location, Google sign-in (waiting on the
-key), and five of the six research features (onboarding, "Отивам", yearly goal, weekly push, tags). Order under Next up.
-
-**How to test a feature:** [testing.md](testing.md) (phone checks one at a time; the rest in the browser pane at http://localhost:8000/app).
-
-**Waiting on Preslav:** the walk-through; the Google OAuth key; the research features' open questions; the open
-decisions below (cast data, Сфумато, Нов театър НДК, box-office links, app name, store accounts).
+**Waiting on Preslav:** the Google OAuth key; the research features' open questions (MVP features from the research);
+the open decisions below (cast data, Сфумато, Нов театър НДК, box-office links, app name, store accounts).
 
 **Screenshots:** `.github/workflows/screens.yml` runs by hand (Actions → Screenshots) or locally (README):
 web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch.
@@ -101,11 +96,11 @@ Walk-through, 2026-10-16:
 
 ## Next up
 
-Proposed order for the unbuilt MVP goals (Preslav can reorder). The first three need no new decisions:
+Build order for the unbuilt MVP goals (Preslav can reorder). Items 2 and 3 need no new decisions:
 
 1. [x] **Manual review list** in the admin: built and checked 2026-10-16
 2. [ ] **Descriptions** (option c): read each theatre's own description where its programme or production page has one, store it as `synopsis` with its source URL, never over an admin's text; productions without one appear in the review list
-3. [ ] **City from location**: needs `expo-location` (a new npm package: Claude can add it with a one-off workflow that runs `npx expo install` and commits the lock file, or Preslav runs it) and a centre point per city
+3. [ ] **City from location**: needs `expo-location` (Preslav runs `npx.cmd expo install expo-location` in `mobile/` and pushes the lock file) and a centre point per city (a `lat`/`lng` per city, or the average of its theatres once they have coordinates)
 4. [ ] **"Already seen" onboarding** once the fallback question is answered (MVP features from the research, 6)
 5. [ ] **Weekly push, yearly goal, "Отивам", tags** once their open questions are answered
 6. [ ] **Google sign-in** once the OAuth key exists
@@ -191,6 +186,13 @@ Smaller to-dos:
 - [x] Moved and dropped performances: after each import, `ProgrammeImporter::reconcile()` checks the theatre's future adapter rows between the first and last day the source listed. A moved show keeps its row and id (per-show ticket link, or same production, stage and day with one old and one new time); unmatched rows are marked cancelled (hidden in the app) and come back if the source lists them again. Admin-entered rows are never touched. A run that would cancel more than 5 shows and over half of them cancels none and says so in the sync log
 - [x] Live sources re-run: both Varna adapters work against the real sites (Драматичен театър 32 performances to 30 Nov, Куклен театър 5 to 3 Nov); Младежки still 403 from GitHub
 - Decided 2026-10-16 (Preslav): no sync running locally; `php artisan teatar:demo` fills the data on a PC. The nightly run and the admin "Обнови" buttons are for production
+
+### 8. Review list and walk-through fixes — done 2026-10-16
+- [x] Admin review list "За преглед" (`ProductionReviewResource`): `productions.needs_review`, `review_reason`, `reviewed_at`, `reviewed_by`; flagged by `ProgrammeImporter` on create and when it fills author, age, director or poster; existing adapter productions start flagged. 9 tests
+- [x] `theatres.short_name` for chips (migration fills the launch theatres; "Кратко име" in the admin; API falls back to the full name)
+- [x] Local web build served by the API at `/app` from `public/app-build` (`npm run web:local`), deep links included; route tested
+- [x] Back label "Назад", varied demo review texts, "Запази" in the schedule dialog
+- [x] Poster file names for productions matched by the importer use the slug (were blank)
 
 ## Data sources
 
@@ -331,6 +333,8 @@ A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — STATUS brought up to date after the walk-through: stage line, Now rewritten, milestone 8 for today's fixes; next is descriptions.
 
 - **2026-10-16** — Review list, chip names, back label and web-build deep links checked in the browser pane. Next: descriptions.
 
