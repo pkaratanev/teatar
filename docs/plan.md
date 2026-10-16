@@ -41,7 +41,7 @@ a review list in the admin until someone marks them checked (to-do, MVP goal in 
 | --- | --- | --- |
 | React Native Paper (Material) for the UI | NativeWind + own components, dark theme, Playfair Display + Inter | Preslav's first test: everything worked, the Material look didn't |
 | Hosting: EU VPS with Forge, or Laravel Cloud | Laravel Cloud, after the MVP is tested | Preslav's choice; no spending before testing |
-| Sign in with email, Apple and Google in the accounts phase | Email and Google in the MVP; Apple after the App Store launch (to-do) | Google needs only a free OAuth client; Apple needs the paid developer account (decided 16 Oct) |
+| Sign in with email, Apple and Google in the accounts phase | Email and Google in the MVP; Apple before the first iOS submission (to-do) | Google needs only a free OAuth client; Apple needs the paid developer account, and the App Store requires it once Google is offered (decided 16 Oct) |
 | Queue: Redis + Horizon | Database queue (`QUEUE_CONNECTION=database`) | Enough at MVP scale; one less service to run |
 | Launch: 12 Sofia drama theatres; opera, musical and puppet theatres after launch | Sofia (10 with adapters) + Varna, including Варна's puppet theatre | Preslav wants a second city in the MVP to test switching. Puppet credits still use the generic roles |
 | #12 "Театро / Ателие 313 (pick one)" | Théatro | Its programme page was easy to read |
