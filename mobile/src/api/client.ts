@@ -1,7 +1,13 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
+const ENV_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
+// The web build opened on the PC itself (http://localhost:8081) talks to the API on the same PC, not the LAN address
+// the phone needs: browsers treat LAN addresses as private and may block or prompt for every request.
+const BASE_URL =
+  Platform.OS === 'web' && globalThis.location?.hostname === 'localhost'
+    ? ENV_URL.replace(/^(https?:\/\/)[^/:]+/, '$1localhost')
+    : ENV_URL;
 const TOKEN_KEY = 'teatar.token';
 
 export class ApiError extends Error {
