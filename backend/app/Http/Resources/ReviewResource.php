@@ -23,6 +23,7 @@ class ReviewResource extends JsonResource
             'user' => $this->whenLoaded('user', fn () => ['username' => $this->user->username, 'name' => $this->user->name]),
             'production' => new ProductionSummaryResource($this->whenLoaded('production')),
             'is_mine' => $request->user('sanctum')?->id === $this->user_id,
+            'liked_by_me' => (bool) ($this->resource->getAttribute('liked_by_me') ?? false),
         ];
     }
 }

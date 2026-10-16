@@ -12,6 +12,7 @@ use App\Models\Rating;
 use App\Models\Review;
 use App\Models\User;
 use App\Services\ProfileStats;
+use App\Services\Social;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -19,7 +20,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class ProfileController extends Controller
 {
     /** A public profile: who, stats, latest diary and reviews. */
-    public function show(Request $request, string $username, ProfileStats $stats): JsonResponse
+    public function show(Request $request, string $username, ProfileStats $stats, Social $social): JsonResponse
     {
         $user = User::where('username', $username)->firstOrFail();
         $viewer = $request->user('sanctum');
@@ -29,6 +30,10 @@ class ProfileController extends Controller
             'name' => $user->name,
             'bio' => $user->bio,
             'joined_at' => $user->created_at?->toDateString(),
+            'followers_count' => $social->followersCount($user),
+            'following_count' => $social->followingCount($user),
+            'is_following' => $social->isFollowing($viewer, $user),
+            'is_me' => $viewer?->is($user) ?? false,
             'stats' => $stats->for($user),
             'recent_diary' => DiaryEntryResource::collection($this->diaryQuery($user)->limit(10)->get()),
             'recent_reviews' => ReviewResource::collection(

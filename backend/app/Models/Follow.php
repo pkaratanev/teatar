@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @property-read User|Person|null $followable
+ */
 #[Fillable(['user_id', 'followable_type', 'followable_id'])]
 class Follow extends Model
 {

@@ -25,6 +25,7 @@ class ReviewController extends Controller
                 ->whereColumn('ratings.user_id', 'reviews.user_id')
                 ->whereColumn('ratings.production_id', 'reviews.production_id')
                 ->limit(1)])
+            ->when($request->user('sanctum'), fn ($q, $viewer) => $q->withExists(['likes as liked_by_me' => fn ($l) => $l->where('user_id', $viewer->id)]))
             ->latest()
             ->paginate(20);
 

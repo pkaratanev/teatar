@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\ProductionController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\SearchController;
+use App\Http\Controllers\Api\V1\SocialController;
 use App\Http\Controllers\Api\V1\TheatreController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,5 +51,17 @@ Route::prefix('v1')->group(function () {
         });
         Route::delete('diary/{entry}', [ActivityController::class, 'deleteVisit']);
         Route::post('reviews/{review}/report', [ReviewController::class, 'report'])->middleware('throttle:10,1');
+
+        // Social.
+        Route::controller(SocialController::class)->group(function () {
+            Route::get('me/feed', 'feed');
+            Route::get('me/following', 'following');
+            Route::put('users/{username}/follow', 'followUser');
+            Route::delete('users/{username}/follow', 'unfollowUser');
+            Route::put('people/{person}/follow', 'followPerson');
+            Route::delete('people/{person}/follow', 'unfollowPerson');
+            Route::put('reviews/{review}/like', 'like');
+            Route::delete('reviews/{review}/like', 'unlike');
+        });
     });
 });
