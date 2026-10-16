@@ -2,6 +2,7 @@ name: Screenshots
 
 # Builds the app for the web, runs it against a local API with demo data and saves a phone-sized
 # screenshot of each screen to the `screenshots` branch (git fetch origin screenshots).
+# Then walks through the MVP goals (e2e/walkthrough.mjs) and saves walkthrough/walkthrough.md there too.
 # Run by hand only (Actions → Screenshots → Run workflow), e.g. after a UI change. Locally:
 # see "Screenshots" in README.md.
 on:
@@ -58,6 +59,12 @@ jobs:
           mkdir -p /tmp/pw && cd /tmp/pw && npm init -y > /dev/null && npm install --no-audit --no-fund playwright@1 > /dev/null
           npx playwright install --with-deps chromium > /dev/null
           cp $GITHUB_WORKSPACE/mobile/e2e/screenshots.mjs . && OUT=$GITHUB_WORKSPACE/shots node screenshots.mjs || true
+
+      - name: Walk-through of the MVP goals
+        working-directory: mobile
+        run: |
+          cd /tmp/pw && cp $GITHUB_WORKSPACE/mobile/e2e/walkthrough.mjs . && OUT=$GITHUB_WORKSPACE/shots/walkthrough node walkthrough.mjs || true
+          cat $GITHUB_WORKSPACE/shots/walkthrough/walkthrough.md >> $GITHUB_STEP_SUMMARY || true
 
       - name: Publish to the screenshots branch
         if: always()
