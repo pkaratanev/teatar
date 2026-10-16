@@ -59,6 +59,12 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 - [ ] Posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
 - [x] Restyle (NativeWind + own components in `mobile/src/ui/`, dark theme): checked, looks good
 
+**Built today, to check in the admin** (`/admin`, sign in as admin): Синхронизации has "Обнови всички"
+and "График" (time and pause) at the top, with the next run under the title; the dashboard shows a
+"Проблеми със синхронизацията" box only when a theatre's last sync failed, found nothing or is over 36 hours old,
+and the Синхронизации menu item gets a red count. Locally the buttons only queue jobs: run `php artisan queue:work`
+in another window to see them go through.
+
 **Added to the MVP (2026-10-16):** Google sign-in, picking the city from the phone's location, production
 descriptions (see MVP goals; none started yet).
 
@@ -83,14 +89,15 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [ ] Code style: Pint fails in CI but is non-blocking (`continue-on-error`), so CI looks green. Run `vendor/bin/pint` once on a machine with Composer, commit, then make the step blocking
 - [ ] Cast for most productions: waiting on the decision under Open decisions
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
-- **Sync management in the admin** — Decided 2026-10-16 (Preslav): build the four to-dos below. How it works today: the scheduler (`routes/console.php`) runs `teatar:sync-programmes` at 03:15 Sofia time, which queues one `SyncTheatreProgramme` job per active theatre with an adapter; each job writes a row to `adapter_runs` (status, found, new/changed, new productions, error). Admin: sync log (`AdapterRunResource`), `SyncHealth` widget on the dashboard, per-theatre "Обнови програмата" button (`TheatreResource`), "Активен" toggle. All four need admin smoke tests for any new page or action. No new packages (lock files only come from Preslav's machine)
-  - [ ] "Обнови всички" button: on the sync log page and the `SyncHealth` widget, queues `SyncTheatreProgramme` for every active theatre with an adapter (same set as the command). Refuse if a run for that theatre is already "running", so one click twice doesn't double-sync. Done when: the button queues one job per theatre and shows a notification with the count; test covers the set of theatres
-  - [ ] Runs stuck at "running": a run that dies mid-way (worker killed, timeout) never gets a finish time. Give the job a `$timeout`, a `failed()` method that marks the run failed, and a scheduled clean-up that marks runs "running" for longer than e.g. 30 minutes as failed ("прекъснато"). Done when: a test with an old "running" row sees it marked failed, and the widget never shows a theatre as running forever
-  - [ ] Alerts on the dashboard: in `SyncHealth` (or a widget above it), flag each theatre whose last run failed, returned 0 performances, or hasn't run in over 36 hours, with the reason; a red count badge on the sync log navigation item. Dashboard only, no email. Done when: tests cover each of the three cases and a healthy theatre shows no alert
-  - [ ] Sync schedule in the admin: show the next run time on the dashboard and sync log; an admin page to change the daily time and pause / resume the nightly sync for all theatres. Needs a small settings table (no package); the scheduler reads the time and the pause flag from it, default 03:15, not paused. The per-theatre "Активен" toggle stays as it is; manual "Обнови" still works while paused. Done when: changing the time moves the next run shown and the schedule (`schedule:list`), pausing skips the nightly run, both tested
+- **Sync management in the admin** — built 2026-10-16 (Preslav decided the four to-dos below). How it works today: the scheduler (`routes/console.php`) runs `teatar:sync-programmes` at 03:15 Sofia time, which queues one `SyncTheatreProgramme` job per active theatre with an adapter; each job writes a row to `adapter_runs` (status, found, new/changed, new productions, error). Admin: sync log (`AdapterRunResource`), `SyncHealth` widget on the dashboard, per-theatre "Обнови програмата" button (`TheatreResource`), "Активен" toggle. All four need admin smoke tests for any new page or action. No new packages (lock files only come from Preslav's machine)
+  - [x] "Обнови всички" button on the sync log and the dashboard's sync table. Every start (nightly command, buttons) goes through `ProgrammeSync`, which writes a "queued" run first and skips a theatre that is already queued or running
+  - [x] Stuck runs: job `$timeout` 600 s (queue `retry_after` raised to 900 s so a long sync isn't started twice), `failed()` closes the run, and every 10 minutes `AdapterRun::markStale()` fails runs "running" over 30 minutes ("Прекъснато") or "queued" over 2 hours ("no queue worker")
+  - [x] Alerts: `SyncAlerts` widget above the sync table (hidden when all is well) lists failed, empty and over-36-hour theatres with the reason; red count on the Синхронизации menu item
+  - [x] Schedule: "График" on the sync log (a modal, not a separate page) sets the daily time and pause; stored in a new `settings` table, read by `SyncSchedule::register()` in `routes/console.php`. Next run shown under the sync log title and on the dashboard's sync table
   - Decided 2026-10-16 (Preslav): no sync running locally; `php artisan teatar:demo` fills the data on a PC. The nightly run and the admin "Обнови" buttons are for production. Locally the buttons only queue jobs; to try them by hand, run `php artisan queue:work` in a second window
-- [ ] Removed or moved performances stay listed: the importer only adds and updates (`ProgrammeImporter`, keyed on production + start time). A show the theatre drops or moves (19:00 → 19:30) keeps its old row, so the app shows a performance that won't happen. Fix: after a successful run, mark future performances of that theatre that the source no longer lists as cancelled (only within the dates the source covered, and never for admin-entered rows); test with a fixture. Ties in with "don't launch with wrong data"
-- [ ] Live sources check hasn't run since the Varna adapters were added (last run 2026-10-15; next scheduled Monday). Run it by hand (Actions → Live sources) to confirm `dramavarna` and `vnpuppet` against the real sites
+- [x] Removed or moved performances (built 2026-10-16): after each import, `ProgrammeImporter::reconcile()` looks at the theatre's future adapter rows between the first and last day the source listed. A moved show keeps its row and id (matched by a per-show ticket link, or same production, stage and day with one old and one new time); unmatched ones are marked cancelled (the app already hides cancelled shows) and come back if the source lists them again. Admin-entered rows are never touched. If a run would cancel more than 5 shows and over half of them, it cancels none and the sync log says so (likely a broken page). The sync log shows moved and cancelled counts
+- [x] Live sources run 2026-10-16: both Varna adapters work against the real sites (Драматичен театър 32 performances to 30 Nov, Куклен театър 5 to 3 Nov). Младежки still 403 from GitHub
+- [ ] Live sources shows results as annotations, and GitHub keeps only 10 notices per step, so with 12 theatres one result is cut (Театър „София“ this time). Write the results to one annotation or the job summary instead
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
 ## Build milestones
@@ -253,9 +260,10 @@ Suggested order: 1, 6, 4, 2, 5, 3.
     - Time or date change: a new row with a new id; the old row stays listed, not cancelled (same bug as the Next up to-do "Removed or moved performances stay listed").
     - Production: matched by normalised title + guest flag + visiting company among the theatre's running productions. If the theatre changes the title's spelling (beyond case and quotes), the import creates a new production, so every id under it changes.
     - Diary entries keep working if a performance row is ever deleted (`performance_id` is nullable, `nullOnDelete`).
+  - Built 2026-10-16: the matching below (see Next up, "Removed or moved performances"). Still open: planned visits from 4 don't exist yet, so nothing else needs to follow a moved row.
   - Fix task (to-do if 4 or 5 go ahead): extend the "removed or moved" to-do so a moved show is recognised (same production, same stage or day, source no longer lists the old time) and the old row is updated or cancelled with a link to the new one; anything pointing at the old performance (planned visits from 4) moves with it. Test with two fixtures, before and after the change.
   - Decided 2026-10-16 (Preslav): after each sync, match performances against what the source now lists, so a moved show updates its existing row (same id) instead of leaving the old one and adding a new one. Rows the source no longer lists, with no match, are marked cancelled, not deleted.
-  - Open: how to match. Proposal: use a per-show id from the source where there is one (ticket ids at Сълза и смях, Entase/ePayGO links); otherwise same production, same stage, same day, exactly one old and one new time. Anything ambiguous is cancelled + created, and shows up in the admin review list.
+  - How to match (built as proposed): use a per-show id from the source where there is one (ticket ids at Сълза и смях, Entase/ePayGO links); otherwise same production, same stage, same day, exactly one old and one new time. Anything ambiguous is cancelled + created, and shows up in the admin review list.
 
 - [ ] **6. "Already seen" onboarding for the user's city** — *exploring* · Size: S
   - Goal: after sign-up and city choice, a grid of long-running productions in that city; tap to mark seen, optionally rate.
@@ -298,6 +306,8 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — Sync management built: "Обнови всички", stuck runs closed, dashboard alerts with a menu badge, nightly time and pause in the admin. Importer tests: 8 new; sync tests: 15 new. Importer now keeps a moved show's id and cancels shows the source dropped. Live sources re-run: both Varna adapters fine.
 
 - **2026-10-16** — Decided (Preslav): onboarding grid = most-reviewed productions in the city.
 - **2026-10-16** — Decided (Preslav): onboarding logs real diary entries with no date (date can be added later), instead of a "seen before" flag. They count as seen everywhere except the year's stats.
