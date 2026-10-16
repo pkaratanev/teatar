@@ -11,6 +11,15 @@ keep a diary and a watchlist. **Where things stand: [docs/STATUS.md](docs/STATUS
 
 ## Run it locally
 
+**Windows, quickest:** paste this into PowerShell. It installs Git, Node and Laravel Herd if missing,
+puts the project in `%USERPROFILE%\Projects\teatar`, sets the backend up on SQLite (no Docker),
+loads the demo data, and starts the API and the Expo dev server. Run it again to update and restart.
+
+```powershell
+irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex
+```
+
+**By hand:**
 Needs PHP 8.3+, Composer, Node 22, and Docker (or Herd / Postgres.app) for Postgres.
 
 ```bash

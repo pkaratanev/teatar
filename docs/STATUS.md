@@ -50,7 +50,9 @@ bundle), but nobody has run the app on a phone yet.
 Nothing else is queued that doesn't need a decision from Preslav; Claude waits for test findings rather
 than adding features.
 
-**How to test (Preslav):**
+**How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):
+`irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
+
 1. `docker compose up -d`
 2. `cd backend && composer setup && php artisan teatar:demo && php artisan serve --host=0.0.0.0`
 3. Admin: http://localhost:8000/admin as `admin@teatar.test` / `password`
@@ -215,6 +217,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — `scripts/windows.ps1`: one-line setup and start on Windows (installs Git/Node/Herd, SQLite backend, demo data, API + Expo). CI parses it.
 - **2026-10-16** — Profile editing (name, bio; `PATCH /me` + 3 tests) and deep links with a share icon on production, theatre, person and user pages. Reminders now also open the production when the tap starts the app; 404s show "not found" instead of retrying.
 - **2026-10-16** — STATUS review: each MVP goal now says where the build stands; cast data added to open decisions.
 - **2026-10-16** — CI now also bundles the Android app with Metro. MVP feature-complete; handed over for the first test run.
