@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Written by scripts/windows.ps1 (your LAN IP)
+.env
