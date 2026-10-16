@@ -89,7 +89,11 @@ class ProductionReviewResource extends Resource
                     ->requiresConfirmation()
                     ->modalDescription('Маркира избраните постановки като прегледани от теб.')
                     ->action(function (Collection $records) {
-                        $records->each(fn ($p) => $p instanceof Production && $p->markReviewed(auth()->id()));
+                        foreach ($records as $production) {
+                            if ($production instanceof Production) {
+                                $production->markReviewed(auth()->id());
+                            }
+                        }
                         Notification::make()->title('Прегледани: '.$records->count())->success()->send();
                     })
                     ->deselectRecordsAfterCompletion(),
