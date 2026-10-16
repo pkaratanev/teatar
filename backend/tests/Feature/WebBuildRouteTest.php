@@ -14,8 +14,10 @@ it('serves the local web build for any /app path so deep links work', function (
     File::put(public_path('app/index.html'), '<!doctype html><title>Teatar</title>');
 
     try {
-        $this->get('/app/sign-in')->assertOk()->assertSee('<title>Teatar</title>', false);
-        $this->get('/app/production/45')->assertOk();
+        foreach (['/app/sign-in', '/app/production/45'] as $path) {
+            $response = $this->get($path)->assertOk();
+            expect($response->baseResponse->getFile()->getPathname())->toEndWith('index.html');
+        }
     } finally {
         File::deleteDirectory(public_path('app'));
     }
