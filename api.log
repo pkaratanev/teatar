@@ -1,0 +1,362 @@
+
+   INFO  Server running on [http://127.0.0.1:8000].  
+
+  Press Ctrl+C to stop the server
+
+  2026-10-16 12:57:05 /api/v1/theatres ........................... ~ 500.27ms
+  2026-10-16 12:58:27 /api/v1/auth/login ......................... ~ 500.31ms
+  2026-10-16 12:58:27 /api/v1/performances ......................... ~ 0.04ms
+  2026-10-16 12:58:27 /api/v1/productions/45 ....................... ~ 0.03ms
+  2026-10-16 12:58:27 /api/v1/productions/45/reviews ............. ~ 500.29ms
+  2026-10-16 12:58:28 /api/v1/cities ............................... ~ 0.10ms
+  2026-10-16 12:58:28 /api/v1/theatres ............................. ~ 0.06ms
+  2026-10-16 12:58:28 /api/v1/performances ......................... ~ 0.50ms
+  2026-10-16 12:58:28 /api/v1/me ................................... ~ 0.41ms
+  2026-10-16 12:58:28 /api/v1/cities ............................... ~ 0.55ms
+  2026-10-16 12:58:28 /api/v1/theatres ............................. ~ 0.49ms
+  2026-10-16 12:58:28 /api/v1/performances ......................... ~ 0.41ms
+  2026-10-16 12:58:28 /api/v1/me ................................. ~ 500.73ms
+  2026-10-16 12:58:29 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:29 /storage/2/conversions/piano-v-trevata-bjjdy-card.jpg  ~ 0.10ms
+  2026-10-16 12:58:29 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.14ms
+  2026-10-16 12:58:29 /storage/4/conversions/bashhata-iyqdb-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:29 /storage/5/conversions/teremin-muzika-liubov-i-spionaz-67xr5-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:29 /storage/6/conversions/ariia-na-siepernicata-muopz-card.jpg  ~ 0.07ms
+  2026-10-16 12:58:31 /storage/7/conversions/razxodka-s-gogol-p0krf-card.jpg  ~ 0.09ms
+  2026-10-16 12:58:32 /api/v1/cities ............................... ~ 0.12ms
+  2026-10-16 12:58:32 /api/v1/theatres ............................. ~ 0.61ms
+  2026-10-16 12:58:32 /api/v1/performances ......................... ~ 1.00ms
+  2026-10-16 12:58:32 /api/v1/productions/45 ....................... ~ 1.92ms
+  2026-10-16 12:58:32 /api/v1/productions/45/reviews ............... ~ 0.40ms
+  2026-10-16 12:58:32 /api/v1/me ................................... ~ 0.28ms
+  2026-10-16 12:58:32 /api/v1/cities ............................... ~ 0.50ms
+  2026-10-16 12:58:32 /api/v1/theatres ............................. ~ 0.45ms
+  2026-10-16 12:58:32 /api/v1/performances ....................... ~ 500.74ms
+  2026-10-16 12:58:32 /api/v1/productions/45 ..................... ~ 500.54ms
+  2026-10-16 12:58:32 /api/v1/productions/45/reviews ............... ~ 0.20ms
+  2026-10-16 12:58:32 /api/v1/me ................................... ~ 0.15ms
+  2026-10-16 12:58:32 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:37 /api/v1/cities ............................... ~ 0.14ms
+  2026-10-16 12:58:37 /api/v1/theatres ............................. ~ 0.59ms
+  2026-10-16 12:58:37 /api/v1/performances ....................... ~ 500.74ms
+  2026-10-16 12:58:37 /api/v1/productions/45 ..................... ~ 500.62ms
+  2026-10-16 12:58:37 /api/v1/productions/45/reviews ............... ~ 0.20ms
+  2026-10-16 12:58:37 /api/v1/me ................................... ~ 0.16ms
+  2026-10-16 12:58:37 /api/v1/cities ............................... ~ 0.29ms
+  2026-10-16 12:58:37 /api/v1/theatres ............................. ~ 0.24ms
+  2026-10-16 12:58:37 /api/v1/performances ......................... ~ 0.22ms
+  2026-10-16 12:58:37 /api/v1/productions/45 ....................... ~ 0.20ms
+  2026-10-16 12:58:37 /api/v1/productions/45/reviews ............... ~ 0.18ms
+  2026-10-16 12:58:37 /api/v1/me ................................... ~ 0.14ms
+  2026-10-16 12:58:37 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.25ms
+  2026-10-16 12:58:40 /api/v1/cities ............................... ~ 0.09ms
+  2026-10-16 12:58:40 /api/v1/theatres ............................. ~ 0.38ms
+  2026-10-16 12:58:40 /api/v1/performances ......................... ~ 0.29ms
+  2026-10-16 12:58:40 /api/v1/theatres/2 ........................... ~ 0.28ms
+  2026-10-16 12:58:40 /api/v1/me ................................... ~ 0.27ms
+  2026-10-16 12:58:40 /api/v1/cities ............................... ~ 0.25ms
+  2026-10-16 12:58:40 /api/v1/theatres ............................. ~ 0.21ms
+  2026-10-16 12:58:40 /api/v1/performances ......................... ~ 0.20ms
+  2026-10-16 12:58:40 /api/v1/theatres/2 ........................... ~ 0.21ms
+  2026-10-16 12:58:40 /api/v1/me ................................... ~ 0.19ms
+  2026-10-16 12:58:40 /storage/66/conversions/neodacnici-ojacy-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:40 /storage/33/conversions/az-plashham-cdk9k-card.jpg  ~ 0.09ms
+  2026-10-16 12:58:40 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.13ms
+  2026-10-16 12:58:40 /storage/10/conversions/bul-terier-zknt4-card.jpg  ~ 0.16ms
+  2026-10-16 12:58:40 /storage/6/conversions/ariia-na-siepernicata-muopz-card.jpg  ~ 0.20ms
+  2026-10-16 12:58:40 /storage/4/conversions/bashhata-iyqdb-card.jpg  ~ 0.23ms
+  2026-10-16 12:58:40 /storage/25/conversions/bebe-na-borda-kekjn-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:40 /storage/8/conversions/belezkite-pod-liniia-70ibo-card.jpg  ~ 0.09ms
+  2026-10-16 12:58:40 /storage/30/conversions/bogiet-na-kasapnicata-rcxas-card.jpg  ~ 0.12ms
+  2026-10-16 12:58:40 /storage/28/conversions/boze-moi-xo3qq-card.jpg  ~ 0.15ms
+  2026-10-16 12:58:40 /storage/68/conversions/buriata-the-tempest-lfqjt-card.jpg  ~ 0.19ms
+  2026-10-16 12:58:40 /storage/35/conversions/velikdensko-vino-wsm4n-card.jpg  ~ 0.22ms
+  2026-10-16 12:58:40 /storage/9/conversions/venecianskiiat-tiergovec-wkpgi-card.jpg  ~ 0.04ms
+  2026-10-16 12:58:40 /storage/37/conversions/vinovniiat-kjqpr-card.jpg  ~ 0.10ms
+  2026-10-16 12:58:40 /storage/56/conversions/vliubenite-msrmt-card.jpg  ~ 0.13ms
+  2026-10-16 12:58:40 /storage/40/conversions/glembaevi-tbry2-card.jpg  ~ 0.11ms
+  2026-10-16 12:58:40 /storage/48/conversions/golemanov-dqmx5-card.jpg  ~ 0.15ms
+  2026-10-16 12:58:40 /storage/61/conversions/dve-xvloz-card.jpg ... ~ 0.18ms
+  2026-10-16 12:58:40 /storage/58/conversions/dvuboi-r7uyg-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:40 /storage/32/conversions/duxiet-na-poeta-yukpv-card.jpg  ~ 0.08ms
+  2026-10-16 12:58:40 /storage/64/conversions/edin-bezumen-den-4wlbq-card.jpg  ~ 0.12ms
+  2026-10-16 12:58:40 /storage/59/conversions/edni-momiceta-fwpjt-card.jpg  ~ 0.15ms
+  2026-10-16 12:58:40 /storage/50/conversions/elementarnite-castici-kbbj8-card.jpg  ~ 0.18ms
+  2026-10-16 12:58:40 /storage/41/conversions/esenna-sonata-3xvpe-card.jpg  ~ 0.21ms
+  2026-10-16 12:58:40 /storage/15/conversions/idealniiat-miez-qhiyb-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:40 /storage/51/conversions/kakvoto-takova-fp3wc-card.jpg  ~ 0.10ms
+  2026-10-16 12:58:40 /storage/22/conversions/kaligula-nacz7-card.jpg  ~ 0.13ms
+  2026-10-16 12:58:40 /storage/67/conversions/kambanata-cvfhl-card.jpg  ~ 0.16ms
+  2026-10-16 12:58:40 /storage/69/conversions/karakondzul-8e1bv-card.jpg  ~ 0.19ms
+  2026-10-16 12:58:40 /storage/44/conversions/kovarstvo-i-liubov-jiwpr-card.jpg  ~ 0.23ms
+  2026-10-16 12:58:40 /storage/13/conversions/kogato-griem-udari-kak-exoto-zagliexva-s813r-card.jpg  ~ 0.21ms
+  2026-10-16 12:58:40 /storage/57/conversions/kolko-e-vazno-da-biedes-seriozen-godini-po-kiesno-1iaew-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:40 /storage/46/conversions/kontrabasiet-yjosx-card.jpg  ~ 0.06ms
+  2026-10-16 12:58:42 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.11ms
+  2026-10-16 12:58:42 /storage/62/conversions/mrak-na-kraia-na-grada-sp5d1-card.jpg  ~ 0.05ms
+  2026-10-16 12:58:42 /storage/23/conversions/lisiceta-6trlq-card.jpg  ~ 0.33ms
+  2026-10-16 12:58:42 /storage/18/conversions/medeia-4dsvo-card.jpg  ~ 0.37ms
+  2026-10-16 12:58:42 /storage/60/conversions/necovek-en1cb-card.jpg  ~ 0.25ms
+  2026-10-16 12:58:42 /storage/38/conversions/nora-scenabezgranici-jbscr-card.jpg  ~ 0.28ms
+  2026-10-16 12:58:43 /api/v1/me ................................... ~ 0.09ms
+  2026-10-16 12:58:43 /api/v1/me ................................... ~ 0.03ms
+  2026-10-16 12:58:44 /api/v1/search ............................. ~ 500.30ms
+  2026-10-16 12:58:44 /api/v1/search ............................... ~ 0.03ms
+  2026-10-16 12:58:44 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:45 /api/v1/me ................................... ~ 0.09ms
+  2026-10-16 12:58:45 /api/v1/me ................................... ~ 0.03ms
+  2026-10-16 12:58:45 /api/v1/me/feed .............................. ~ 0.02ms
+  2026-10-16 12:58:45 /api/v1/me/feed .............................. ~ 0.02ms
+  2026-10-16 12:58:45 /storage/12/conversions/narodiet-na-vazov-7bs1h-card.jpg  ~ 0.02ms
+  2026-10-16 12:58:48 /api/v1/me ................................... ~ 0.09ms
+  2026-10-16 12:58:48 /api/v1/me ................................... ~ 0.03ms
+  2026-10-16 12:58:48 /api/v1/me/diary ............................. ~ 0.02ms
+  2026-10-16 12:58:48 /api/v1/me/diary ............................. ~ 0.02ms
+  2026-10-16 12:58:48 /storage/16/conversions/teatier-79ntj-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:48 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.06ms
+  2026-10-16 12:58:48 /storage/14/conversions/svriexpredel-cogt8-card.jpg  ~ 0.03ms
+  2026-10-16 12:58:48 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.06ms
+  2026-10-16 12:58:51 /api/v1/me ................................... ~ 0.09ms
+  2026-10-16 12:58:51 /api/v1/me ................................... ~ 0.03ms
+  2026-10-16 12:58:51 /api/v1/users/maria.p ........................ ~ 0.07ms
+  2026-10-16 12:58:51 /api/v1/me/watchlist ......................... ~ 0.24ms
+  2026-10-16 12:58:51 /api/v1/users/maria.p ........................ ~ 0.02ms
+  2026-10-16 12:58:51 /api/v1/me/watchlist ......................... ~ 0.02ms
+  2026-10-16 12:58:51 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.04ms
+  2026-10-16 12:58:51 /storage/16/conversions/teatier-79ntj-card.jpg  ~ 0.07ms
+  2026-10-16 12:58:51 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.11ms
+  2026-10-16 12:58:51 /storage/14/conversions/svriexpredel-cogt8-card.jpg  ~ 0.14ms
+  2026-10-16 12:58:51 /storage/15/conversions/idealniiat-miez-qhiyb-card.jpg  ~ 0.02ms
+  2026-10-16 12:58:55 /api/v1/cities ............................... ~ 0.11ms
+  2026-10-16 12:58:55 /api/v1/theatres ............................. ~ 0.38ms
+  2026-10-16 12:58:55 /api/v1/performances ......................... ~ 0.59ms
+  2026-10-16 12:58:55 /api/v1/users/niki.st ........................ ~ 0.84ms
+  2026-10-16 12:58:55 /api/v1/me ................................... ~ 1.05ms
+  2026-10-16 12:58:55 /api/v1/cities ............................... ~ 0.26ms
+  2026-10-16 12:58:55 /api/v1/theatres ............................. ~ 0.21ms
+  2026-10-16 12:58:55 /api/v1/performances ......................... ~ 0.23ms
+  2026-10-16 12:58:55 /api/v1/users/niki.st ...................... ~ 500.49ms
+  2026-10-16 12:58:55 /api/v1/me ................................. ~ 500.55ms
+  2026-10-16 12:58:55 /storage/8/conversions/belezkite-pod-liniia-70ibo-card.jpg  ~ 0.07ms
+  2026-10-16 12:58:57 /api/v1/cities ............................... ~ 0.12ms
+  2026-10-16 12:58:57 /api/v1/theatres ............................. ~ 0.52ms
+  2026-10-16 12:58:57 /api/v1/performances ......................... ~ 0.87ms
+  2026-10-16 12:58:58 /api/v1/me ................................... ~ 0.05ms
+  2026-10-16 12:58:58 /api/v1/cities ............................... ~ 0.48ms
+  2026-10-16 12:58:58 /api/v1/theatres ........................... ~ 500.86ms
+  2026-10-16 12:58:58 /api/v1/performances ....................... ~ 500.65ms
+  2026-10-16 12:58:58 /api/v1/me ................................... ~ 0.31ms
+  2026-10-16 12:59:00 /api/v1/cities ............................... ~ 0.13ms
+  2026-10-16 12:59:00 /api/v1/theatres ............................. ~ 0.42ms
+  2026-10-16 12:59:00 /api/v1/performances ......................... ~ 0.60ms
+  2026-10-16 12:59:00 /api/v1/me ................................... ~ 0.79ms
+  2026-10-16 12:59:00 /api/v1/cities ............................... ~ 0.03ms
+  2026-10-16 12:59:00 /api/v1/theatres ............................. ~ 0.26ms
+  2026-10-16 12:59:00 /api/v1/performances ......................... ~ 0.30ms
+  2026-10-16 12:59:00 /api/v1/me ................................... ~ 0.19ms
+  2026-10-16 12:59:00 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.07ms
+  2026-10-16 12:59:00 /storage/2/conversions/piano-v-trevata-bjjdy-card.jpg  ~ 0.13ms
+  2026-10-16 12:59:00 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.19ms
+  2026-10-16 12:59:00 /storage/4/conversions/bashhata-iyqdb-card.jpg  ~ 0.09ms
+  2026-10-16 12:59:00 /storage/5/conversions/teremin-muzika-liubov-i-spionaz-67xr5-card.jpg  ~ 0.04ms
+  2026-10-16 12:59:00 /storage/6/conversions/ariia-na-siepernicata-muopz-card.jpg  ~ 0.08ms
+  2026-10-16 12:59:01 /api/v1/cities ............................... ~ 0.08ms
+  2026-10-16 12:59:01 /api/v1/cities ............................... ~ 0.02ms
+  2026-10-16 12:59:02 /api/v1/theatres ............................. ~ 0.08ms
+  2026-10-16 12:59:02 /api/v1/performances ......................... ~ 0.31ms
+  2026-10-16 12:59:02 /api/v1/theatres ............................. ~ 0.04ms
+  2026-10-16 12:59:02 /api/v1/performances ......................... ~ 0.08ms
+  2026-10-16 12:59:02 /api/v1/performances ......................... ~ 0.36ms
+  2026-10-16 12:59:02 /api/v1/performances ......................... ~ 0.04ms
+  2026-10-16 12:59:02 /storage/74/conversions/dobriiat-covek-ot-secuan-og9kw-card.jpg  ~ 0.04ms
+  2026-10-16 12:59:02 /storage/75/conversions/dama-pika-3tbga-card.jpg  ~ 0.08ms
+  2026-10-16 12:59:02 /storage/76/conversions/svidetel-na-obvinenieto-huwyn-card.jpg  ~ 0.04ms
+  2026-10-16 12:59:02 /storage/77/conversions/veceria-za-glupaci-rzn3k-card.jpg  ~ 0.09ms
+  2026-10-16 12:59:02 /storage/78/conversions/amadeus-aatci-card.jpg  ~ 0.13ms
+  2026-10-16 12:59:03 /storage/79/conversions/lavandulovi-momiceta-dxprd-card.jpg  ~ 0.03ms
+  2026-10-16 12:59:03 /storage/80/conversions/karnaval-pj2ks-card.jpg  ~ 0.07ms
+  2026-10-16 12:59:03 /storage/73/conversions/zashhoto-v-tvoite-oci-0ugnf-card.jpg  ~ 0.10ms
+  2026-10-16 12:59:03 /storage/70/conversions/botusiet-s1xeu-card.jpg  ~ 0.16ms
+  2026-10-16 12:59:03 /storage/81/conversions/pod-igoto-djssc-card.jpg  ~ 0.20ms
+  2026-10-16 12:59:03 /storage/72/conversions/alma-maler-5pjnu-card.jpg  ~ 0.04ms
+  2026-10-16 12:59:03 /storage/82/conversions/formata-na-neshhata-abtwi-card.jpg  ~ 0.07ms
+  2026-10-16 12:59:03 /storage/83/conversions/izobretatelnata-vliubena-hd3pd-card.jpg  ~ 0.11ms
+  2026-10-16 12:59:05 /api/v1/cities ............................... ~ 0.15ms
+  2026-10-16 12:59:05 /api/v1/theatres ............................. ~ 0.63ms
+  2026-10-16 12:59:05 /api/v1/performances ......................... ~ 1.04ms
+  2026-10-16 12:59:05 /api/v1/cities ............................... ~ 0.07ms
+  2026-10-16 12:59:05 /api/v1/theatres ............................. ~ 0.50ms
+  2026-10-16 12:59:05 /api/v1/performances ......................... ~ 0.40ms
+  2026-10-16 12:59:10 /api/v1/performances ......................... ~ 0.07ms
+  2026-10-16 12:59:10 /api/v1/productions/45/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:10 /api/v1/productions/47/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:10 /api/v1/productions/12/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:10 /api/v1/productions/15/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:10 /api/v1/productions/48/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/49/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/50/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/51/reviews ............. ~ 500.35ms
+  2026-10-16 12:59:11 /api/v1/productions/52/reviews ............... ~ 0.03ms
+  2026-10-16 12:59:11 /api/v1/productions/14/reviews ............... ~ 0.03ms
+  2026-10-16 12:59:11 /api/v1/productions/53/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/274/reviews .............. ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/11/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/46/reviews ............... ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/242/reviews .............. ~ 0.02ms
+  2026-10-16 12:59:11 /api/v1/productions/47 ....................... ~ 0.04ms
+  2026-10-16 12:59:11 /api/v1/cities ............................... ~ 0.18ms
+  2026-10-16 12:59:11 /api/v1/theatres ............................. ~ 0.44ms
+  2026-10-16 12:59:11 /api/v1/performances ......................... ~ 0.63ms
+  2026-10-16 12:59:11 /api/v1/cities ............................... ~ 0.03ms
+  2026-10-16 12:59:11 /api/v1/theatres ............................. ~ 0.22ms
+  2026-10-16 12:59:11 /api/v1/performances ......................... ~ 0.24ms
+  2026-10-16 12:59:12 /api/v1/auth/register ........................ ~ 0.08ms
+  2026-10-16 12:59:34 /api/v1/cities ............................... ~ 0.10ms
+  2026-10-16 12:59:34 /api/v1/theatres ............................. ~ 0.39ms
+  2026-10-16 12:59:34 /api/v1/performances ......................... ~ 0.62ms
+  2026-10-16 12:59:34 /api/v1/productions/47 ....................... ~ 0.46ms
+  2026-10-16 12:59:34 /api/v1/productions/47/reviews ............... ~ 0.19ms
+  2026-10-16 12:59:34 /api/v1/cities ............................... ~ 0.15ms
+  2026-10-16 12:59:34 /api/v1/theatres ............................. ~ 0.23ms
+  2026-10-16 12:59:34 /api/v1/performances ......................... ~ 0.21ms
+  2026-10-16 12:59:34 /api/v1/productions/47 ....................... ~ 0.21ms
+  2026-10-16 12:59:34 /api/v1/productions/47/reviews ............... ~ 0.17ms
+  2026-10-16 12:59:34 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.02ms
+  2026-10-16 13:00:15 /api/v1/cities ............................... ~ 0.15ms
+  2026-10-16 13:00:15 /api/v1/theatres ............................. ~ 0.40ms
+  2026-10-16 13:00:15 /api/v1/performances ......................... ~ 0.63ms
+  2026-10-16 13:00:15 /api/v1/productions/47 ....................... ~ 0.22ms
+  2026-10-16 13:00:15 /api/v1/productions/47/reviews ............... ~ 0.20ms
+  2026-10-16 13:00:15 /api/v1/cities ............................... ~ 0.18ms
+  2026-10-16 13:00:15 /api/v1/theatres ............................. ~ 0.21ms
+  2026-10-16 13:00:15 /api/v1/performances ......................... ~ 0.20ms
+  2026-10-16 13:00:15 /api/v1/productions/47 ....................... ~ 0.20ms
+  2026-10-16 13:00:15 /api/v1/productions/47/reviews ............... ~ 0.17ms
+  2026-10-16 13:00:15 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.02ms
+  2026-10-16 13:00:26 /api/v1/cities ............................... ~ 0.11ms
+  2026-10-16 13:00:26 /api/v1/theatres ............................. ~ 0.33ms
+  2026-10-16 13:00:26 /api/v1/performances ....................... ~ 500.84ms
+  2026-10-16 13:00:26 /api/v1/productions/47 ..................... ~ 501.10ms
+  2026-10-16 13:00:26 /api/v1/productions/47/reviews ............. ~ 501.26ms
+  2026-10-16 13:00:26 /api/v1/cities ............................... ~ 0.03ms
+  2026-10-16 13:00:26 /api/v1/theatres ............................. ~ 0.26ms
+  2026-10-16 13:00:26 /api/v1/performances ......................... ~ 0.27ms
+  2026-10-16 13:00:26 /api/v1/productions/47 ....................... ~ 0.25ms
+  2026-10-16 13:00:26 /api/v1/productions/47/reviews ............... ~ 0.20ms
+  2026-10-16 13:00:26 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.02ms
+  2026-10-16 13:00:58 /api/v1/cities ............................... ~ 0.10ms
+  2026-10-16 13:00:58 /api/v1/theatres ............................. ~ 0.34ms
+  2026-10-16 13:00:58 /api/v1/performances ......................... ~ 0.54ms
+  2026-10-16 13:00:58 /api/v1/users/maria.p ........................ ~ 0.75ms
+  2026-10-16 13:00:58 /api/v1/cities ............................... ~ 0.03ms
+  2026-10-16 13:00:58 /api/v1/theatres ............................. ~ 0.25ms
+  2026-10-16 13:00:58 /api/v1/performances ......................... ~ 0.24ms
+  2026-10-16 13:00:58 /api/v1/users/maria.p ........................ ~ 0.20ms
+  2026-10-16 13:00:58 /storage/1/conversions/malkata-angliia-oycll-card.jpg  ~ 0.04ms
+  2026-10-16 13:00:58 /storage/16/conversions/teatier-79ntj-card.jpg  ~ 0.09ms
+  2026-10-16 13:00:58 /storage/14/conversions/svriexpredel-cogt8-card.jpg  ~ 0.13ms
+  2026-10-16 13:00:58 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.17ms
+  2026-10-16 13:01:50 /admin/login ............................... ~ 500.36ms
+  2026-10-16 13:01:50 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.06ms
+  2026-10-16 13:01:50 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.11ms
+  2026-10-16 13:01:50 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.18ms
+  2026-10-16 13:01:50 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.04ms
+  2026-10-16 13:01:50 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.11ms
+  2026-10-16 13:01:50 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.45ms
+  2026-10-16 13:01:50 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.51ms
+  2026-10-16 13:01:50 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.55ms
+  2026-10-16 13:01:50 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.41ms
+  2026-10-16 13:01:50 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.03ms
+  2026-10-16 13:01:50 /livewire-39526236/livewire.js ............... ~ 0.10ms
+  2026-10-16 13:01:50 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.02ms
+  2026-10-16 13:01:50 /js/filament/forms/components/text-input/password-reveal.js?v=5.10.2.0  ~ 0.02ms
+  2026-10-16 13:01:50 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:01:51 /livewire-39526236/update .................. ~ 500.26ms
+  2026-10-16 13:01:51 /admin ..................................... ~ 500.29ms
+  2026-10-16 13:01:52 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.11ms
+  2026-10-16 13:01:52 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.19ms
+  2026-10-16 13:01:52 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.36ms
+  2026-10-16 13:01:52 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.44ms
+  2026-10-16 13:01:52 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.55ms
+  2026-10-16 13:01:52 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.62ms
+  2026-10-16 13:01:52 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.56ms
+  2026-10-16 13:01:52 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.20ms
+  2026-10-16 13:01:52 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.32ms
+  2026-10-16 13:01:52 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.44ms
+  2026-10-16 13:01:52 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.04ms
+  2026-10-16 13:01:52 /livewire-39526236/update .................... ~ 0.11ms
+  2026-10-16 13:01:52 /admin/reviews ............................... ~ 0.03ms
+  2026-10-16 13:01:53 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.19ms
+  2026-10-16 13:01:53 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.30ms
+  2026-10-16 13:01:53 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.36ms
+  2026-10-16 13:01:53 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.06ms
+  2026-10-16 13:01:53 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.11ms
+  2026-10-16 13:01:53 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.15ms
+  2026-10-16 13:01:53 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.20ms
+  2026-10-16 13:01:53 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.26ms
+  2026-10-16 13:01:53 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.34ms
+  2026-10-16 13:01:53 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.02ms
+  2026-10-16 13:01:53 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.02ms
+  2026-10-16 13:01:53 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:02:03 /admin/users ............................... ~ 500.38ms
+  2026-10-16 13:02:04 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.07ms
+  2026-10-16 13:02:04 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.13ms
+  2026-10-16 13:02:04 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.18ms
+  2026-10-16 13:02:04 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.24ms
+  2026-10-16 13:02:04 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.28ms
+  2026-10-16 13:02:04 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.27ms
+  2026-10-16 13:02:04 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.44ms
+  2026-10-16 13:02:04 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.04ms
+  2026-10-16 13:02:04 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.10ms
+  2026-10-16 13:02:04 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.16ms
+  2026-10-16 13:02:04 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.02ms
+  2026-10-16 13:02:04 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:02:15 /admin/adapter-runs ........................ ~ 500.34ms
+  2026-10-16 13:02:15 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.07ms
+  2026-10-16 13:02:15 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.14ms
+  2026-10-16 13:02:15 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.19ms
+  2026-10-16 13:02:15 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.24ms
+  2026-10-16 13:02:15 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.28ms
+  2026-10-16 13:02:15 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.36ms
+  2026-10-16 13:02:15 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.04ms
+  2026-10-16 13:02:15 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.10ms
+  2026-10-16 13:02:15 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.50ms
+  2026-10-16 13:02:15 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.25ms
+  2026-10-16 13:02:15 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.02ms
+  2026-10-16 13:02:15 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:02:16 /livewire-39526236/update .................. ~ 500.28ms
+  2026-10-16 13:02:16 /livewire-39526236/update .................. ~ 500.31ms
+  2026-10-16 13:02:16 /livewire-39526236/update .................... ~ 0.03ms
+  2026-10-16 13:02:16 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:02:17 /livewire-39526236/update .................... ~ 0.09ms
+  2026-10-16 13:02:17 /livewire-39526236/update .................... ~ 0.03ms
+  2026-10-16 13:02:17 /admin ....................................... ~ 0.09ms
+  2026-10-16 13:02:17 /fonts/filament/filament/inter/index.css?v=5.10.2.0  ~ 0.06ms
+  2026-10-16 13:02:17 /css/filament/filament/app.css?v=5.10.2.0 .... ~ 0.13ms
+  2026-10-16 13:02:17 /fonts/filament/filament/inter/inter-latin-wght-normal-DIHYUR35.woff2  ~ 0.21ms
+  2026-10-16 13:02:17 /js/filament/actions/actions.js?v=5.10.2.0 ... ~ 0.25ms
+  2026-10-16 13:02:17 /js/filament/notifications/notifications.js?v=5.10.2.0  ~ 0.32ms
+  2026-10-16 13:02:17 /js/filament/schemas/schemas.js?v=5.10.2.0 ... ~ 0.28ms
+  2026-10-16 13:02:17 /js/filament/tables/tables.js?v=5.10.2.0 ..... ~ 0.14ms
+  2026-10-16 13:02:17 /js/filament/filament/echo.js?v=5.10.2.0 ..... ~ 0.19ms
+  2026-10-16 13:02:17 /js/filament/support/support.js?v=5.10.2.0 ... ~ 0.38ms
+  2026-10-16 13:02:17 /js/filament/filament/app.js?v=5.10.2.0 ...... ~ 0.26ms
+  2026-10-16 13:02:18 /fonts/filament/filament/inter/inter-cyrillic-wght-normal-DR6K5BQD.woff2  ~ 0.02ms
+  2026-10-16 13:02:18 /livewire-39526236/update .................... ~ 0.02ms
+  2026-10-16 13:02:19 /api/v1/cities ............................... ~ 0.09ms
+  2026-10-16 13:02:19 /api/v1/theatres ............................. ~ 0.42ms
+  2026-10-16 13:02:19 /api/v1/performances ......................... ~ 0.26ms
+  2026-10-16 13:02:19 /api/v1/productions/47 ....................... ~ 0.21ms
+  2026-10-16 13:02:19 /api/v1/productions/47/reviews ............... ~ 0.18ms
+  2026-10-16 13:02:19 /api/v1/cities ............................... ~ 0.14ms
+  2026-10-16 13:02:19 /api/v1/theatres ............................. ~ 0.21ms
+  2026-10-16 13:02:19 /api/v1/performances ......................... ~ 0.32ms
+  2026-10-16 13:02:19 /api/v1/productions/47 ..................... ~ 500.69ms
+  2026-10-16 13:02:19 /api/v1/productions/47/reviews ............. ~ 500.57ms
+  2026-10-16 13:02:19 /storage/3/conversions/zenata-konbini-pjdpb-card.jpg  ~ 0.03ms
+  2026-10-16 13:02:23 /livewire-39526236/update .................... ~ 0.08ms
+  2026-10-16 13:02:28 /livewire-39526236/update .................... ~ 0.08ms
+  2026-10-16 13:02:33 /livewire-39526236/update .................... ~ 0.08ms
+  2026-10-16 13:02:38 /livewire-39526236/update .................... ~ 0.08ms
+  2026-10-16 13:02:43 /livewire-39526236/update .................... ~ 0.09ms
+  2026-10-16 13:02:48 /livewire-39526236/update .................... ~ 0.09ms

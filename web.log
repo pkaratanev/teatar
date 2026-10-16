@@ -1,0 +1,443 @@
+ INFO  Accepting connections at http://localhost:8081
+ HTTP  10/16/2026 12:58:03 PM ::1 GET /
+ HTTP  10/16/2026 12:58:03 PM ::1 Returned 200 in 13 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 3 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 13 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:28 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 8 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 7 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 3 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 7 ms
+ HTTP  10/16/2026 12:58:28 PM ::1 Returned 200 in 7 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /production/45
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:32 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:58:32 PM ::1 Returned 200 in 3 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /production/45
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:37 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:58:37 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:58:39 PM ::1 GET /theatre/2
+ HTTP  10/16/2026 12:58:39 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:39 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:39 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:39 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:39 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:40 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:58:40 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /search
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:43 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /feed
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:45 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:45 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /diary
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:48 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:48 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /profile
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:51 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /user/niki.st
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:55 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:58:55 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /edit-profile
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 4 ms
+ HTTP  10/16/2026 12:58:57 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:58:57 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:00 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:00 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /sign-in
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 3 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 3 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:05 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:59:05 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /feed
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:08 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /sign-in
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:59:11 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:59:11 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /profile
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 200 in 2 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:12 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:12 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /profile
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:23 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:23 PM ::1 Returned 304 in 5 ms
+ HTTP  10/16/2026 12:59:33 PM ::1 GET /production/47
+ HTTP  10/16/2026 12:59:33 PM ::1 Returned 200 in 0 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 3 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 12:59:34 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 12:59:34 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /production/47
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 4 ms
+ HTTP  10/16/2026 1:00:15 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 1:00:15 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:25 PM ::1 GET /production/47
+ HTTP  10/16/2026 1:00:25 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:25 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:00:25 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:00:25 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:25 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:26 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 1:00:26 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /diary
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:00:37 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:37 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /profile
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:47 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:00:47 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /user/maria.p
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:00:58 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 1:00:58 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /feed
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 200 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:09 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:01:09 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /profile
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:01:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:01:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /production/47
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 2 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:18 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:02:18 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /profile
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /_expo/static/css/web-af9e7db1f16dd517a4018cdcade622ba.css
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /_expo/static/js/web/entry-c30e31c0b6cfe954b923ff5cbb13b70d.js
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.51b6ad87261f18b6433ec52871ddfabc.ttf
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.a5f35888d2da465de352e0dcfaf33324.ttf
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.6e237de4f1f413afa2fcc45c77ac343a.ttf
+ HTTP  10/16/2026 1:02:19 PM ::1 GET /assets/node_modules/@expo-google-fonts/playfair-display/700Bold/PlayfairDisplay_700Bold.f083d3d233c60977fde5d857afec24e8.ttf
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 0 ms
+ HTTP  10/16/2026 1:02:19 PM ::1 Returned 304 in 1 ms
