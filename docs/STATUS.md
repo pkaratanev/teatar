@@ -69,7 +69,9 @@ Apple/Google sign-in (need the store accounts).
 
 ## Test findings
 
-_Empty until the first run._
+First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
+- [x] Windows script stopped at `npm` (execution policy blocks `npm.ps1`) — fixed, uses `npm.cmd` / `npx.cmd`
+- [x] App crashed on start in Expo Go on Android: importing `expo-notifications` throws there, which broke every screen — fixed, notifications load only in dev/store builds
 
 ## Next up
 
@@ -217,6 +219,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — First phone run: the app crashed at start in Expo Go on Android (expo-notifications import). Push code now loads lazily and only outside Expo Go.
 - **2026-10-16** — First real run of the Windows script: backend set up fine; it stopped at `npm` because Windows blocks `npm.ps1` by default. Now calls `npm.cmd` / `npx.cmd`.
 - **2026-10-16** — `scripts/windows.ps1`: one-line setup and start on Windows (installs Git/Node/Herd, SQLite backend, demo data, API + Expo). CI parses it.
 - **2026-10-16** — Profile editing (name, bio; `PATCH /me` + 3 tests) and deep links with a share icon on production, theatre, person and user pages. Reminders now also open the production when the tap starts the app; 404s show "not found" instead of retrying.

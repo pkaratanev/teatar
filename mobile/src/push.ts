@@ -1,19 +1,40 @@
-import Constants from 'expo-constants';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { Platform } from 'react-native';
 
 import { api } from './api/client';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+type NotificationsModule = typeof import('expo-notifications');
+type NotificationResponse = import('expo-notifications').NotificationResponse;
+
+/**
+ * Expo Go can't do push, and on Android just importing expo-notifications
+ * there throws ("Cannot find native module ExpoTopicSubscriptionModule"),
+ * which took every screen down. So the module is only loaded, lazily, in a
+ * development or store build.
+ */
+const pushAvailable = Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
+
+let loaded: Promise<NotificationsModule | null> | null = null;
+
+function notifications(): Promise<NotificationsModule | null> {
+  if (!pushAvailable) return Promise.resolve(null);
+  loaded ??= import('expo-notifications')
+    .then((Notifications) => {
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowBanner: true,
+          shouldShowList: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        }),
+      });
+      return Notifications;
+    })
+    .catch(() => null);
+  return loaded;
+}
 
 /**
  * Ask for permission (once) and send the Expo push token to the API.
@@ -23,7 +44,8 @@ Notifications.setNotificationHandler({
  */
 export async function registerForPush(): Promise<void> {
   try {
-    if (!Device.isDevice) return;
+    const Notifications = await notifications();
+    if (!Notifications || !Device.isDevice) return;
 
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('reminders', {
@@ -54,8 +76,10 @@ export async function registerForPush(): Promise<void> {
  */
 export function listenForNotificationTaps(): () => void {
   let handled: string | null = null;
+  let unsubscribe: (() => void) | null = null;
+  let stopped = false;
 
-  const open = (response: Notifications.NotificationResponse | null) => {
+  const open = (response: NotificationResponse | null) => {
     if (!response || response.notification.request.identifier === handled) return;
     handled = response.notification.request.identifier;
     const id = response.notification.request.content.data?.productionId;
@@ -64,12 +88,18 @@ export function listenForNotificationTaps(): () => void {
     }
   };
 
-  // App started from the notification: the listener below was not yet registered when it was tapped.
-  Notifications.getLastNotificationResponseAsync()
-    .then(open)
+  notifications()
+    .then((Notifications) => {
+      if (!Notifications || stopped) return;
+      const sub = Notifications.addNotificationResponseReceivedListener(open);
+      unsubscribe = () => sub.remove();
+      // App started from the notification: the listener wasn't registered yet when it was tapped.
+      return Notifications.getLastNotificationResponseAsync().then(open);
+    })
     .catch(() => undefined);
 
-  const sub = Notifications.addNotificationResponseReceivedListener(open);
-
-  return () => sub.remove();
+  return () => {
+    stopped = true;
+    unsubscribe?.();
+  };
 }
