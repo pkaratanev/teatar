@@ -39,15 +39,33 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Pre-test hardening: API checks for every screen's data (programme day grouping, empty states), and a review of what a first-time user sees
+**The MVP is feature-complete and ready for Preslav's first test run.** Everything in the MVP goals
+is built except two things that need time or decisions (see below). CI covers the backend (tests on
+Postgres), the admin pages, and the app (typecheck + a full Metro bundle), but nobody has run the app
+on a phone yet.
 
-**Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
-cast/poster pass is parked under "Later" below.
+**How to test (Preslav):**
+1. `docker compose up -d`
+2. `cd backend && composer setup && php artisan teatar:demo && php artisan serve --host=0.0.0.0`
+3. Admin: http://localhost:8000/admin as `admin@teatar.test` / `password`
+4. `cd mobile && cp .env.example .env` (set your computer's LAN IP), `npm install`, `npx expo start`, open in Expo Go (SDK 57)
+5. Sign in as `admin@teatar.test` / `password` (or `maria.p@demo.teatar.test`) and walk through the screen map
+6. Note anything broken or confusing under "Test findings" below, or just tell Claude
 
-**Waiting on Preslav:** the two open decisions below (Сфумато, Нов театър НДК), and running it locally once.
+**Not covered by the first test:** push reminders (need `eas init` and a development build) and
+Apple/Google sign-in (need the store accounts).
+
+**Waiting on Preslav:** the two open decisions below (Сфумато, Нов театър НДК).
+
+## Test findings
+
+_Empty until the first run._
 
 ## Next up
 
+- [ ] Cast for most productions — an MVP goal ("most have author, director and cast"), but the cast pass is parked. Options: fill the most-watched shows in the admin, or un-park the production-page pass for the 3–4 biggest theatres
+- [ ] Edit your own profile (name, bio) in the app
+- [ ] Deep links `teatar://production/{id}` for sharing
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
@@ -186,6 +204,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — CI now also bundles the Android app with Metro. MVP feature-complete; handed over for the first test run.
 - **2026-10-16** — Setup fix: `composer setup` now publishes Filament's CSS/JS and links storage; without it the admin would load unstyled. CI checks the assets are published.
 - **2026-10-16** — Pre-test fix: Programme, Diary and Feed only showed the first API page (Месец stopped at 50 performances); now infinite scroll. Theatre chips hide theatres with nothing scheduled.
 - **2026-10-16** — `teatar:demo` for testing: real programme plus demo people and activity. The default seeder no longer mixes fake productions into the real theatres.
