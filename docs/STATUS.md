@@ -96,7 +96,7 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] **Live sources** workflow: runs every adapter against the real sites (manual + weekly)
 - [x] Local Postgres via `compose.yaml`
 - [x] Preslav runs it locally once (`composer setup`, `php artisan teatar:demo`, Expo Go on a phone)
-- [ ] Commit `backend/composer.lock` and `mobile/package-lock.json` from Preslav's working install, so every install gets the same versions (can't be generated in the sandbox)
+- [x] `backend/composer.lock` and `mobile/package-lock.json` committed from Preslav's working install, so every install (and CI) gets the same versions
 
 ### 2. Catalogue and data — enough for the MVP (paused)
 - [x] Tables, Filament admin for catalogue, adapter framework, idempotent importer, nightly sync, CSV adapter
@@ -229,6 +229,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Lock files committed, copied from Preslav's working Windows install.
 - **2026-10-16** — Preslav: the restyled app looks great on his phone. Restyle closed; the phone run goal ticked; next is his walk through the MVP goals.
 - **2026-10-16** — Windows bundling fix: `babel-preset-expo` added as a direct devDependency (npm had nested it under `expo/`, out of Babel's reach).
 - **2026-10-16** — Restyle round 2: typographic posters, day headings, fixes; ready for Preslav to check on the phone.
