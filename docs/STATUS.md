@@ -20,7 +20,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 - [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office
 
 **Your theatre life**
-- [ ] Sign up and sign in (email, Apple, Google); delete account
+- [ ] Sign up and sign in (email for testing; Apple and Google before the store release); delete account
 - [ ] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist
 - [ ] Profile: diary by date, stats for the year, ratings histogram
 
@@ -37,7 +37,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 
 ## Now
 
-- [ ] Sign in with Apple and Google (backend `auth/social` + app buttons; Apple is required by the App Store once Google is offered)
+- [ ] Social: follow users and people, feed of followed users' reviews, like a review (API + app)
 
 **Data work is paused (Preslav, 2026-10-16):** we have enough theatres for now. No new adapters; the
 cast/poster pass is parked under "Later" below.
@@ -101,7 +101,7 @@ cast/poster pass is parked under "Later" below.
 - [x] Moderation queue in Filament, shadow ban
 - [x] Report a review (API)
 - [x] Report a review from the app (reason menu)
-- [ ] Follow, feed, likes
+- [ ] Follow, feed, likes (Now)
 - [ ] Watchlist push (Expo Push)
 
 ### 6. Stabilise
@@ -166,7 +166,8 @@ Findings that shape the code:
 - [ ] Final app name, icon, splash, bundle id (placeholder `bg.teatar.app`)
 - [ ] `eas.json` profiles (`development`, `preview`, `production`); EAS Build, Submit, Update
 - [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form
-- [ ] Store rules already covered by the MVP: in-app account deletion, Sign in with Apple, reporting user content
+- [ ] Sign in with Apple and Google: needs the Apple Developer account and a Google OAuth client, so it comes with the store accounts. Backend `auth/social` verifies the provider token with Socialite; app buttons via `expo-apple-authentication` and Google sign-in. Apple sign-in is required by the App Store once Google is offered
+- [ ] Store rules already covered by the MVP: in-app account deletion, reporting user content
 - [ ] Bulgarian store listings, screenshots, age rating
 - [ ] TestFlight → external beta; Play internal → closed test (14 days) → production
 
@@ -182,6 +183,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Apple/Google sign-in moved to Store releases: Sign in with Apple needs the paid developer account, which comes after the MVP. Email sign-in is enough for testing. Social (follow, feed, likes) is Now.
 - **2026-10-16** — App side of your theatre life: sign in/up, log-a-visit sheet, watchlist, review feed with spoilers and reporting, Diary and Profile tabs, public profiles. Typechecked in CI; not yet run on a phone.
 - **2026-10-16** — Your-theatre-life API with 16 feature tests: ratings, one editable review per show (hidden stays hidden), diary visits, watchlist, one-tap log, review feed and reports, profile stats. New accounts limited to 10 reviews/hour.
 - **2026-10-16** — Preslav: stop adding adapters, enough data for now. Cast/poster pass parked; moving to accounts, ratings, reviews, diary and watchlist.
