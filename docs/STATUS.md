@@ -211,6 +211,7 @@ Findings that shape the code:
 - [ ] Google Play Console (25 USD once); new personal accounts must run a closed test with 12+ testers for 14 days before production
 - [ ] Final app name, icon, splash, bundle id (placeholder `bg.teatar.app`)
 - [ ] `eas.json` profiles (`development`, `preview`, `production`); EAS Build, Submit, Update
+- Budget to launch on both stores (checked 2026-10-16): Google Play 25 USD once + Apple 99 USD/year (local equivalent, about €99) ≈ 124 USD the first year, 99 USD/year after. Expo Free plan is enough (15 Android + 15 iOS cloud builds a month, 1,000 update users; slow queue) — Starter (19 USD/month) only if the queue gets annoying. No Mac needed: iOS builds run on EAS. Hosting (Laravel Cloud) is separate
 - [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form
 - [ ] Sign in with Apple and Google: needs the Apple Developer account and a Google OAuth client, so it comes with the store accounts. Backend `auth/social` verifies the provider token with Socialite; app buttons via `expo-apple-authentication` and Google sign-in. Apple sign-in is required by the App Store once Google is offered
 - [ ] Store rules already covered by the MVP: in-app account deletion, reporting user content
@@ -229,6 +230,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Launch budget researched: about 124 USD the first year (Play 25 once, Apple 99/year), Expo Free plan is enough. Noted under Store releases.
 - **2026-10-16** — Lock files committed, copied from Preslav's working Windows install. They pin Symfony 8.1, which needs PHP 8.4, so CI, the Windows script and the README now require PHP 8.4.
 - **2026-10-16** — Preslav: the restyled app looks great on his phone. Restyle closed; the phone run goal ticked; next is his walk through the MVP goals.
 - **2026-10-16** — Windows bundling fix: `babel-preset-expo` added as a direct devDependency (npm had nested it under `expo/`, out of Babel's reach).
