@@ -80,6 +80,12 @@ export interface Person {
   past: PersonCredit[];
 }
 
+export interface City {
+  name: string;
+  theatres_count: number;
+  upcoming_count: number;
+}
+
 export interface Theatre {
   id: number;
   slug: string;

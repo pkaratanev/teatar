@@ -18,6 +18,8 @@ return [
         'mlt' => App\Adapters\MladezhkiAdapter::class,
         'theatre199' => App\Adapters\Theatre199Adapter::class,
         'satirata' => App\Adapters\SatirataAdapter::class,
+        'dramavarna' => App\Adapters\DramaVarnaAdapter::class,
+        'vnpuppet' => App\Adapters\PuppetVarnaAdapter::class,
     ],
 
     // Sent with every request to theatre sites, so they can see who we are and reach us.

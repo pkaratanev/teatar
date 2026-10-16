@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 /**
- * The proposed Sofia launch set (see docs/plan.md). Only names and the
+ * The launch set: 12 Sofia theatres (see docs/plan.md) and Varna, the second city. Only names and the
  * websites we have confirmed; addresses, box-office links and adapters are
  * filled in Filament as each theatre is onboarded.
  */
@@ -28,12 +28,14 @@ class LaunchTheatresSeeder extends Seeder
             ['name' => 'Театър „Възраждане“', 'website' => 'https://theatrevazrajdane.bg', 'adapter' => 'vazrajdane'],
             ['name' => 'Нов театър НДК'],
             ['name' => 'Théatro', 'website' => 'https://www.theatro.bg', 'adapter' => 'theatro'],
+            ['name' => 'Драматичен театър „Стоян Бъчваров“', 'city' => 'Варна', 'website' => 'https://dramavarna.com', 'adapter' => 'dramavarna'],
+            ['name' => 'Държавен куклен театър – Варна', 'city' => 'Варна', 'website' => 'https://vnpuppet.com', 'adapter' => 'vnpuppet'],
         ];
 
         foreach ($theatres as $t) {
             Theatre::firstOrCreate(
                 ['slug' => Str::slug($t['name'])],
-                ['name' => $t['name'], 'city' => 'София', 'website' => $t['website'] ?? null, 'adapter' => $t['adapter'] ?? null, 'source' => 'admin'],
+                ['name' => $t['name'], 'city' => $t['city'] ?? 'София', 'website' => $t['website'] ?? null, 'adapter' => $t['adapter'] ?? null, 'source' => 'admin'],
             );
         }
     }

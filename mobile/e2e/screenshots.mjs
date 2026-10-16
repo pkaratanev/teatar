@@ -92,6 +92,16 @@ await shot(signedIn, '08-diary', '/diary');
 await shot(signedIn, '09-profile', '/profile', { scrolls: 2 });
 if (other) await shot(signedIn, '10-user', `/user/${other.username}`);
 await shot(signedIn, '11-edit-profile', '/edit-profile');
+await shot(signedIn, '14-city-sheet', '/', { before: (p) => p.getByLabel(/Смени града/).click() });
+await shot(signedIn, '15-programme-varna', null, {
+  before: async (p) => {
+    await p.getByText('Варна', { exact: true }).last().click();
+    await p.waitForLoadState('networkidle');
+    await p.getByText('Месец').click();
+    await p.waitForLoadState('networkidle');
+  },
+  scrolls: 1,
+});
 
 const signedOut = await (await context(false)).newPage();
 await shot(signedOut, '12-sign-in', '/sign-in');

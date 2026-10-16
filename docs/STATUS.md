@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone, restyle done · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone, restyle done, Varna added · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -18,6 +18,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 **Catalogue (what's on)**
 - [ ] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *built: 10 adapters, nightly sync*
 - [ ] Guest performances are listed too, under the host theatre, marked with the visiting company — *built*
+- [ ] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *built 2026-10-16*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [ ] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *built*
 - [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built*
@@ -45,6 +46,15 @@ restyle is done ("app seems great"). Next: try each MVP goal above and tick the 
 broken under "Test findings". Not testable yet: push reminders (need a development build) and the
 "nightly sync for a week" goal (needs a machine running the scheduler). Cast data for most productions
 still waits on a decision.
+
+**Second city — Varna (built, waiting for CI and Preslav's check):** Preslav wants two cities in the MVP to
+test switching. Added `GET /cities`, a city switcher in the Programme header (remembered on the device), and
+two Varna theatres with adapters: Драматичен театър „Стоян Бъчваров“ (monthly calendar with stage, author,
+director and ticket links) and Държавен куклен театър – Варна (WordPress events feed, one request per run as
+its robots.txt asks). `php artisan teatar:demo` pulls both. Search stays across all cities.
+- [x] API, admin seed, adapters with saved-HTML/JSON tests
+- [x] City switcher in the app; theatre chips and programme follow the city
+- [ ] Preslav switches to Варна on his phone (`php artisan teatar:demo` again to pull the Varna programme)
 
 **Restyle — done.** React Native Paper → NativeWind (Tailwind) with our own Reusables-style components in
 `mobile/src/ui/`: dark theme, curtain red + gold stars, Playfair Display headings, Inter text, lucide icons,
@@ -178,6 +188,14 @@ protected by the EU database right (see investigation). Everything else is fair 
 | 11 | Театрална работилница „Сфумато“ | `sfumato.info/programa.php?year=&month=` | **robots.txt disallows crawling**; same platform as theatre.art.bg | Blocked | See decisions |
 | 12 | ~~Нов театър НДК~~ | — | reported closed since Aug 2024; its own site blocks crawlers | Drop | See decisions |
 
+**Varna** (second city):
+
+| # | Theatre | Programme source | Notes | Verdict | Status |
+| --- | --- | --- | --- | --- | --- |
+| V1 | Драматичен театър „Стоян Бъчваров“ | `dramavarna.com/index.php/bg/program-and-tickets?month=M&year=Y` | Joomla; one `li-YYYY-MM-DD` per day, stage, time range, author line, director, cast, ticket links (ФКЦ, Eventim, Grabo); tours are a separate filter; published about 6 weeks ahead | Easy | **Adapter done** (`dramavarna`) |
+| V2 | Държавен куклен театър – Варна | `vnpuppet.com/wp-json/tribe/events/v1/events?start_date=&per_page=100` | The Events Calendar's public JSON; English copies under `/en/` skipped; guests in the title ("Лазарица/гостува ДТ-Русе"); robots.txt: Crawl-delay 300, so one request per run; publishes only a few weeks ahead | Easy | **Adapter done** (`vnpuppet`) |
+| — | Държавна опера Варна | `operavarna.bg/програма/месечна-програма` | opera and ballet, not drama; the monthly page still shows January 2012 | Skip for now | — |
+
 Findings that shape the code:
 - Most sites print dates without a year (Народен, Théatro, Възраждане, Театър 199). Needs one shared helper: infer the year from day + month (+ weekday when present) relative to today.
 - Entase is not a shortcut: organiser pages load events by JavaScript and the API needs a key per organiser. Individual `entase.com/book?eid=` pages are readable, so ticket links can still be kept.
@@ -230,6 +248,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Second city: Varna with 2 theatres (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър), `GET /cities`, city switcher in the Programme header. Both sites allow our bot; the puppet theatre's crawl delay means one request per run.
 - **2026-10-16** — Launch budget researched: about 124 USD the first year (Play 25 once, Apple 99/year), Expo Free plan is enough. Noted under Store releases.
 - **2026-10-16** — Lock files committed, copied from Preslav's working Windows install. They pin Symfony 8.1, which needs PHP 8.4, so CI, the Windows script and the README now require PHP 8.4.
 - **2026-10-16** — Preslav: the restyled app looks great on his phone. Restyle closed; the phone run goal ticked; next is his walk through the MVP goals.

@@ -3,7 +3,9 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, SectionList, View } from 'react-native';
 
 import { useProgramme, useTheatres } from '@/src/api/hooks';
+import { useCity } from '@/src/city';
 import type { Performance, ProgrammeRange } from '@/src/api/types';
+import { CityPicker } from '@/src/components/CityPicker';
 import { ProductionRow } from '@/src/components/ProductionRow';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { Empty, ErrorState, Loading } from '@/src/components/States';
@@ -13,8 +15,10 @@ import { Chip, colors, Segmented, Text } from '@/src/ui';
 export default function ProgrammeScreen() {
   const [range, setRange] = useState<ProgrammeRange>('week');
   const [theatreId, setTheatreId] = useState<number | undefined>(undefined);
-  const theatres = useTheatres();
+  const { city } = useCity();
+  const theatres = useTheatres(city);
   const { items, isLoading, isError, refetch, isRefetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useProgramme(
+    city,
     range,
     theatreId,
   );
@@ -31,7 +35,7 @@ export default function ProgrammeScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScreenHeader title="Програма">
+      <ScreenHeader title="Програма" right={<CityPicker onChange={() => setTheatreId(undefined)} />}>
         <Segmented
           className="mt-4"
           value={range}
