@@ -83,3 +83,11 @@ jobs:
           set -o pipefail
           npx tsc --noEmit --pretty false | sed -E 's/^(.+)\(([0-9]+),[0-9]+\): error (.*)$/::error file=mobile\/\1,line=\2::\3/'
         shell: bash
+      - name: Bundle (catches bad imports and missing modules)
+        run: |
+          set -o pipefail
+          npx expo export --platform android --output-dir dist 2>&1 | tee export.log | tail -20 || { grep -iE "error|unable to resolve" export.log | head -20 | sed 's/^/::error::/'; exit 1; }
+        shell: bash
+        env:
+          EXPO_PUBLIC_API_URL: http://localhost:8000/api/v1
+          CI: "1"
