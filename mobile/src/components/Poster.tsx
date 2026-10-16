@@ -59,8 +59,8 @@ export function Poster({
           <View className="mb-2 h-[2px] w-6 bg-gold/70" />
           <Text
             className="font-display text-foreground"
-            style={{ fontSize: width * 0.12, lineHeight: width * 0.145 }}
-            numberOfLines={5}
+            style={{ fontSize: width * 0.17, lineHeight: width * 0.2 }}
+            numberOfLines={4}
           >
             {title}
           </Text>

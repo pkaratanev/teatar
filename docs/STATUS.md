@@ -53,7 +53,7 @@ curtain red + gold stars, Playfair Display headings, Inter text, lucide icons. E
 the `screenshots` branch (`git fetch origin screenshots`), so Claude can see every screen.
 - [x] Every screen moved off Paper; CI green
 - [x] Screenshot pipeline works (first run: all 13 screens, no console errors)
-- [ ] Screenshot pass: fix what looks wrong — round 1: typographic posters (no production has a poster yet), button wrap, tab label clipping, edit-profile empty when opened by link, day headings
+- [ ] Screenshot pass: fix what looks wrong — round 1: typographic posters (no production has a poster yet), button wrap, tab label clipping, edit-profile empty when opened by link, day headings. Round 2 looks right; tab labels look clipped at the bottom in the web screenshots (check on the phone)
 - [ ] Preslav checks the look on his phone (`git pull`, `npm.cmd install`, `npx.cmd expo start --clear`)
 
 **How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):
@@ -226,6 +226,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Restyle round 2: typographic posters, day headings, fixes; ready for Preslav to check on the phone.
 - **2026-10-16** — Restyle started: React Native Paper → NativeWind 4 + own components (`src/ui`), dark theme, new fonts and icons; web build + CI screenshot workflow so Claude can see the screens.
 - **2026-10-16** — First phone run: the app crashed at start in Expo Go on Android (expo-notifications import). Push code now loads lazily and only outside Expo Go.
 - **2026-10-16** — First real run of the Windows script: backend set up fine; it stopped at `npm` because Windows blocks `npm.ps1` by default. Now calls `npm.cmd` / `npx.cmd`.
