@@ -67,6 +67,7 @@ class ProgrammeImporter
                     ]);
                     if ($gaps !== []) {
                         $production->update($gaps);
+                        $production->flagForReview();
                     }
                 }
 
@@ -226,6 +227,7 @@ class ProgrammeImporter
                 ->usingFileName("{$production->slug}.{$extension}")
                 ->withCustomProperties(['source_url' => $url])
                 ->toMediaCollection('poster');
+            $production->flagForReview();
 
             return true;
         } catch (Throwable $e) {
@@ -272,7 +274,7 @@ class ProgrammeImporter
         return $theatre->productions()
             ->where('status', ProductionStatus::Running)
             ->where('is_guest', $guest)
-            ->get(['id', 'title', 'author', 'age_advisory', 'is_guest', 'visiting_company'])
+            ->get(['id', 'title', 'slug', 'author', 'age_advisory', 'is_guest', 'visiting_company', 'needs_review', 'review_reason'])
             ->first(fn (Production $p) => self::normaliseTitle($p->title) === $wanted
                 && ($p->visiting_company === null ? null : self::normaliseTitle($p->visiting_company)) === $company);
     }
@@ -295,6 +297,7 @@ class ProgrammeImporter
             ]);
 
         $production->credits()->create(['person_id' => $person->id, 'role_type' => CreditRole::Director]);
+        $production->flagForReview();
     }
 
     private function createProduction(Theatre $theatre, ScrapedPerformance $item): Production
@@ -313,6 +316,8 @@ class ProgrammeImporter
             'status' => ProductionStatus::Running,
             'source' => CatalogueSource::Adapter->value,
             'source_url' => $item->sourceUrl ?? $theatre->website,
+            'needs_review' => true,
+            'review_reason' => 'new',
         ]);
     }
 }
