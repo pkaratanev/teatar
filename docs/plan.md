@@ -54,6 +54,7 @@ a review list in the admin until someone marks them checked (to-do, MVP goal in 
 | Analytics with PostHog from day one | Not built yet | Moved to Launch in STATUS; needs consent and a privacy policy |
 | ~20-week build, launch around 1 March 2027 | MVP built in the first days; phases replaced by MVP goals → test → deploy → stores | The build went faster than planned; dates now depend on testing and the store accounts |
 | Beta phase with 50–100 founding reviews | Still planned, under Launch in STATUS | Not dropped, just not scheduled |
+| MVP scope: catalogue, your theatre life, social and safety | Also: manual review list, descriptions, city from location, Google sign-in, sync management, and six features from the research (stable performance ids, "already seen" onboarding, "Отивам" with calendar + next-day push, yearly goal, weekly city push, tags) | Preslav, 2026-10-16: don't launch with wrong data; the research features belong in the MVP |
 | Performances unique on production + stage + start time | Unique on production + start time | A production can't play twice at the same moment |
 
 Unchanged: Laravel + Filament + Postgres, Expo Router + TanStack Query, the data model's tables, adapters

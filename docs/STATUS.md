@@ -37,6 +37,14 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] Report a review; moderation in the admin (hide, shadow ban) — *built*
 - [ ] Push reminder when a watchlisted production plays within 7 days — *built; testable only with a development build*
 
+**Added from the feature research** (Preslav, 2026-10-16: these are MVP, not after; details and open questions under "MVP features from the research")
+- [ ] A moved show keeps its performance id; a dropped show is marked cancelled — *built 2026-10-16 (importer matching, see Next up)*
+- [ ] "Already seen" onboarding: after sign-up, a grid of the city's most-reviewed productions to mark seen (diary entries without a date) — *not started; one open question (fallback while there are few reviews)*
+- [ ] "Отивам": add a performance to the phone's calendar; the next day one push "Как беше …?" opens the log sheet — *not started; needs `expo-calendar` and three answers*
+- [ ] Yearly theatre goal: set how many shows to see this year, progress from the diary — *not started; three open questions*
+- [ ] Weekly "new in your city" push; the chosen city is saved on the account — *not started; four open questions*
+- [ ] Tags on productions and a "similar productions" section — *not started; three open questions; the biggest of the six*
+
 **Stable**
 - [x] Runs end to end on a laptop and on a real phone (Expo Go / dev build) against the local API — *done 2026-10-16: Windows PC + Android phone in Expo Go*
 - [ ] Nightly sync runs for a week with no unexplained failures in the admin's sync log — *needs a machine running the scheduler for a week*
@@ -50,26 +58,24 @@ under "Test findings" (or just tell Claude). Not testable yet: push reminders (n
 "nightly sync for a week" (needs a machine running the scheduler).
 
 **How to run it (Windows):** `irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
-pulls the code, starts the API in its own window and Expo in this one. A re-run doesn't download the
-programme again: for fresh programmes and posters run `php artisan teatar:demo` in `backend/` (second window).
+pulls the code, runs migrations, starts the API in its own window and Expo in this one. A re-run doesn't download
+the programme again: for fresh programmes and posters run `php artisan teatar:demo` in `backend/` (second window).
 Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `password`. Screen map: link at the top.
 
-**Done today, to check on the phone:**
-- [ ] Varna: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
-- [ ] Posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
-- [x] Restyle (NativeWind + own components in `mobile/src/ui/`, dark theme): checked, looks good
+**Built 2026-10-16, to check:**
+- [ ] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
+- [ ] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
+- [ ] Admin (`/admin`): Синхронизации has "Обнови всички" and "График" (time, pause) at the top and the next run under
+  the title; the dashboard shows "Проблеми със синхронизацията" only when a theatre's last sync failed, found nothing or
+  is over 36 hours old, and the menu item gets a red count. Locally the buttons only queue jobs: run
+  `php artisan queue:work` in another window to see them go through
+- [x] Restyle (NativeWind + own components, dark theme): checked, looks good
 
-**Built today, to check in the admin** (`/admin`, sign in as admin): Синхронизации has "Обнови всички"
-and "График" (time and pause) at the top, with the next run under the title; the dashboard shows a
-"Проблеми със синхронизацията" box only when a theatre's last sync failed, found nothing or is over 36 hours old,
-and the Синхронизации menu item gets a red count. Locally the buttons only queue jobs: run `php artisan queue:work`
-in another window to see them go through.
+**Not started, in the MVP:** manual review list, descriptions, city from location, Google sign-in (waiting on the
+key), and five of the six research features (onboarding, "Отивам", yearly goal, weekly push, tags). Order under Next up.
 
-**Added to the MVP (2026-10-16):** Google sign-in, picking the city from the phone's location, production
-descriptions (see MVP goals; none started yet).
-
-**Waiting on Preslav:** the walk-through, and the open decisions below (cast data, Сфумато,
-Нов театър НДК, box-office links, app name, store accounts).
+**Waiting on Preslav:** the walk-through; the Google OAuth key; the research features' open questions; the open
+decisions below (cast data, Сфумато, Нов театър НДК, box-office links, app name, store accounts).
 
 **Screenshots:** `.github/workflows/screens.yml` runs by hand (Actions → Screenshots) or locally (README):
 web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch.
@@ -86,18 +92,20 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 
 ## Next up
 
+Proposed order for the unbuilt MVP goals (Preslav can reorder). The first three need no new decisions:
+
+1. [ ] **Manual review list** in the admin (spec under MVP goals). Do first: it is the safety net for wrong data, and later items (descriptions, tags) feed into it
+2. [ ] **Descriptions** (option c): read each theatre's own description where its programme or production page has one, store it as `synopsis` with its source URL, never over an admin's text; productions without one appear in the review list
+3. [ ] **City from location**: needs `expo-location` (a new npm package: Claude can add it with a one-off workflow that runs `npx expo install` and commits the lock file, or Preslav runs it) and a centre point per city
+4. [ ] **"Already seen" onboarding** once the fallback question is answered (MVP features from the research, 6)
+5. [ ] **Weekly push, yearly goal, "Отивам", tags** once their open questions are answered
+6. [ ] **Google sign-in** once the OAuth key exists
+
+Smaller to-dos:
 - [ ] Code style: Pint fails in CI but is non-blocking (`continue-on-error`), so CI looks green. Run `vendor/bin/pint` once on a machine with Composer, commit, then make the step blocking
+- [ ] Live sources shows results as annotations, and GitHub keeps only 10 notices per step, so with 12 theatres one result is cut (Театър „София“ this time). Write the results to one annotation or the job summary instead
 - [ ] Cast for most productions: waiting on the decision under Open decisions
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
-- **Sync management in the admin** — built 2026-10-16 (Preslav decided the four to-dos below). How it works today: the scheduler (`routes/console.php`) runs `teatar:sync-programmes` at 03:15 Sofia time, which queues one `SyncTheatreProgramme` job per active theatre with an adapter; each job writes a row to `adapter_runs` (status, found, new/changed, new productions, error). Admin: sync log (`AdapterRunResource`), `SyncHealth` widget on the dashboard, per-theatre "Обнови програмата" button (`TheatreResource`), "Активен" toggle. All four need admin smoke tests for any new page or action. No new packages (lock files only come from Preslav's machine)
-  - [x] "Обнови всички" button on the sync log and the dashboard's sync table. Every start (nightly command, buttons) goes through `ProgrammeSync`, which writes a "queued" run first and skips a theatre that is already queued or running
-  - [x] Stuck runs: job `$timeout` 600 s (queue `retry_after` raised to 900 s so a long sync isn't started twice), `failed()` closes the run, and every 10 minutes `AdapterRun::markStale()` fails runs "running" over 30 minutes ("Прекъснато") or "queued" over 2 hours ("no queue worker")
-  - [x] Alerts: `SyncAlerts` widget above the sync table (hidden when all is well) lists failed, empty and over-36-hour theatres with the reason; red count on the Синхронизации menu item
-  - [x] Schedule: "График" on the sync log (a modal, not a separate page) sets the daily time and pause; stored in a new `settings` table, read by `SyncSchedule::register()` in `routes/console.php`. Next run shown under the sync log title and on the dashboard's sync table
-  - Decided 2026-10-16 (Preslav): no sync running locally; `php artisan teatar:demo` fills the data on a PC. The nightly run and the admin "Обнови" buttons are for production. Locally the buttons only queue jobs; to try them by hand, run `php artisan queue:work` in a second window
-- [x] Removed or moved performances (built 2026-10-16): after each import, `ProgrammeImporter::reconcile()` looks at the theatre's future adapter rows between the first and last day the source listed. A moved show keeps its row and id (matched by a per-show ticket link, or same production, stage and day with one old and one new time); unmatched ones are marked cancelled (the app already hides cancelled shows) and come back if the source lists them again. Admin-entered rows are never touched. If a run would cancel more than 5 shows and over half of them, it cancels none and the sync log says so (likely a broken page). The sync log shows moved and cancelled counts
-- [x] Live sources run 2026-10-16: both Varna adapters work against the real sites (Драматичен театър 32 performances to 30 Nov, Куклен театър 5 to 3 Nov). Младежки still 403 from GitHub
-- [ ] Live sources shows results as annotations, and GitHub keeps only 10 notices per step, so with 12 theatres one result is cut (Театър „София“ this time). Write the results to one annotation or the job summary instead
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
 
 ## Build milestones
@@ -165,6 +173,15 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [ ] Test pass on iOS and Android devices; fix crashes
 - [x] Pre-test fixes: lists stopped at the first page; admin had no CSS/JS on a fresh install
 - [x] `php artisan teatar:demo`: real programme + 12 demo people with ratings, reviews (some spoilers), diaries, watchlists, follows, likes; admin's own Feed/Diary/Profile filled too
+
+### 7. Sync management — done 2026-10-16
+- [x] "Обнови всички" on the sync log and the dashboard's sync table. Every start (nightly command, buttons) goes through `ProgrammeSync`, which writes a "queued" run first and skips a theatre that is already queued or running
+- [x] Stuck runs: job `$timeout` 600 s (queue `retry_after` 900 s so a long sync isn't started twice), `failed()` closes the run, and every 10 minutes `AdapterRun::markStale()` fails runs "running" over 30 minutes ("Прекъснато") or "queued" over 2 hours ("no queue worker")
+- [x] Alerts: `SyncAlerts` widget above the sync table (hidden when all is well) lists failed, empty and over-36-hour theatres with the reason; red count on the Синхронизации menu item
+- [x] Schedule: "График" on the sync log (a modal) sets the daily time and pause; stored in the `settings` table, read by `SyncSchedule::register()` in `routes/console.php`. Next run shown on the sync log and the dashboard
+- [x] Moved and dropped performances: after each import, `ProgrammeImporter::reconcile()` checks the theatre's future adapter rows between the first and last day the source listed. A moved show keeps its row and id (per-show ticket link, or same production, stage and day with one old and one new time); unmatched rows are marked cancelled (hidden in the app) and come back if the source lists them again. Admin-entered rows are never touched. A run that would cancel more than 5 shows and over half of them cancels none and says so in the sync log
+- [x] Live sources re-run: both Varna adapters work against the real sites (Драматичен театър 32 performances to 30 Nov, Куклен театър 5 to 3 Nov); Младежки still 403 from GitHub
+- Decided 2026-10-16 (Preslav): no sync running locally; `php artisan teatar:demo` fills the data on a PC. The nightly run and the admin "Обнови" buttons are for production
 
 ## Data sources
 
@@ -246,13 +263,13 @@ Findings that shape the code:
 - [ ] Founding group: 50–100 reviews from friends of the theatre before the public launch, so the app isn't empty
 - [ ] Talk to the theatres (posters, programme feeds, cast) and, early, to Art.bg Net, which sells tickets for many of them
 
-## Exploration (post-MVP candidates)
+## MVP features from the research
 
 From the feature research (Letterboxd, Goodreads, StoryGraph, Stagedoor, Show-Score, Songkick and others).
-All **exploring, not committed**: nothing here is started or promised until Preslav moves it into a milestone.
-Suggested order: 1, 6, 4, 2, 5, 3.
+**Part of the MVP** (Preslav, 2026-10-16: these were meant for the MVP, not after); each has a goal under MVP goals.
+A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 2, 4, 3.
 
-- [ ] **1. Verify performance id stability** — *exploring* · Size: S · Do first; blocks 4 and 5
+- [x] **1. Performance ids survive a nightly import** — *built 2026-10-16* · Size: S · Needed by 4 and 5
   - Goal: know whether a performance keeps its id across nightly imports, so plans and pushes can point at it.
   - Checked from the code 2026-10-16 (PM, not yet tried against a real site change):
     - The import upserts (`Performance::updateOrCreate` in `ProgrammeImporter`), it never deletes and recreates. Key: production + start time (unique `production_id, starts_at`); the stage is not part of the key.
@@ -261,35 +278,34 @@ Suggested order: 1, 6, 4, 2, 5, 3.
     - Production: matched by normalised title + guest flag + visiting company among the theatre's running productions. If the theatre changes the title's spelling (beyond case and quotes), the import creates a new production, so every id under it changes.
     - Diary entries keep working if a performance row is ever deleted (`performance_id` is nullable, `nullOnDelete`).
   - Built 2026-10-16: the matching below (see Next up, "Removed or moved performances"). Still open: planned visits from 4 don't exist yet, so nothing else needs to follow a moved row.
-  - Fix task (to-do if 4 or 5 go ahead): extend the "removed or moved" to-do so a moved show is recognised (same production, same stage or day, source no longer lists the old time) and the old row is updated or cancelled with a link to the new one; anything pointing at the old performance (planned visits from 4) moves with it. Test with two fixtures, before and after the change.
   - Decided 2026-10-16 (Preslav): after each sync, match performances against what the source now lists, so a moved show updates its existing row (same id) instead of leaving the old one and adding a new one. Rows the source no longer lists, with no match, are marked cancelled, not deleted.
   - How to match (built as proposed): use a per-show id from the source where there is one (ticket ids at Сълза и смях, Entase/ePayGO links); otherwise same production, same stage, same day, exactly one old and one new time. Anything ambiguous is cancelled + created, and shows up in the admin review list.
 
-- [ ] **6. "Already seen" onboarding for the user's city** — *exploring* · Size: S
+- [ ] **6. "Already seen" onboarding for the user's city** — *not started* · Size: S
   - Goal: after sign-up and city choice, a grid of long-running productions in that city; tap to mark seen, optionally rate.
   - Decided 2026-10-16 (Preslav): onboarding marks are real diary entries with no date (replaces the "seen before" flag idea and its two follow-ups). The user can add the date later. Undated entries can't count in a year's stats; the diary lists them in their own group ("Без дата"). Otherwise they count as seen like any diary entry: the production shows as seen on its page, and they count in the all-time stats (most-seen actor, favourite theatre, ratings histogram).
   - Decided 2026-10-16 (Preslav): the grid shows the most-reviewed productions in that city (the ones people are most likely to have seen).
   - Open, to decide later (Preslav, 2026-10-16): at launch almost nothing has reviews (only the founding reviews), so the grid would be empty or random. Fallback while a city has few reviews: most performances since the import began, or an admin-picked list? Count reviews only, or all "seen" logs (more of them)? Can onboarding be skipped and reached later from the profile?
   - Depends on: one-tap log (built); the user's city on the server (see 5); `diary_entries.seen_on` made nullable, with stats, the diary list and the "Видях" sheet handling a missing date.
 
-- [ ] **4. "I'm going": add to the phone calendar, then a next-day "How was it?" push** — *exploring* · Size: S–M
+- [ ] **4. "I'm going": add to the phone calendar, then a next-day "How was it?" push** — *not started* · Size: S–M
   - Goal: "Add to calendar" on a performance saves a planned visit; the day after, one push "Как беше <production>?" opens the log sheet with the date filled in. No push before the show; the calendar handles that.
   - Decided 2026-10-16 (Preslav): use `expo-calendar` if the feature needs it (new npm package: Preslav updates `mobile/package-lock.json` on his machine). Push is built and covered by tests as if it works; Preslav tests it on a development build later.
   - Open: cancelled calendar event (probably ignore; remove the plan in the app)? Performance cancelled: drop the plan or tell the user? (A moved show keeps its row once item 1's matching exists, so the plan moves with it.) Show "planned" visits to followers or keep them private?
   - Depends on: item 1's matching; a new "planned visits" table (nothing like it exists; the diary is for seen shows); push (development build to test).
 
-- [ ] **2. Yearly theatre goal** — *exploring* · Size: S
+- [ ] **2. Yearly theatre goal** — *not started* · Size: S
   - Goal: the user sets how many performances to see this year; progress comes from diary entries.
   - Open: profile only, or also the Програма screen? Past years: keep each year's goal and result, or only the current one? Does the goal reset on 1 January or ask again?
   - Depends on: yearly stats (built: `ProfileStats` counts `seen_this_year` by `seen_on`); a goal per user per year (new column or table).
 
-- [ ] **5. Weekly "new in your city" push** — *exploring* · Size: S
+- [ ] **5. Weekly "new in your city" push** — *not started* · Size: S
   - Goal: once a week, new productions and premieres in the user's city since last week.
   - Open: day and time? Its own on/off switch, separate from watchlist reminders? Skip the push when there's nothing new (likely yes)? Does a guest production count as new?
   - Decided 2026-10-16 (Preslav): save the city on the user's account (today the app keeps it on the phone only); the app sends it when the user picks or changes a city. Push is built and tested as if it works; Preslav tests it on a development build later.
   - Depends on: item 1 (a renamed title would look "new"); "first appeared" = `productions.created_at`, which also counts productions an admin adds; push (development build).
 
-- [ ] **3. Tags for productions, to find similar ones** — *exploring* · Size: M
+- [ ] **3. Tags for productions, to find similar ones** — *not started* · Size: M
   - Goal: a fixed tag list (comedy, drama, musical, heavy, light, for teens, short, long) to show "similar productions".
   - Open: who sets tags: admin in Filament, users after rating, or both (and how user votes turn into a tag)? Ranking of "similar": shared tags, same director or actors, same theatre? Bulgarian tag names fixed in code or editable in the admin?
   - Depends on: new tags table; the manual review list (MVP goal) if admins tag while reviewing; enough tagged productions before the section is worth showing.
@@ -306,6 +322,8 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — STATUS restructured: the six research features are MVP goals (Preslav: meant for the MVP, not after); "Next up" is now the build order; finished sync work moved to milestone 7; "Now" rewritten.
 
 - **2026-10-16** — Sync management built: "Обнови всички", stuck runs closed, dashboard alerts with a menu badge, nightly time and pause in the admin. Importer tests: 8 new; sync tests: 15 new. Importer now keeps a moved show's id and cancels shows the source dropped. Live sources re-run: both Varna adapters fine.
 
