@@ -249,6 +249,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — City switcher is now always shown (it hid itself when the city list failed to load, which looked like it was missing on Preslav's phone) and reloads the list when opened.
 - **2026-10-16** — Fix: `teatar:demo` crashed on a second run on SQLite (diary dates); `DiaryEntry::record()` used by the app and the seeder.
 - **2026-10-16** — Screenshot workflow no longer runs on every push (slow); run it by hand or locally (README → Screenshots).
 - **2026-10-16** — Second city: Varna with 2 theatres (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър), `GET /cities`, city switcher in the Programme header. Both sites allow our bot; the puppet theatre's crawl delay means one request per run.
