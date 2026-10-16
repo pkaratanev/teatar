@@ -37,7 +37,7 @@ it('reminds about a watchlisted show playing within a week, once', function () {
     Http::assertSent(fn (Request $r) => $r['to'] === WATCH_TOKEN
         && $r['title'] === 'Гняв'
         && str_contains($r['body'], ' в 19:00')   // 17:00 UTC is 19:00 in Sofia (winter)
-        && $r['data']['productionId'] === $item->production_id);
+        && ((array) $r['data'])['productionId'] === $item->production_id);
     expect($item->fresh()->reminded_at)->not->toBeNull();
 });
 
