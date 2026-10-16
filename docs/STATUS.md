@@ -16,7 +16,7 @@ The MVP is done when every box here is ticked. These are the acceptance criteria
 so a box is ticked only after he has tried it. The note after each goal says where the build stands.
 
 **Catalogue (what's on)**
-- [ ] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *built: 10 adapters, nightly sync*
+- [x] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *checked by Preslav 2026-10-16: 10 adapters, month view loads more on scroll; the week-long nightly run is its own goal under Stable*
 - [ ] Guest performances are listed too, under the host theatre, marked with the visiting company — *built*
 - [ ] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *built 2026-10-16*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
