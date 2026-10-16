@@ -30,6 +30,7 @@ class ListAdapterRuns extends ListRecords
                 ->icon(Heroicon::OutlinedClock)
                 ->color('gray')
                 ->modalHeading('Нощна синхронизация')
+                ->modalSubmitActionLabel('Запази')
                 ->modalDescription('Важи за всички театри. „Активен“ на всеки театър и ръчното „Обнови“ работят както досега.')
                 ->fillForm(fn () => ['time' => SyncSchedule::time(), 'paused' => SyncSchedule::paused()])
                 ->schema([

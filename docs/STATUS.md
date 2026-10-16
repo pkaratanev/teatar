@@ -27,14 +27,14 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [x] Production, person and theatre pages; "Билети" opens the theatre's own box office — *checked by Preslav 2026-10-16; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
 
 **Your theatre life**
-- [ ] Sign up and sign in with email; delete account — *built*
+- [x] Sign up and sign in with email; delete account — *checked 2026-10-16 by Claude in the web build while Preslav watched: sign up, still signed in after a reload, sign out and in, delete (the login then fails)*
 - [ ] Sign in with Google — *not started; Preslav gets the Google OAuth key later. Plan: free Google Cloud OAuth client (Android, iOS and web client ids), backend `auth/social` verifying the Google token with Socialite (`laravel/socialite` is already in composer.json and the lock file; no route yet), app button with Google sign-in. Native Google sign-in doesn't run in Expo Go, so testing it needs a development build (`eas init`, free plan). Apple sign-in still comes with the store accounts, since the App Store requires it once Google is offered*
-- [ ] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist — *built*
-- [ ] Profile: diary by date, stats for the year, ratings histogram — *built*
+- [x] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist — *checked 2026-10-16 (web build): 4★ + review + spoiler saved, "Гледах пак" and the date shown, watchlist toggles*
+- [x] Profile: diary by date, stats for the year, ratings histogram — *checked 2026-10-16 (web build): diary by month, stats, histogram, favourite theatre, watchlist with next date*
 
 **Social and safety**
-- [ ] Follow users and people; feed of followed users' reviews; like a review — *built*
-- [ ] Report a review; moderation in the admin (hide, shadow ban) — *built*
+- [x] Follow users and people; feed of followed users' reviews; like a review — *checked 2026-10-16 (web build)*
+- [x] Report a review; moderation in the admin (hide, shadow ban) — *checked 2026-10-16 (web build + admin): reported review appears with a count, "Скрий" removes it from the app, shadow ban hides the user's reviews from others*
 - [ ] Push reminder when a watchlisted production plays within 7 days — *built; testable only with a development build*
 
 **Added from the feature research** (Preslav, 2026-10-16: these are MVP, not after; details and open questions under "MVP features from the research")
@@ -65,10 +65,7 @@ Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `pas
 **Built 2026-10-16, to check:**
 - [x] Phone: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
 - [x] Phone: posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
-- [ ] Admin (`/admin`): Синхронизации has "Обнови всички" and "График" (time, pause) at the top and the next run under
-  the title; the dashboard shows "Проблеми със синхронизацията" only when a theatre's last sync failed, found nothing or
-  is over 36 hours old, and the menu item gets a red count. Locally the buttons only queue jobs: run
-  `php artisan queue:work` in another window to see them go through
+- [x] Admin: "Обнови всички" (12 queued; a second click skips them all), "График" (time change shown under the title and in the notification), checked 2026-10-16
 - [x] Restyle (NativeWind + own components, dark theme): checked, looks good
 
 **Not started, in the MVP:** manual review list, descriptions, city from location, Google sign-in (waiting on the
@@ -91,6 +88,11 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] Restyle checked on the phone: looks good (tab labels clipped only in the web screenshots, not on the phone)
 
 Walk-through, 2026-10-16:
+- [ ] Back button's accessibility label reads "(tabs), back" (the route group's name); give the tabs screen a title so it reads "Назад"
+- [ ] Local web build: opening a deep URL directly (e.g. `/app/sign-in`) gives Laravel's 404 on Preslav's PC, though `/app/` works; the `/app/{path}` fallback in `routes/web.php` isn't matching there. In-app navigation is fine. Web-only, testing aid
+- [ ] Web build only: posters don't load (poster URLs use the LAN address in `APP_URL`, which the browser pane blocks). Not an issue on the phone
+- [ ] Demo data: every review by a demo user has the same text across productions (`DemoActivitySeeder` picks per user, not per review); looks odd in the feed
+- [x] "График" dialog's button said "Изпрати"; now "Запази"
 - [ ] Theatre chips on Програма use the quoted part of the name, so Народен театър shows as "Иван Вазов" (also Младежки → "Николай Бинев", 199 → "Валентин Стойчев", Сатира → "Алеко Константинов", Драма Варна → "Стоян Бъчваров"). Fix: a `short_name` column on theatres, filled by the seeder (Народен театър, Младежки театър, Театър 199, Сатира, …), editable in the admin, sent by the API and used for chips
 
 ## Next up
@@ -325,6 +327,8 @@ A feature is built once its open questions are answered. Order: 1 (done), 6, 5, 
 ## Log
 
 Newest first. One line per working session.
+
+- **2026-10-16** — Walk-through with Preslav: Sofia programme, guests, Varna, browse/search, pages and posters checked on his phone; accounts, rating/review/diary/watchlist, profile, social and moderation checked by Claude in the web build (served by the local API at `/app`) while he watched. Five small findings logged.
 
 - **2026-10-16** — STATUS restructured: the six research features are MVP goals (Preslav: meant for the MVP, not after); "Next up" is now the build order; finished sync work moved to milestone 7; "Now" rewritten.
 
