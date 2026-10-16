@@ -100,8 +100,10 @@ export default function ProgrammeScreen() {
   );
 }
 
-/** "Театър „Българска армия“" → "Българска армия" for compact chips. */
+/** "Театър „Българска армия“" → "Българска армия", "Държавен куклен театър – Варна" → "Куклен театър". */
 function shortName(name: string): string {
   const quoted = name.match(/[„"“]([^“”"]+)[“”"]/);
-  return quoted ? quoted[1] : name;
+  if (quoted) return quoted[1];
+  const short = name.replace(/^Държавен\s+/u, '').replace(/\s+[–-]\s+\S+$/u, '');
+  return short.charAt(0).toUpperCase() + short.slice(1);
 }
