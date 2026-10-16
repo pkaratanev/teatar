@@ -8,4 +8,11 @@ use Filament\Resources\Pages\ListRecords;
 class ListProductionReviews extends ListRecords
 {
     protected static string $resource = ProductionReviewResource::class;
+
+    protected ?string $heading = 'За преглед';
+
+    public function getTitle(): string
+    {
+        return 'За преглед';
+    }
 }

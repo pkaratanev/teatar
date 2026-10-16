@@ -130,6 +130,11 @@ class ProductionReviewResource extends Resource
         return 'За преглед, играят до 30 дни';
     }
 
+    public static function getBreadcrumb(): string
+    {
+        return 'За преглед';
+    }
+
     public static function canCreate(): bool
     {
         return false;
