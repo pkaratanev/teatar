@@ -2,6 +2,8 @@
 
 **Last updated:** 2026-10-15 (end of day) · **Stage:** building the MVP, locally · **Then:** Preslav tests → deploy → stores
 
+Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
+
 This is the single source of truth for the project. Update it in the same commit as the work: tick what's
 done, move "Now", add what you found, add a Log line. Plan and rationale: [plan.md](plan.md).
 
@@ -184,6 +186,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Published a screen map of the app (link at the top) for Preslav, who hasn't run the app yet.
 - **2026-10-16** — Theatre filter chips on the Programme screen. Watchlist push reminders (backend job + app registration); testable only with a dev build.
 - **2026-10-16** — Social: follow users and people, feed, likes (counts recomputed from the table). Polymorphic columns now use short names (user, person, production, theatre).
 - **2026-10-16** — Apple/Google sign-in moved to Store releases: Sign in with Apple needs the paid developer account, which comes after the MVP. Email sign-in is enough for testing. Social (follow, feed, likes) is Now.
