@@ -44,7 +44,7 @@ verify: failures appear as annotations, readable with
 - Lock files (`backend/composer.lock`, `mobile/package-lock.json`) come from Preslav's working install
   (PHP 8.4). Adding a package needs a lock update, which only a machine with Composer/npm can make.
 - Theatre sites aren't reachable from the sandbox either. To look at a site, push a temporary workflow to a
-  `probe` branch that curls the pages (with our user agent) and force-pushes them to `probe-out`.
+  `probe` branch that curls the pages (with our user agent) and force-pushes them to `probe-out`. Ask Preslav to delete the probe branches afterwards (the sandbox can't delete branches).
 - Screenshots: run `.github/workflows/screens.yml` by hand (`gh workflow run` needs GraphQL, which is
   blocked; use `gh api repos/pkaratanev/teatar/actions/workflows/screens.yml/dispatches -f ref=main`),
   then `git fetch origin screenshots`.
