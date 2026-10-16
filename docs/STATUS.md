@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-15 (end of day) · **Stage:** building the MVP, locally · **Then:** Preslav tests → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP built, waiting for Preslav's first test run · **Then:** fixes → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -12,37 +12,42 @@ No deploy work before the MVP goals below are met.
 
 ## MVP goals
 
-The MVP is done when every box here is ticked. These are the acceptance criteria for Preslav's testing.
+The MVP is done when every box here is ticked. These are the acceptance criteria for Preslav's testing,
+so a box is ticked only after he has tried it. The note after each goal says where the build stands.
 
 **Catalogue (what's on)**
-- [ ] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically
-- [ ] Guest performances are listed too, under the host theatre, marked with the visiting company
-- [ ] Every listed production has a title and theatre; most have author, director and cast
-- [ ] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres
-- [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office
+- [ ] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *built: 10 adapters, nightly sync*
+- [ ] Guest performances are listed too, under the host theatre, marked with the visiting company — *built*
+- [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
+- [ ] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *built*
+- [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built*
 
 **Your theatre life**
-- [ ] Sign up and sign in (email for testing; Apple and Google before the store release); delete account
-- [ ] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist
-- [ ] Profile: diary by date, stats for the year, ratings histogram
+- [ ] Sign up and sign in (email for testing; Apple and Google before the store release); delete account — *built for email*
+- [ ] Rate ½–5★, write a review with a spoiler flag, mark "seen" with a date, watchlist — *built*
+- [ ] Profile: diary by date, stats for the year, ratings histogram — *built*
 
 **Social and safety**
-- [ ] Follow users and people; feed of followed users' reviews; like a review
-- [ ] Report a review; moderation in the admin (hide, shadow ban)
-- [ ] Push reminder when a watchlisted production plays within 7 days
+- [ ] Follow users and people; feed of followed users' reviews; like a review — *built*
+- [ ] Report a review; moderation in the admin (hide, shadow ban) — *built*
+- [ ] Push reminder when a watchlisted production plays within 7 days — *built; testable only with a development build*
 
 **Stable**
-- [ ] Runs end to end on a laptop and on a real phone (Expo Go / dev build) against the local API
-- [ ] Nightly sync runs for a week with no unexplained failures in the admin's sync log
-- [ ] CI green; every adapter has a saved-HTML test; core flows have API tests
-- [ ] No known crash or data-loss bug open
+- [ ] Runs end to end on a laptop and on a real phone (Expo Go / dev build) against the local API — *not yet tried*
+- [ ] Nightly sync runs for a week with no unexplained failures in the admin's sync log — *needs a machine running the scheduler for a week*
+- [ ] CI green; every adapter has a saved-HTML test; core flows have API tests — *done in CI; tick at sign-off*
+- [ ] No known crash or data-loss bug open — *none known; the first test will tell*
 
 ## Now
 
-**The MVP is feature-complete and ready for Preslav's first test run.** Everything in the MVP goals
-is built except two things that need time or decisions (see below). CI covers the backend (tests on
-Postgres), the admin pages, and the app (typecheck + a full Metro bundle), but nobody has run the app
-on a phone yet.
+**The MVP is built and ready for Preslav's first test run.** Every MVP goal is built except cast data
+for most productions (decision below). Two goals need more than code: push reminders need a
+development build, and the "nightly sync for a week" goal needs a machine running the scheduler.
+CI covers the backend (tests on Postgres), the admin pages, and the app (typecheck + a full Metro
+bundle), but nobody has run the app on a phone yet.
+
+**Claude, while waiting:** small items from Next up (profile editing, deep links), nothing that
+changes what Preslav is testing.
 
 **How to test (Preslav):**
 1. `docker compose up -d`
@@ -55,7 +60,7 @@ on a phone yet.
 **Not covered by the first test:** push reminders (need `eas init` and a development build) and
 Apple/Google sign-in (need the store accounts).
 
-**Waiting on Preslav:** the two open decisions below (Сфумато, Нов театър НДК).
+**Waiting on Preslav:** the first test run, and the open decisions below (cast data, Сфумато, Нов театър НДК).
 
 ## Test findings
 
@@ -63,7 +68,7 @@ _Empty until the first run._
 
 ## Next up
 
-- [ ] Cast for most productions — an MVP goal ("most have author, director and cast"), but the cast pass is parked. Options: fill the most-watched shows in the admin, or un-park the production-page pass for the 3–4 biggest theatres
+- [ ] Cast for most productions: waiting on the decision under Open decisions
 - [ ] Edit your own profile (name, bio) in the app
 - [ ] Deep links `teatar://production/{id}` for sharing
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
@@ -73,7 +78,8 @@ _Empty until the first run._
 
 ### 1. Setup and CI — done
 - [x] Monorepo on GitHub: `backend/` (Laravel 13) + `mobile/` (Expo SDK 57)
-- [x] CI: Pint, Larastan, migrations on Postgres 17, Pest; mobile `tsc`
+- [x] CI: Pint, Larastan, migrations on Postgres 17, Pest, Filament assets check; mobile `tsc` + Metro bundle of the Android app
+- [x] **Live sources** workflow: runs every adapter against the real sites (manual + weekly)
 - [x] Local Postgres via `compose.yaml`
 - [ ] Preslav runs it locally once (`composer setup`, `php artisan teatar:demo`, Expo Go on a phone); commit `composer.lock` + `package-lock.json`
 
@@ -105,7 +111,8 @@ _Empty until the first run._
 - [x] API: programme, production, person, theatre, search
 - [x] Screens: Programme, Search, Production, Person, Theatre (first pass)
 - [x] "гостува …" label on visiting productions
-- [x] Theatre filter on the Programme screen (chips)
+- [x] Theatre filter on the Programme screen (chips, hides theatres with nothing scheduled)
+- [x] Infinite scroll on Programme, Diary and Feed
 - [ ] Generate API types from Scramble and replace hand-written ones
 - [ ] Deep links `teatar://production/{id}`
 
@@ -128,6 +135,7 @@ _Empty until the first run._
 ### 6. Stabilise
 - [ ] Run the nightly sync for a week; fix every failure
 - [ ] Test pass on iOS and Android devices; fix crashes
+- [x] Pre-test fixes: lists stopped at the first page; admin had no CSS/JS on a fresh install
 - [x] `php artisan teatar:demo`: real programme + 12 demo people with ratings, reviews (some spoilers), diaries, watchlists, follows, likes; admin's own Feed/Diary/Profile filled too
 
 ## Data sources
@@ -194,9 +202,9 @@ Findings that shape the code:
 
 ## Open decisions
 
+- [ ] Cast data: fill the most-watched shows in the admin, or un-park the production-page reader for the 3–4 biggest theatres (Народен, Сатира, Българска армия, Театър „София“)?
 - [ ] Сфумато: its robots.txt asks bots not to crawl. Respect it (add Сфумато by hand in the admin / later contact) or not?
 - [ ] Нов театър НДК looks closed: replace it in the launch set? Candidates: Театър „Азарян“ (НДК), Топлоцентрала, Столичен куклен театър
-
 - [ ] App name (placeholder: Teatar)
 - [ ] Store developer accounts: individual or company
 
@@ -204,6 +212,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — STATUS review: each MVP goal now says where the build stands; cast data added to open decisions.
 - **2026-10-16** — CI now also bundles the Android app with Metro. MVP feature-complete; handed over for the first test run.
 - **2026-10-16** — Setup fix: `composer setup` now publishes Filament's CSS/JS and links storage; without it the admin would load unstyled. CI checks the assets are published.
 - **2026-10-16** — Pre-test fix: Programme, Diary and Feed only showed the first API page (Месец stopped at 50 performances); now infinite scroll. Theatre chips hide theatres with nothing scheduled.
