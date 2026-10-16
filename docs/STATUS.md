@@ -90,6 +90,7 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 - [x] App crashed on start in Expo Go on Android: importing `expo-notifications` throws there, which broke every screen — fixed, notifications load only in dev/store builds
 - [x] After the restyle, Metro failed on Windows ("reading 'transformFile'"): the real error was `Cannot find module 'babel-preset-expo'` — our new babel.config uses it, so it is now a direct devDependency
 - [x] After the fix: the app works; the styling is the problem (generic Material look) — restyled
+- [x] Running `php artisan teatar:demo` a second time crashed on SQLite (duplicate diary entry): SQLite stores a `date` cast as "Y-m-d 00:00:00", so the same-day lookup missed. Same bug would hit logging a show twice on one day in the app. Fixed with `DiaryEntry::record()` (matches with whereDate)
 - [x] Restyle checked on the phone: looks good (tab labels clipped only in the web screenshots, not on the phone)
 
 ## Next up
@@ -248,6 +249,7 @@ Findings that shape the code:
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Fix: `teatar:demo` crashed on a second run on SQLite (diary dates); `DiaryEntry::record()` used by the app and the seeder.
 - **2026-10-16** — Screenshot workflow no longer runs on every push (slow); run it by hand or locally (README → Screenshots).
 - **2026-10-16** — Second city: Varna with 2 theatres (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър), `GET /cities`, city switcher in the Programme header. Both sites allow our bot; the puppet theatre's crawl delay means one request per run.
 - **2026-10-16** — Launch budget researched: about 124 USD the first year (Play 25 once, Apple 99/year), Expo Free plan is enough. Noted under Store releases.

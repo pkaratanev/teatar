@@ -117,7 +117,7 @@ class DemoActivitySeeder extends Seeder
 
         foreach ($seen as $production) {
             $seenOn = CarbonImmutable::now($tz)->subDays(mt_rand(1, 240));
-            DiaryEntry::firstOrCreate(['user_id' => $user->id, 'production_id' => $production->id, 'seen_on' => $seenOn->toDateString()]);
+            DiaryEntry::record($user->id, $production->id, $seenOn->toDateString());
 
             $halfStars = $this->plausibleRating();
             Rating::updateOrCreate(['user_id' => $user->id, 'production_id' => $production->id], ['half_stars' => $halfStars]);
