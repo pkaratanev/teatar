@@ -105,7 +105,7 @@ class Production extends Model implements HasMedia
             'synopsis' => filled($this->synopsis),
         ];
 
-        return array_values(array_map(fn (string $key) => self::CHECKS[$key], array_keys(array_filter($present, fn (bool $ok) => ! $ok))));
+        return array_map(fn (string $key) => self::CHECKS[$key], array_keys(array_filter($present, fn (bool $ok) => ! $ok)));
     }
 
     /** An importer added or changed something: put it (back) on the review list. A new production stays "new". */

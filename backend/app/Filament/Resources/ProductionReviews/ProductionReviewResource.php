@@ -44,7 +44,7 @@ class ProductionReviewResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        return Production::query()
             ->where('needs_review', true)
             ->with('theatre')
             ->withDataChecks()
@@ -89,7 +89,7 @@ class ProductionReviewResource extends Resource
                     ->requiresConfirmation()
                     ->modalDescription('Маркира избраните постановки като прегледани от теб.')
                     ->action(function (Collection $records) {
-                        $records->each(fn (Production $p) => $p->markReviewed(auth()->id()));
+                        $records->each(fn ($p) => $p instanceof Production && $p->markReviewed(auth()->id()));
                         Notification::make()->title('Прегледани: '.$records->count())->success()->send();
                     })
                     ->deselectRecordsAfterCompletion(),
