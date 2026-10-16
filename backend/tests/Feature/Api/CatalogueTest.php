@@ -79,3 +79,22 @@ it('pages through a long programme', function () {
 
     $this->getJson('/api/v1/performances?range=month&page=2')->assertOk()->assertJsonCount(10, 'data');
 });
+
+it('lists cities with active theatres, biggest programme first', function () {
+    $sofia = Production::factory()->for(Theatre::factory()->create(['city' => 'София']))->create();
+    Performance::factory()->for($sofia)->count(3)->create(['starts_at' => now()->addDays(2)]);
+    $varna = Production::factory()->for(Theatre::factory()->create(['city' => 'Варна']))->create();
+    Performance::factory()->for($varna)->create(['starts_at' => now()->addDays(2)]);
+    Performance::factory()->for($varna)->create(['starts_at' => now()->subDays(2)]); // past, not counted
+    Theatre::factory()->create(['city' => 'Варна']);
+    Theatre::factory()->create(['city' => 'Пловдив', 'is_active' => false]);
+
+    $this->getJson('/api/v1/cities')
+        ->assertOk()
+        ->assertJsonCount(2, 'data')
+        ->assertJsonPath('data.0.name', 'София')
+        ->assertJsonPath('data.0.upcoming_count', 3)
+        ->assertJsonPath('data.1.name', 'Варна')
+        ->assertJsonPath('data.1.theatres_count', 2)
+        ->assertJsonPath('data.1.upcoming_count', 1);
+});

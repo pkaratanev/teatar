@@ -15,20 +15,7 @@ jobs:
           UA=$(grep -oP "user_agent'\s*=>\s*env\('[A-Z_]+',\s*'\K[^']+" ../backend/config/teatar.php || echo "TeatarBot/0.1")
           echo "$UA" > ua.txt
           f() { curl -sSL -m 30 -A "$UA" -H 'Accept-Language: bg' -o "$1" -w "$1 %{http_code} %{url_effective}\n" "$2" >> index.txt 2>&1 || echo "$1 FAIL $2" >> index.txt; }
-          f drama-robots.txt https://dramavarna.com/robots.txt
-          f drama-10.html "https://dramavarna.com/index.php/bg/program-and-tickets?month=10&year=2026"
-          f drama-11.html "https://dramavarna.com/index.php/bg/program-and-tickets?month=11&year=2026"
-          f drama-12.html "https://dramavarna.com/index.php/bg/program-and-tickets?month=12&year=2026"
-          f drama-01.html "https://dramavarna.com/index.php/bg/program-and-tickets?month=1&year=2027"
-          f drama-event.html "https://dramavarna.com/index.php/bg/program-and-tickets?event=971"
-          f puppet-robots.txt https://vnpuppet.com/robots.txt
-          f puppet-home.html https://vnpuppet.com/
-          f opera-robots.txt https://operavarna.bg/robots.txt
-          f opera-home.html https://operavarna.bg/
-          f opera-month.html "https://operavarna.bg/програма/месечна-програма"
-          f opera-prog.html "https://operavarna.bg/програма"
-          f vculture-theatre.html "https://varnaculture.bg/bg/Театър/c11.html"
-          f varnaevents.html https://varna.events/
+          f puppet-events.json "https://vnpuppet.com/wp-json/tribe/events/v1/events?per_page=50&start_date=2026-10-16"
       - name: publish
         if: always()
         run: |

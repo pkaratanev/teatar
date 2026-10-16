@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\PerformanceController;
 use App\Http\Controllers\Api\V1\PersonController;
 use App\Http\Controllers\Api\V1\ProductionController;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     // Catalogue: public, no account needed to browse.
+    Route::get('cities', [CityController::class, 'index']);
     Route::get('performances', [PerformanceController::class, 'index']);
     Route::get('productions/{production}', [ProductionController::class, 'show']);
     Route::get('theatres', [TheatreController::class, 'index']);
