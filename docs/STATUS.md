@@ -254,17 +254,20 @@ Suggested order: 1, 6, 4, 2, 5, 3.
     - Production: matched by normalised title + guest flag + visiting company among the theatre's running productions. If the theatre changes the title's spelling (beyond case and quotes), the import creates a new production, so every id under it changes.
     - Diary entries keep working if a performance row is ever deleted (`performance_id` is nullable, `nullOnDelete`).
   - Fix task (to-do if 4 or 5 go ahead): extend the "removed or moved" to-do so a moved show is recognised (same production, same stage or day, source no longer lists the old time) and the old row is updated or cancelled with a link to the new one; anything pointing at the old performance (planned visits from 4) moves with it. Test with two fixtures, before and after the change.
-  - Open: is "time moved" detectable reliably from listings that don't give a per-show id? Some sources do (ticket ids at Сълза и смях, Entase/ePayGO links); could those become the key where present?
+  - Decided 2026-10-16 (Preslav): after each sync, match performances against what the source now lists, so a moved show updates its existing row (same id) instead of leaving the old one and adding a new one. Rows the source no longer lists, with no match, are marked cancelled, not deleted.
+  - Open: how to match. Proposal: use a per-show id from the source where there is one (ticket ids at Сълза и смях, Entase/ePayGO links); otherwise same production, same stage, same day, exactly one old and one new time. Anything ambiguous is cancelled + created, and shows up in the admin review list.
 
 - [ ] **6. "Already seen" onboarding for the user's city** — *exploring* · Size: S
   - Goal: after sign-up and city choice, a grid of long-running productions in that city; tap to mark seen, optionally rate.
-  - Open: admin-picked list or "most performances in the last N months"? (The import only has history since mid-October 2026, so an automatic list is thin for a while.) Can it be skipped and reached later from the profile? Is the "seen" date left empty, since we don't know when?
-  - Depends on: one-tap log (built); city choice (in the app only, see 5); a diary entry without a date if we want that (today `seen_on` is required).
+  - Decided 2026-10-16 (Preslav): onboarding marks are a separate "seen before" flag, not diary entries, so they don't count in the year's stats or the diary (to confirm: Preslav said "add that" to this option).
+  - Open: admin-picked list or "most performances in the last N months"? (The import only has history since mid-October 2026, so an automatic list is thin for a while.) Can it be skipped and reached later from the profile? Does a "seen before" production show as seen on its page and count towards "most-seen actor"?
+  - Depends on: one-tap log (built); the user's city on the server (see 5); a new "seen before" record per user and production.
 
 - [ ] **4. "I'm going": add to the phone calendar, then a next-day "How was it?" push** — *exploring* · Size: S–M
   - Goal: "Add to calendar" on a performance saves a planned visit; the day after, one push "Как беше <production>?" opens the log sheet with the date filled in. No push before the show; the calendar handles that.
-  - Open: cancelled calendar event (probably ignore; remove the plan in the app)? Performance cancelled or moved: drop the plan, move it, or tell the user? `expo-calendar` (new npm package, needs a lock update from Preslav's machine) or an .ics file (no package)? Show "planned" visits to followers or keep them private?
-  - Depends on: item 1 and its fix; a new "planned visits" table (nothing like it exists; the diary is for seen shows); push, which needs `eas init` and a development build to test.
+  - Decided 2026-10-16 (Preslav): use `expo-calendar` if the feature needs it (new npm package: Preslav updates `mobile/package-lock.json` on his machine). Push is built and covered by tests as if it works; Preslav tests it on a development build later.
+  - Open: cancelled calendar event (probably ignore; remove the plan in the app)? Performance cancelled: drop the plan or tell the user? (A moved show keeps its row once item 1's matching exists, so the plan moves with it.) Show "planned" visits to followers or keep them private?
+  - Depends on: item 1's matching; a new "planned visits" table (nothing like it exists; the diary is for seen shows); push (development build to test).
 
 - [ ] **2. Yearly theatre goal** — *exploring* · Size: S
   - Goal: the user sets how many performances to see this year; progress comes from diary entries.
@@ -274,7 +277,8 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 - [ ] **5. Weekly "new in your city" push** — *exploring* · Size: S
   - Goal: once a week, new productions and premieres in the user's city since last week.
   - Open: day and time? Its own on/off switch, separate from watchlist reminders? Skip the push when there's nothing new (likely yes)? Does a guest production count as new?
-  - Depends on: item 1 (a renamed title would look "new"); "first appeared" = `productions.created_at`, which also counts productions an admin adds; the user's city on the server (today the app keeps it on the phone only, so the backend can't target by city); push (development build).
+  - Decided 2026-10-16 (Preslav): save the city on the user's account (today the app keeps it on the phone only); the app sends it when the user picks or changes a city. Push is built and tested as if it works; Preslav tests it on a development build later.
+  - Depends on: item 1 (a renamed title would look "new"); "first appeared" = `productions.created_at`, which also counts productions an admin adds; push (development build).
 
 - [ ] **3. Tags for productions, to find similar ones** — *exploring* · Size: M
   - Goal: a fixed tag list (comedy, drama, musical, heavy, light, for teens, short, long) to show "similar productions".
@@ -294,6 +298,7 @@ Suggested order: 1, 6, 4, 2, 5, 3.
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Exploration list added (6 post-MVP candidates). Decided (Preslav): match moved performances after each sync instead of new rows; city saved on the user; onboarding uses a "seen before" flag (to confirm); `expo-calendar` if needed; push features built as if working, tested later.
 - **2026-10-16** — Decided (Preslav): no local sync, `teatar:demo` seeds the data. Sync management scoped: sync-all button, stuck runs, dashboard alerts, schedule time and pause in the admin. Four to-dos under Next up, not started.
 - **2026-10-16** — Decided (Preslav): Sign in with Apple before the first iOS submission. To-dos: manage the sync from the admin (scope open); cancel performances a source no longer lists (found while reviewing the sync).
 - **2026-10-16** — PM review: docs match the code (new MVP goals all unbuilt; CI green on main). plan.md and CLAUDE.md now record descriptions, Google sign-in, location city and the review list; Apple sign-in timing added to Open decisions; Live sources re-run for Varna added to Next up.
