@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone, restyle done, Varna added · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
+**Last updated:** 2026-10-16 · **Stage:** MVP runs on Preslav's phone (restyle, Varna, posters done) · **Next:** Preslav walks the MVP goals · **Then:** fixes → deploy → stores
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
@@ -21,7 +21,7 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 - [ ] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *built 2026-10-16*
 - [ ] Every listed production has a title and theatre; most have author, director and cast — *partly: titles and theatres yes, authors for most, directors for some, cast mostly missing (decision below)*
 - [ ] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *built*
-- [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built*
+- [ ] Production, person and theatre pages; "Билети" opens the theatre's own box office — *built; per-show ticket links for 7 theatres, the rest need a box-office link (Open decisions)*
 
 **Your theatre life**
 - [ ] Sign up and sign in (email for testing; Apple and Google before the store release); delete account — *built for email*
@@ -41,47 +41,25 @@ so a box is ticked only after he has tried it. The note after each goal says whe
 
 ## Now
 
-**Preslav walks through the MVP goals on his phone.** The app runs on his Windows PC + Android phone and the
-restyle is done ("app seems great"). Next: try each MVP goal above and tick the ones that work; log anything
-broken under "Test findings". Not testable yet: push reminders (need a development build) and the
-"nightly sync for a week" goal (needs a machine running the scheduler). Cast data for most productions
-still waits on a decision.
+**Preslav walks through the MVP goals on his phone** and ticks the ones that work; anything broken goes
+under "Test findings" (or just tell Claude). Not testable yet: push reminders (need a development build) and
+"nightly sync for a week" (needs a machine running the scheduler).
 
-**Second city — Varna (built, waiting for CI and Preslav's check):** Preslav wants two cities in the MVP to
-test switching. Added `GET /cities`, a city switcher in the Programme header (remembered on the device), and
-two Varna theatres with adapters: Драматичен театър „Стоян Бъчваров“ (monthly calendar with stage, author,
-director and ticket links) and Държавен куклен театър – Варна (WordPress events feed, one request per run as
-its robots.txt asks). `php artisan teatar:demo` pulls both. Search stays across all cities.
-- [x] API, admin seed, adapters with saved-HTML/JSON tests
-- [x] City switcher in the app; theatre chips and programme follow the city
-- [ ] Preslav switches to Варна on his phone (`php artisan teatar:demo` again to pull the Varna programme)
+**How to run it (Windows):** `irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
+pulls the code, starts the API in its own window and Expo in this one. A re-run doesn't download the
+programme again: for fresh programmes and posters run `php artisan teatar:demo` in `backend/` (second window).
+Sign in as `admin@teatar.test` / `password` or `maria.p@demo.teatar.test` / `password`. Screen map: link at the top.
 
-**Restyle — done.** React Native Paper → NativeWind (Tailwind) with our own Reusables-style components in
-`mobile/src/ui/`: dark theme, curtain red + gold stars, Playfair Display headings, Inter text, lucide icons,
-typographic posters when a production has no image. `.github/workflows/screens.yml` (run by hand since 2026-10-16; also runs locally, see README):
-web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch
-(`git fetch origin screenshots`), so Claude can check every screen after a UI change.
-- [x] Every screen moved off Paper; CI green
-- [x] Screenshot pipeline works (13 screens, no console errors)
-- [x] Two screenshot passes: typographic posters, button wrap, edit profile empty when opened by link, day headings
-- [x] Preslav checked the look on his phone: looks good
+**Done today, to check on the phone:**
+- [ ] Varna: tap **📍 София** at the top right of Програма → Варна (Драматичен театър „Стоян Бъчваров“, Държавен куклен театър)
+- [ ] Posters from Народен театър and Драматичен театър Варна (others keep the typographic poster)
+- [x] Restyle (NativeWind + own components in `mobile/src/ui/`, dark theme): checked, looks good
 
-**How to test (Preslav):** on Windows, one line in PowerShell does steps 1–4 (SQLite instead of Postgres; see README):
-`irm https://raw.githubusercontent.com/pkaratanev/teatar/main/scripts/windows.ps1 | iex`
+**Waiting on Preslav:** the walk-through, and the open decisions below (cast data, Сфумато, Нов театър НДК,
+box-office links, app name, store accounts).
 
-1. `docker compose up -d`
-2. `cd backend && composer setup && php artisan teatar:demo && php artisan serve --host=0.0.0.0`
-3. Admin: http://localhost:8000/admin as `admin@teatar.test` / `password`
-4. `cd mobile && cp .env.example .env` (set your computer's LAN IP), `npm install`, `npx expo start`, open in Expo Go (SDK 57)
-5. Sign in as `admin@teatar.test` / `password` (or `maria.p@demo.teatar.test`) and walk through the screen map
-   (new since the map: "Редактирай профила" on the Profile tab, and a share icon on production, theatre,
-   person and user pages; in Expo Go the shared link starts with `exp://` and opens only on a phone running the dev server)
-6. Note anything broken or confusing under "Test findings" below, or just tell Claude
-
-**Not covered by the first test:** push reminders (need `eas init` and a development build) and
-Apple/Google sign-in (need the store accounts).
-
-**Waiting on Preslav:** the MVP walk-through, and the open decisions below (cast data, Сфумато, Нов театър НДК, app name, store accounts).
+**Screenshots:** `.github/workflows/screens.yml` runs by hand (Actions → Screenshots) or locally (README):
+web build + API with demo data + Playwright → phone-sized screenshots on the `screenshots` branch.
 
 ## Test findings
 
@@ -95,6 +73,7 @@ First run, 2026-10-16 (Windows PC, Android phone, Expo Go):
 
 ## Next up
 
+- [ ] Code style: Pint fails in CI but is non-blocking (`continue-on-error`), so CI looks green. Run `vendor/bin/pint` once on a machine with Composer, commit, then make the step blocking
 - [ ] Cast for most productions: waiting on the decision under Open decisions
 - [ ] Following people: notify / highlight new productions with people you follow (nice-to-have)
 - [ ] Младежки театър: Cloudflare bot check blocks GitHub's servers (fine from a normal connection). Re-test from the production host when we deploy; fallback is CSV / manual entry in the admin. Never work around the check.
@@ -239,6 +218,11 @@ Findings that shape the code:
 - [ ] Bulgarian store listings, screenshots, age rating
 - [ ] TestFlight → external beta; Play internal → closed test (14 days) → production
 
+### Launch (from the original plan, not yet scheduled)
+- [ ] Analytics: PostHog EU cloud — log rate, review rate, D7 retention from day one (needs a privacy-policy line and consent)
+- [ ] Founding group: 50–100 reviews from friends of the theatre before the public launch, so the app isn't empty
+- [ ] Talk to the theatres (posters, programme feeds, cast) and, early, to Art.bg Net, which sells tickets for many of them
+
 ## Open decisions
 
 - [ ] Cast data: fill the most-watched shows in the admin, or un-park the production-page reader for the 3–4 biggest theatres (Народен, Сатира, Българска армия, Театър „София“)?
@@ -246,11 +230,13 @@ Findings that shape the code:
 - [ ] Нов театър НДК looks closed: replace it in the launch set? Candidates: Театър „Азарян“ (НДК), Топлоцентрала, Столичен куклен театър
 - [ ] App name (placeholder: Teatar)
 - [ ] Store developer accounts: individual or company
+- [ ] Box-office links: theatres without per-show ticket links (Българска армия, Младежки, 199, Зад канала, Куклен театър Варна) show no "Билети" button. Claude looks up each theatre's ticket page and adds it to the seeder, or Preslav fills "Каса / билети" in the admin
 
 ## Log
 
 Newest first. One line per working session.
 
+- **2026-10-16** — Docs review against the original plan: README, plan.md (with a "changed since the original plan" section), backend README, STATUS "Now" rewritten; analytics, founding reviews and theatre outreach added under Launch; box-office links added to Open decisions.
 - **2026-10-16** — Posters: the importer downloads the theatre's own poster when the programme shows one (Народен театър, Драматичен театър Варна), once per production; resized copy made right away (no queue worker locally). Permission from theatres is a pre-launch task.
 - **2026-10-16** — City switcher is now always shown (it hid itself when the city list failed to load, which looked like it was missing on Preslav's phone) and reloads the list when opened.
 - **2026-10-16** — Fix: `teatar:demo` crashed on a second run on SQLite (diary dates); `DiaryEntry::record()` used by the app and the seeder.
