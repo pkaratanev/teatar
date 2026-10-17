@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Schedule;
 SyncSchedule::register(Schedule::getFacadeRoot());
 
 // Runs that died mid-way (worker killed, timeout) are marked failed instead of "running" forever.
-Schedule::call(fn () => AdapterRun::markStale())->everyTenMinutes()->name('mark-stale-sync-runs');
+// Hourly, not more often: on Laravel Cloud every scheduled task wakes the sleeping app and database,
+// so a frequent task would keep both awake (and billed) all the time.
+Schedule::call(fn () => AdapterRun::markStale())->hourly()->name('mark-stale-sync-runs');
 
 // Watchlist reminders in the morning, after the sync has the latest dates.
 Schedule::job(new SendWatchlistReminders)->dailyAt('10:00')->timezone('Europe/Sofia');

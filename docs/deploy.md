@@ -26,8 +26,9 @@ The database must never be reset. These rules keep it that way:
 
 1. **Application:** new application from `pkaratanev/teatar`, EU region, branch `main`, root folder `backend`.
 2. **Database:** Postgres in the same region, attached to the environment. It fills the `DB_*` variables.
-3. **Bucket:** object storage, **public**, attached to the environment. It fills the `AWS_*` variables.
-   Posters are saved there; the server's own disk is wiped on every deploy.
+3. **Bucket:** Laravel Object Storage, visibility **public**, attached with disk name `public` and "default disk"
+   on. Posters go to the `public` disk, so they land in the bucket with no extra setting. The server's own disk is
+   wiped on every deploy. If you name the disk anything else, set `MEDIA_DISK` to that name.
 4. **Environment variables** (the rest of `backend/.env.example`):
 
    | Variable | Value |
@@ -36,14 +37,17 @@ The database must never be reset. These rules keep it that way:
    | `APP_DEBUG` | `false` |
    | `APP_URL` | the address Laravel Cloud gives you (or your domain later) |
    | `APP_LOCALE` | `bg` |
-   | `MEDIA_DISK` | `s3` |
    | `QUEUE_CONNECTION` | `database` |
    | `TEATAR_CONTACT_EMAIL` | the address shown on /privacy and /delete-account |
    | `MAIL_*` | see "Email" below |
 
 5. **Deploy command:** `php artisan migrate --force`.
-6. **Background work:** turn on the scheduler (nightly sync, stale-run cleanup, watchlist reminders) and add a queue
-   worker (`php artisan queue:work`). Without the worker, syncs started from the admin stay "queued".
+6. **Background work:** on the App cluster, turn on the scheduler (nightly sync, hourly stale-run cleanup, watchlist
+   reminders) and add a queue worker (`php artisan queue:work`). Without the worker, syncs started from the admin
+   stay "queued".
+   - **Scale to zero is fine.** Scheduled tasks wake the sleeping app, and the nightly sync takes a few minutes, well
+     inside the sleep timeout. Queued jobs alone don't wake it, but they run as soon as the next task or request
+     does. Don't schedule anything more often than hourly, or the app and database never get to sleep.
 7. **First deploy, once only.** Run these in Laravel Cloud's command runner:
    ```
    php artisan db:seed --force
