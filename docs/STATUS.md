@@ -268,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — `npm run start:prod`: Expo Go against the Laravel Cloud API.
 - **2026-10-17** — Production address: https://teatar-production-8awteq.laravel.cloud (temporary Laravel Cloud domain), set as the API address in the EAS builds.
 - **2026-10-17** — S3 package pushed (lock from Preslav's PC); `prod` branch for Laravel Cloud deploys; stale-run check hourly so the app can scale to zero; bucket used as the `public` disk.
 - **2026-10-17** — Decided (Preslav): deploy the backend to Laravel Cloud now, closed Play test, public after the MVP. Built for it: posters on a bucket (`MEDIA_DISK`), `teatar:make-admin`, forgotten password with an emailed code (API + app), `eas.json`, /privacy and /delete-account, docs/deploy.md. CLAUDE.md spending rule updated.

@@ -54,6 +54,13 @@ npm install
 npx expo start                       # scan the QR code with Expo Go
 ```
 
+## The app against the production API
+
+`npm.cmd run start:prod` in `mobile/` starts Expo Go against the Laravel Cloud API
+(https://teatar-production-8awteq.laravel.cloud) instead of your PC. You see and change real production data.
+A plain `npm.cmd start` goes back to the local API. For an installable APK with the same address:
+`eas build -p android --profile preview` (see [docs/deploy.md](docs/deploy.md)).
+
 ## The app in a browser on your PC
 
 `npm run web:local` in `mobile/` (in PowerShell: `npm.cmd run web:local`) builds the web version into `backend/public/app-build`; with the API running, open
