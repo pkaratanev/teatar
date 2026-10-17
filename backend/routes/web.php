@@ -2,9 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// No public website yet: the root goes to the admin (which asks for a sign-in).
+Route::redirect('/', '/admin');
 
 // Linked from Google Play and the app: the privacy policy and how to delete an account without the app.
 Route::get('/privacy', fn () => view('legal.privacy', [

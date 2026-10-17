@@ -26,3 +26,7 @@ it('still renders without a contact address', function () {
     $this->get('/privacy')->assertOk()->assertDontSee('mailto:', false);
     $this->get('/delete-account')->assertOk()->assertDontSee('mailto:', false);
 });
+
+it('sends the site root to the admin', function () {
+    $this->get('/')->assertRedirect('/admin');
+});
