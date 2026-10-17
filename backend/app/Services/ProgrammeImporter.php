@@ -291,7 +291,7 @@ class ProgrammeImporter
             ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->first()
             ?? Person::create([
                 'name' => $name,
-                'slug' => Str::slug($name).'-'.Str::lower(Str::random(4)),
+                'slug' => self::slug($name).'-'.Str::lower(Str::random(4)),
                 'source' => CatalogueSource::Adapter->value,
                 'source_url' => $production->source_url,
             ]);
@@ -309,15 +309,29 @@ class ProgrammeImporter
         return $theatre->productions()->create([
             'title' => $title,
             'author' => $item->author,
-            'age_advisory' => $item->ageAdvisory,
+            'age_advisory' => self::ageAdvisory($item->ageAdvisory),
             'is_guest' => $item->guest(),
             'visiting_company' => $item->visitingCompany,
-            'slug' => Str::slug($title).'-'.Str::lower(Str::random(5)),
+            'slug' => self::slug($title).'-'.Str::lower(Str::random(5)),
             'status' => ProductionStatus::Running,
             'source' => CatalogueSource::Adapter->value,
             'source_url' => $item->sourceUrl ?? $theatre->website,
             'needs_review' => true,
             'review_reason' => 'new',
         ]);
+    }
+
+    /** Slug base, short enough for its column (and for poster file names): Cyrillic grows when transliterated. */
+    private static function slug(string $text): string
+    {
+        return rtrim(Str::limit(Str::slug($text), 80, ''), '-') ?: 'x';
+    }
+
+    /** The column holds labels like "12+"; anything longer isn't one. */
+    private static function ageAdvisory(?string $age): ?string
+    {
+        $age = $age === null ? null : trim($age);
+
+        return $age !== null && $age !== '' && mb_strlen($age) <= 8 ? $age : null;
     }
 }

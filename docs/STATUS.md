@@ -268,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — First production sync: one theatre failed with "value too long" (Postgres enforces varchar limits, SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped.
 - **2026-10-17** — `npm run start:prod`: Expo Go against the Laravel Cloud API.
 - **2026-10-17** — Production address: https://teatar-production-8awteq.laravel.cloud (temporary Laravel Cloud domain), set as the API address in the EAS builds.
 - **2026-10-17** — S3 package pushed (lock from Preslav's PC); `prod` branch for Laravel Cloud deploys; stale-run check hourly so the app can scale to zero; bucket used as the `public` disk.

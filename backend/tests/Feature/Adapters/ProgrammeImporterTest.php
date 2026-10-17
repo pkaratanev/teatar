@@ -68,3 +68,25 @@ it('keeps a guest production apart from a home production with the same title', 
         ->and($home->performances()->count())->toBe(1)
         ->and(Production::where('visiting_company', 'ДТ-Варна')->sole()->performances()->count())->toBe(1);
 });
+
+it('stores long titles, credits and links from theatre sites (Postgres rejects text over a column length)', function () {
+    $theatre = Theatre::factory()->create();
+    $title = str_repeat('Дълго заглавие на постановка ', 12); // ~350 characters, ~500 once transliterated
+    $url = 'https://tickets.example.test/event?'.str_repeat('utm_source=teatar&', 30);
+
+    app(ProgrammeImporter::class)->import($theatre, [new ScrapedPerformance(
+        title: $title,
+        startsAt: CarbonImmutable::parse('2026-11-03 19:00', 'Europe/Sofia'),
+        stage: 'Голяма сцена',
+        ticketUrl: $url,
+        sourceUrl: $url,
+        author: str_repeat('Автор ', 60),
+        ageAdvisory: 'Подходящо за деца над 12 години',
+    )]);
+
+    $production = Production::sole();
+    expect(mb_strlen($production->title))->toBeGreaterThan(255)
+        ->and(strlen($production->slug))->toBeLessThanOrEqual(86)
+        ->and($production->age_advisory)->toBeNull()
+        ->and(Performance::sole()->ticket_url)->toBe($url);
+});
