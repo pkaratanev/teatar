@@ -4,8 +4,14 @@ namespace App\Filament\Resources\Productions\Pages;
 
 use App\Filament\Resources\ProductionReviews\ProductionReviewResource;
 use App\Filament\Resources\Productions\ProductionResource;
+use App\Enums\CatalogueSource;
 use App\Models\Production;
+use App\Services\Credits;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Resources\Pages\EditRecord;
 
 class EditProduction extends EditRecord
@@ -14,7 +20,39 @@ class EditProduction extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [ProductionReviewResource::reviewedAction(), DeleteAction::make()];
+        return [$this->pasteCreditsAction(), ProductionReviewResource::reviewedAction(), DeleteAction::make()];
+    }
+
+    /** "Внеси екип": paste the team and cast as a theatre's page lists them; saved straight away. */
+    protected function pasteCreditsAction(): Action
+    {
+        return Action::make('pasteCredits')
+            ->label('Внеси екип')
+            ->icon(Heroicon::OutlinedClipboardDocumentList)
+            ->color('gray')
+            ->modalHeading('Внеси екип и актьори')
+            ->modalDescription('По един етикет на ред, имената след него, разделени със запетая или на отделни редове. '
+                .'Персонаж в скоби или след „ - “. Съществуващите хора се използват отново; нищо не се изтрива и не се дублира.')
+            ->modalSubmitActionLabel('Добави')
+            ->schema([
+                Textarea::make('text')->hiddenLabel()->required()->rows(12)
+                    ->placeholder("Режисьор: Иван Петров\nСценография и костюми: Мария Иванова\nМузика: Петър Димов\nАктьори: Анна Колева (Офелия), Петър Стоянов"),
+            ])
+            ->action(function (array $data, Credits $credits): void {
+                /** @var Production $production */
+                $production = $this->getRecord();
+                $parsed = $credits->parse($data['text']);
+                $added = $credits->add($production, $parsed['credits'], CatalogueSource::Admin);
+
+                Notification::make()
+                    ->title("Добавени участия: {$added}")
+                    ->body($parsed['skipped'] ? 'Пропуснати редове (непознат етикет): '.implode(' · ', $parsed['skipped']) : null)
+                    ->status($parsed['skipped'] ? 'warning' : 'success')
+                    ->persistent($parsed['skipped'] !== [])
+                    ->send();
+
+                $this->redirect(ProductionResource::getUrl('edit', ['record' => $production]));
+            });
     }
 
     /** Under the title: is it on the review list, or who checked it last. */

@@ -7,7 +7,6 @@ use App\Enums\CatalogueSource;
 use App\Enums\CreditRole;
 use App\Enums\ProductionStatus;
 use App\Models\Performance;
-use App\Models\Person;
 use App\Models\Production;
 use App\Models\Stage;
 use App\Models\Theatre;
@@ -287,14 +286,7 @@ class ProgrammeImporter
             return;
         }
 
-        $person = Person::where('name', $name)->first()
-            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->first()
-            ?? Person::create([
-                'name' => $name,
-                'slug' => self::slug($name).'-'.Str::lower(Str::random(4)),
-                'source' => CatalogueSource::Adapter->value,
-                'source_url' => $production->source_url,
-            ]);
+        $person = app(People::class)->findOrCreate($name, CatalogueSource::Adapter, $production->source_url);
 
         $production->credits()->create(['person_id' => $person->id, 'role_type' => CreditRole::Director]);
         $production->flagForReview();
