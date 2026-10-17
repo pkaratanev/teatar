@@ -197,7 +197,7 @@ Moved up from "after the MVP" (Preslav, 2026-10-17). Steps: [deploy.md](deploy.m
 - [ ] Object storage for posters and headshots — *bucket attached as the `public` disk; S3 package pushed 2026-10-17; check posters after the first sync*
 - [ ] Scheduler (nightly sync) and a queue worker
 - [ ] Deploy runs `php artisan migrate --force`; Laravel Cloud deploys from the `prod` branch (`git push origin main:prod` when CI is green on `main`) — *branch created 2026-10-17*
-- [ ] Domain and HTTPS for API and admin
+- [ ] Domain and HTTPS for API and admin — *for now the Laravel Cloud domain https://teatar-production-8awteq.laravel.cloud (Preslav, 2026-10-17); a custom domain later, keeping this one attached for older builds*
 - [ ] First production admin user — *`php artisan teatar:make-admin <email>` (built 2026-10-17)*
 - [ ] Email for password-reset codes (SMTP, e.g. Resend free tier) — *password reset built 2026-10-17*
 - [ ] Web links for sharing (`https://<domain>/production/{id}`): iOS Universal Links + Android App Links, plus a simple web page for people without the app. Until then shared links are `teatar://…`
@@ -268,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — Production address: https://teatar-production-8awteq.laravel.cloud (temporary Laravel Cloud domain), set as the API address in the EAS builds.
 - **2026-10-17** — S3 package pushed (lock from Preslav's PC); `prod` branch for Laravel Cloud deploys; stale-run check hourly so the app can scale to zero; bucket used as the `public` disk.
 - **2026-10-17** — Decided (Preslav): deploy the backend to Laravel Cloud now, closed Play test, public after the MVP. Built for it: posters on a bucket (`MEDIA_DISK`), `teatar:make-admin`, forgotten password with an emailed code (API + app), `eas.json`, /privacy and /delete-account, docs/deploy.md. CLAUDE.md spending rule updated.
 - **2026-10-16** — Data-source decisions (Preslav): cast reader un-parked (Next up 4), Нов театър НДК dropped (registered as a shop), Сфумато: respect robots.txt and ask for permission, box-office links to the seeder (Next up 1; Българска армия open). Build order set; new to-dos and parked expansions (Топлоцентрала, Столичен куклен театър, Азарян). STATUS condensed: done milestones and fixed findings summarised, research item 1 trimmed, superseded notes dropped.

@@ -30,6 +30,9 @@ This moves `prod` forward to the same commit as `main`. Claude does this only wh
 
 ## Laravel Cloud
 
+Production address (temporary Laravel Cloud domain, 2026-10-17): https://teatar-production-8awteq.laravel.cloud
+— admin at `/admin`, API at `/api/v1`, `/privacy`, `/delete-account`.
+
 1. **Application:** new application from `pkaratanev/teatar`, EU region, branch **`prod`**, root folder `backend`,
    auto-deploy on push.
 2. **Database:** Postgres in the same region, attached to the environment. It fills the `DB_*` variables.
@@ -42,7 +45,7 @@ This moves `prod` forward to the same commit as `main`. Claude does this only wh
    |---|---|
    | `APP_ENV` | `production` |
    | `APP_DEBUG` | `false` |
-   | `APP_URL` | the address Laravel Cloud gives you (or your domain later) |
+   | `APP_URL` | `https://teatar-production-8awteq.laravel.cloud` (your own domain later) |
    | `APP_LOCALE` | `bg` |
    | `QUEUE_CONNECTION` | `database` |
    | `TEATAR_CONTACT_EMAIL` | the address shown on /privacy and /delete-account |
@@ -96,8 +99,9 @@ Until a domain is verified, Resend only delivers to your own address, which is e
    eas init
    ```
    `eas init` asks you to add `extra.eas.projectId` to `app.json`; commit that.
-3. **API address:** on expo.dev → the project → Environment variables, add `EXPO_PUBLIC_API_URL` =
-   `APP_URL/api/v1` for the `preview` and `production` environments.
+3. **API address:** already set in `eas.json` for the `preview` and `production` builds:
+   `https://teatar-production-8awteq.laravel.cloud/api/v1`. When a custom domain arrives, change it there for new
+   builds. Keep the Laravel Cloud domain attached, because builds already on phones still use it.
 4. **Builds:**
    - `eas build -p android --profile preview` makes an APK you can install on your phone directly. Try it there first.
    - `eas build -p android --profile production` makes the app bundle for Play.
