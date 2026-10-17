@@ -43,8 +43,8 @@ it('adds credits once, reuses people by name, and fills the author', function ()
     $existing = Person::factory()->create(['name' => 'Анна Колева']);
     $credits = app(Credits::class);
 
-    $first = $credits->add($production, $credits->parse(TEAM."\nАвтор: Уилям Шекспир")['credits'], CatalogueSource::Admin);
-    $again = $credits->add($production, $credits->parse(TEAM)['credits'], CatalogueSource::Admin);
+    $first = $credits->add($production, $credits->parse(TEAM."\nАвтор: Уилям Шекспир"), CatalogueSource::Admin);
+    $again = $credits->add($production, $credits->parse(TEAM), CatalogueSource::Admin);
 
     expect($first)->toBe(9)
         ->and($again)->toBe(0)
@@ -57,8 +57,8 @@ it('fills a missing character instead of adding the actor twice', function () {
     $production = Production::factory()->create();
     $credits = app(Credits::class);
 
-    $credits->add($production, $credits->parse('Актьори: Анна Колева')['credits'], CatalogueSource::Admin);
-    $credits->add($production, $credits->parse('Актьори: Анна Колева (Офелия)')['credits'], CatalogueSource::Admin);
+    $credits->add($production, $credits->parse('Актьори: Анна Колева'), CatalogueSource::Admin);
+    $credits->add($production, $credits->parse('Актьори: Анна Колева (Офелия)'), CatalogueSource::Admin);
 
     expect($production->credits()->where('role_type', CreditRole::Actor)->count())->toBe(1)
         ->and($production->credits()->value('character_name'))->toBe('Офелия');

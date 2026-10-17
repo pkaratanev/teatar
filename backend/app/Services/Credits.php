@@ -7,7 +7,8 @@ use App\Enums\CreditRole;
 use App\Models\Production;
 
 /**
- * Credits from text, as a theatre's page or a person lists them:
+ * Credits from label/value pairs, as theatres list them ("Режисьор" → "Иван Петров"), shared
+ * by the cast reader (pairs read from a theatre's page) and the paste box in the admin (text):
  *
  *   Режисьор: Иван Петров
  *   Сценография и костюми: Мария Иванова
@@ -15,107 +16,139 @@ use App\Models\Production;
  *   Актьори:
  *   Анна Колева - Офелия
  *
- * A known label starts a group; names follow on the same line (comma separated) or on the
- * next lines (one per line). A character goes in brackets or after " - ". Adding is safe to
- * repeat: an existing credit is never doubled and nothing is removed.
+ * Adding is safe to repeat: an existing credit is never doubled and nothing is removed.
+ *
+ * @phpstan-type ParsedCredit array{role: CreditRole, name: string, character: ?string}
+ * @phpstan-type Parsed array{credits: list<ParsedCredit>, author: ?string, skipped: list<string>}
  */
 class Credits
 {
-    /** Label (lower case, without the colon) → roles. Checked as "starts with". */
+    /** Label pattern (lower case) → roles; the first match wins, so combined labels come first. */
     private const LABELS = [
-        'сценография и костюми' => [CreditRole::SetDesigner, CreditRole::CostumeDesigner],
-        'сценограф и костюми' => [CreditRole::SetDesigner, CreditRole::CostumeDesigner],
-        'художник' => [CreditRole::SetDesigner, CreditRole::CostumeDesigner],
-        'режисьор' => [CreditRole::Director],
-        'режисура' => [CreditRole::Director],
-        'постановка' => [CreditRole::Director],
-        'автор' => [CreditRole::Playwright],
-        'драматург' => [CreditRole::Playwright],
-        'пиеса' => [CreditRole::Playwright],
-        'по пиесата на' => [CreditRole::Playwright],
-        'превод' => [CreditRole::Translator],
-        'сценография' => [CreditRole::SetDesigner],
-        'сценограф' => [CreditRole::SetDesigner],
-        'костюми' => [CreditRole::CostumeDesigner],
-        'костюмограф' => [CreditRole::CostumeDesigner],
-        'музика' => [CreditRole::Composer],
-        'композитор' => [CreditRole::Composer],
-        'хореография' => [CreditRole::Choreographer],
-        'хореограф' => [CreditRole::Choreographer],
-        'светлинен дизайн' => [CreditRole::LightingDesigner],
-        'осветление' => [CreditRole::LightingDesigner],
-        'светлини' => [CreditRole::LightingDesigner],
-        'актьори' => [CreditRole::Actor],
-        'участват' => [CreditRole::Actor],
-        'в ролите' => [CreditRole::Actor],
-        'играят' => [CreditRole::Actor],
-        'актьорски състав' => [CreditRole::Actor],
+        '/сценограф\w*\s+и\s+костюм|художник/u' => [CreditRole::SetDesigner, CreditRole::CostumeDesigner],
+        '/режис|^постановка\b/u' => [CreditRole::Director],
+        '/^автор|^по пиесата|^пиеса\b|^текст\b/u' => [CreditRole::Playwright],
+        '/драматург/u' => [CreditRole::Other],
+        '/превод/u' => [CreditRole::Translator],
+        '/сценограф/u' => [CreditRole::SetDesigner],
+        '/костюм/u' => [CreditRole::CostumeDesigner],
+        '/музик|композитор/u' => [CreditRole::Composer],
+        '/хореограф/u' => [CreditRole::Choreographer],
+        '/светлин|осветлен|^светли/u' => [CreditRole::LightingDesigner],
+        '/^участват|^актьор|^в ролите|^играят|^роли\b|изпълнители|^актьорски/u' => [CreditRole::Actor],
     ];
 
     public function __construct(private People $people) {}
 
+    /** The roles a label stands for, or null when it isn't a credit we keep (Фотограф, Продукция …). */
+    public static function roles(string $label): ?array
+    {
+        $label = mb_strtolower(trim(preg_replace('/\s+/u', ' ', $label) ?? $label, " \t\n\r\0\x0B:;"));
+        foreach (self::LABELS as $pattern => $roles) {
+            if (preg_match($pattern, $label)) {
+                return $roles;
+            }
+        }
+
+        return null;
+    }
+
     /**
-     * @return array{credits: list<array{role: CreditRole, name: string, character: ?string}>, skipped: list<string>}
-     *               skipped: lines with a label we don't know, so their names were left out
+     * Text from the paste box: a known label starts a group; names follow on the same line
+     * (comma separated) or on the next lines. Characters in brackets or after " - ".
+     *
+     * @return Parsed
      */
     public function parse(string $text): array
     {
-        $credits = [];
+        $pairs = [];
         $skipped = [];
-        $roles = null;
+        $label = null;
 
         foreach (preg_split('/\R/u', $text) ?: [] as $line) {
             $line = trim($line);
             if ($line === '') {
                 continue;
             }
-
-            $rest = $line;
             if (preg_match('/^([^:]{2,40}):\s*(.*)$/u', $line, $m)) {
-                $roles = self::roles($m[1]);
-                if ($roles === null) {
+                $label = self::roles($m[1]) === null ? null : $m[1];
+                if ($label === null) {
                     $skipped[] = $line;
-
-                    continue;
+                } elseif (trim($m[2]) !== '') {
+                    $pairs[] = [$label, $m[2]];
                 }
-                $rest = $m[2];
-            } elseif ($roles === null) {
+
+                continue;
+            }
+            if ($label === null) {
                 $skipped[] = $line;
 
                 continue;
             }
+            $pairs[] = [$label, $line];
+        }
 
-            foreach (self::names($rest) as [$name, $character]) {
+        $parsed = $this->fromPairs($pairs, characters: true);
+        $parsed['skipped'] = $skipped;
+
+        return $parsed;
+    }
+
+    /**
+     * Pairs read from a theatre's page. Unknown labels are left out. Without $characters, a
+     * " - " between names is part of a double surname ("Аврамова - Бочева"), not a character.
+     *
+     * @param  list<array{0: string, 1: string}>  $pairs
+     * @return Parsed
+     */
+    public function fromPairs(array $pairs, bool $characters = false): array
+    {
+        $credits = [];
+        $author = null;
+        $skipped = [];
+
+        foreach ($pairs as [$label, $value]) {
+            $roles = self::roles($label);
+            if ($roles === null) {
+                $skipped[] = trim($label);
+
+                continue;
+            }
+
+            if ($roles === [CreditRole::Playwright] && $author === null) {
+                $author = People::clean(preg_replace('/^от\s+/u', '', People::clean($value)) ?? $value) ?: null;
+            }
+
+            foreach (self::names($value, $characters) as [$name, $character]) {
                 foreach ($roles as $role) {
                     $credits[] = ['role' => $role, 'name' => $name, 'character' => $role === CreditRole::Actor ? $character : null];
                 }
             }
         }
 
-        return ['credits' => $credits, 'skipped' => $skipped];
+        return ['credits' => $credits, 'author' => $author, 'skipped' => $skipped];
     }
 
     /**
-     * Adds the credits to the production. When a playwright is added and the production
-     * has no author yet, the author field is filled too.
+     * Adds the credits to the production, and the author text when the production has none.
      *
-     * @param  list<array{role: CreditRole, name: string, character: ?string}>  $credits
+     * @param  Parsed  $parsed
      * @return int how many credits were new
      */
-    public function add(Production $production, array $credits, CatalogueSource $source, ?string $sourceUrl = null): int
+    public function add(Production $production, array $parsed, CatalogueSource $source, ?string $sourceUrl = null): int
     {
         $added = 0;
         $sort = (int) $production->credits()->max('sort');
 
-        foreach ($credits as $credit) {
+        foreach ($parsed['credits'] as $credit) {
             $person = $this->people->findOrCreate($credit['name'], $source, $sourceUrl);
-            $character = $credit['character'] === null ? null : People::clean($credit['character']);
-
+            $character = $credit['character'] === null ? null : (People::clean($credit['character']) ?: null);
             $same = $production->credits()->where('person_id', $person->id)->where('role_type', $credit['role']);
+
             if ($credit['role'] === CreditRole::Actor) {
                 // One actor credit per person and production: fill in the character if it was missing.
                 $existing = $same->first();
-                if ($existing !== null && $existing->character_name === null && filled($character)) {
+                if ($existing !== null && $existing->character_name === null && $character !== null) {
                     $existing->update(['character_name' => $character]);
                 }
                 $exists = $existing !== null;
@@ -130,51 +163,63 @@ class Credits
             $production->credits()->create([
                 'person_id' => $person->id,
                 'role_type' => $credit['role'],
-                'character_name' => $character ?: null,
+                'character_name' => $character,
                 'sort' => ++$sort,
             ]);
             $added++;
+        }
 
-            if ($credit['role'] === CreditRole::Playwright && blank($production->author)) {
-                $production->update(['author' => $person->name]);
-            }
+        if ($parsed['author'] !== null && blank($production->author)) {
+            $production->update(['author' => $parsed['author']]);
         }
 
         return $added;
     }
 
-    /** @return list<CreditRole>|null */
-    private static function roles(string $label): ?array
+    /** @return list<array{0: string, 1: ?string}> name and character */
+    private static function names(string $text, bool $characters): array
     {
-        $label = mb_strtolower(trim(preg_replace('/\s+/u', ' ', $label) ?? $label));
-        foreach (self::LABELS as $known => $roles) {
-            if (str_starts_with($label, $known)) {
-                return $roles;
-            }
+        $text = str_replace("\u{00A0}", ' ', $text);
+        if (! $characters) {
+            // "Донка Аврамова – Бочева" is one double surname.
+            $text = preg_replace('/(\p{L})\s*[-–—]\s*(?=\p{Lu})/u', '$1-', $text) ?? $text;
         }
 
-        return null;
-    }
-
-    /** @return list<array{0: string, 1: ?string}> name and character */
-    private static function names(string $text): array
-    {
         $out = [];
-        foreach (preg_split('/\s*[,;]\s*|\s+и\s+/u', $text) ?: [] as $part) {
+        foreach (preg_split('/\s*[,;\/]\s*|\s+и\s+/u', $text) ?: [] as $part) {
             $character = null;
-            if (preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
+            if ($characters && preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
-            } elseif (preg_match('/^(.+?)\s+[-–—]\s+(.+)$/u', $part, $m)) {
+            } elseif ($characters && preg_match('/^(.+?)\s+[-–—]\s+(.+)$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
             }
 
-            $name = People::clean($part);
-            // A name has at least two words; single words are usually leftovers ("и", "др.").
-            if (mb_strlen($name) >= 4 && str_contains($name, ' ') && mb_strlen($name) <= 80) {
+            $name = self::name($part);
+            if ($name !== null) {
                 $out[] = [$name, $character];
             }
         }
 
         return $out;
+    }
+
+    /**
+     * A person's name: titles dropped, then the leading capitalised words, 2 to 4 of them
+     * ("Елизабет Динкова по романа на …" → "Елизабет Динкова"). Anything else isn't a name.
+     */
+    private static function name(string $text): ?string
+    {
+        $text = People::clean(preg_replace('/\([^)]*\)/u', '', $text) ?? $text);
+        $text = preg_replace('/^(проф|доц|д-р|акад|гл\. ас)\.?\s+/iu', '', $text) ?? $text;
+
+        $words = [];
+        foreach (preg_split('/\s+/u', $text) ?: [] as $word) {
+            if (! preg_match('/^\p{Lu}[\p{L}\'’.-]*$/u', $word)) {
+                break;
+            }
+            $words[] = $word;
+        }
+
+        return count($words) >= 2 && count($words) <= 4 ? implode(' ', $words) : null;
     }
 }

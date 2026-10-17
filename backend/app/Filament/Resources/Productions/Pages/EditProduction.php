@@ -42,14 +42,15 @@ class EditProduction extends EditRecord
                 /** @var Production $production */
                 $production = $this->getRecord();
                 $parsed = $credits->parse($data['text']);
-                $added = $credits->add($production, $parsed['credits'], CatalogueSource::Admin);
+                $added = $credits->add($production, $parsed, CatalogueSource::Admin);
 
-                Notification::make()
+                $notification = Notification::make()
                     ->title("Добавени участия: {$added}")
-                    ->body($parsed['skipped'] ? 'Пропуснати редове (непознат етикет): '.implode(' · ', $parsed['skipped']) : null)
-                    ->status($parsed['skipped'] ? 'warning' : 'success')
-                    ->persistent($parsed['skipped'] !== [])
-                    ->send();
+                    ->status($parsed['skipped'] ? 'warning' : 'success');
+                if ($parsed['skipped'] !== []) {
+                    $notification->body('Пропуснати редове (непознат етикет): '.implode(' · ', $parsed['skipped']))->persistent();
+                }
+                $notification->send();
 
                 $this->redirect(ProductionResource::getUrl('edit', ['record' => $production]));
             });
