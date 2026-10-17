@@ -22,6 +22,18 @@ return [
         'vnpuppet' => App\Adapters\PuppetVarnaAdapter::class,
     ],
 
+    // Team and cast from each production's own page on the theatre's site (App\Services\CastSync), after a sync.
+    // per_run: pages per theatre per sync (0 turns it off; tests set 0 unless they test it).
+    'cast_reader' => [
+        'per_run' => (int) env('TEATAR_CAST_READER_PER_RUN', 25),
+        'readers' => [
+            'vazrajdane' => App\Adapters\Cast\VazrajdaneCastReader::class,
+            'zadkanala' => App\Adapters\Cast\ZadKanalaCastReader::class,
+            'tba' => App\Adapters\Cast\TbaCastReader::class,
+            'theatro' => App\Adapters\Cast\TheatroCastReader::class,
+        ],
+    ],
+
     // Sent with every request to theatre sites, so they can see who we are and reach us.
     'user_agent' => env('TEATAR_USER_AGENT', 'TeatarBot/0.1 (+https://github.com/pkaratanev/teatar; theatre listings app)'),
 

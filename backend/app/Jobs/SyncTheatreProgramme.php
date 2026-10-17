@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\AdapterRun;
 use App\Models\Theatre;
+use App\Services\CastSync;
 use App\Services\ProgrammeImporter;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -27,7 +28,7 @@ class SyncTheatreProgramme implements ShouldQueue
     /** @param  int|null  $runId  the "queued" run made by ProgrammeSync; null makes a new one (teatar:demo, tests) */
     public function __construct(public Theatre $theatre, public ?int $runId = null) {}
 
-    public function handle(ProgrammeImporter $importer): void
+    public function handle(ProgrammeImporter $importer, CastSync $cast): void
     {
         $values = ['status' => 'running', 'started_at' => now(), 'finished_at' => null, 'error' => null];
         $run = $this->runId !== null ? AdapterRun::find($this->runId) : null;
@@ -65,6 +66,15 @@ class SyncTheatreProgramme implements ShouldQueue
                 'finished_at' => now(),
             ]);
 
+            report($e);
+
+            return;
+        }
+
+        // Team and cast from the productions' own pages. Never fails the run: the programme is already in.
+        try {
+            $run->update(['credits_added' => $cast->fill($this->theatre)]);
+        } catch (Throwable $e) {
             report($e);
         }
     }

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon $started_at
  * @property \Illuminate\Support\Carbon|null $finished_at
  */
-#[Fillable(['theatre_id', 'adapter', 'status', 'performances_found', 'performances_upserted', 'performances_moved', 'performances_cancelled', 'productions_created', 'error', 'started_at', 'finished_at'])]
+#[Fillable(['theatre_id', 'adapter', 'status', 'performances_found', 'performances_upserted', 'performances_moved', 'performances_cancelled', 'productions_created', 'credits_added', 'error', 'started_at', 'finished_at'])]
 class AdapterRun extends Model
 {
     /** A run still "running" after this long died (worker killed, server restart). */

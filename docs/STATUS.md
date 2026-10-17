@@ -20,7 +20,7 @@ Claude try it in the web build). The note after each goal says where the build s
 - [x] Programme for Sofia covers at least 8 of the 12 launch theatres, kept fresh automatically — *checked 2026-10-16: 10 adapters*
 - [x] Guest performances are listed too, under the host theatre, marked with the visiting company — *checked 2026-10-16*
 - [x] A second city, so switching cities can be tested: Varna with 2 theatres; the app remembers the chosen city — *checked 2026-10-16*
-- [ ] Every listed production has a title and theatre; most have author, director and cast — *titles, theatres and most authors yes; directors for some; cast mostly missing → cast reader (Next up 4)*
+- [ ] Every listed production has a title and theatre; most have author, director and cast — *titles, theatres and most authors yes; directors for some; cast mostly missing → cast reader (Next up 4): built 2026-10-17 for Зад канала, Възраждане, Българска армия, Théatro; tick when production shows cast for most of them*
 - [x] Manual review in the admin, productions only for now — *checked 2026-10-16 (Каталог → За преглед; milestone 8)*
 - [ ] Productions have a short description — *skipped for now (Preslav, 2026-10-16). When picked up: theatres' own text for testing, permission before launch (option c); the app already shows `synopsis` when set*
 - [x] Browse tonight / this week / this month; filter by theatre; search productions, people and theatres — *checked 2026-10-16*
@@ -94,6 +94,8 @@ Build order for the unbuilt MVP goals (Preslav, 2026-10-16; he can reorder):
 2. [ ] **City from location** · Size S — `expo-location` + a centre point per city (`lat`/`lng` per city; theatres have no coordinates). София if permission is refused or the phone is far from every city. Works in Expo Go
 3. [ ] **"Already seen" onboarding** · Size S — research feature 6. The fallback question (few reviews at launch) is left for later; build with a stated provisional fallback and flag it to Preslav
 4. [ ] **Cast and credits from production pages** · Size M — Decided 2026-10-16 (Preslav): un-park the production-page reader; admins fill the rest in Filament.
+   - **Built 2026-10-17** (`App\Services\CastSync`, readers in `app/Adapters/Cast`): Зад канала, Възраждане, Българска армия, Théatro. Runs after each sync for productions without actors, 25 pages per theatre, re-checks empty ones after 30 days; Зад канала waits 10 s per page (robots.txt). Label → role mapping and name cleaning shared with the admin paste box (`App\Services\Credits`). Posters from these pages are not taken (permission rule). The sync log shows "Екип (нови)"
+   - Still to do from the first pass below: Сатира, Народен, Театър „София“ (Младежки stays blocked)
    - One shared reader for labelled credit blocks ("Режисьор", "Автор", "Участват", "В ролите" / "Ролите изпълняват", "Премиера", "Продължителност") plus a small per-theatre selector. Cast stored as people linked to the production, with roles where given
    - Runs once when a production first appears, then monthly (not nightly); one request per production. Every row sets `source` and `source_url`. Never overwrites admin data. New or changed credits flag the production in the review list
    - First pass:
@@ -111,7 +113,7 @@ Build order for the unbuilt MVP goals (Preslav, 2026-10-16; he can reorder):
 
 Smaller to-dos:
 - [ ] Email Сфумато for written permission to read its programme page (robots.txt disallows crawling). If they agree, add an adapter
-- [ ] Българска армия: check online ticket sales and the production-page layout with a probe run (tba.art.bg is http-only)
+- [ ] Българска армия: check online ticket sales with a probe run (tba.art.bg is http-only; production pages checked 2026-10-17)
 - [ ] Check robots.txt with our user agent for Топлоцентрала and Столичен куклен театър before any adapter
 - [ ] Read Eventim's and Entase's terms of use before using their pages for anything beyond outbound links
 - [ ] Code style: Pint fails in CI but is non-blocking (`continue-on-error`), so CI looks green. Run `vendor/bin/pint` once on a machine with Composer, commit, then make the step blocking
@@ -178,7 +180,7 @@ Findings that shape the code:
 - [ ] Театър „Азарян“ (НДК, Зала 2): closed by fire-safety order; NDK's ticket centre lists no performances there for Oct 2026. Recheck next season
 - [ ] Per-show "Билети" for Театър 199 from its Eventim venue page (match title + date, keep the numeric event id)
 - [ ] Entase production pages as a credits fallback for visiting companies at Théatro and Възраждане
-- [ ] Cast reader, second pass: 199, Théatro, Възраждане, Сълза и смях, Българска армия (see Next up 4)
+- [ ] Cast reader, second pass: 199, Сълза и смях (Théatro, Възраждане, Българска армия done 2026-10-17; see Next up 4)
 - [ ] Posters for the rest: Сатира, Театър „София“ and others show them only on production pages (one extra request per production; could ride on the cast reader's request); Възраждане's are filled by JavaScript; Куклен театър Варна's crawl delay rules out extra requests. Зад канала's come with the cast reader (Next up 4)
 - [ ] Театър „София“ sold-out rows (no time in the listing)
 
@@ -268,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — Cast reader for Зад канала, Възраждане, Българска армия, Théatro (probe of 3 pages each, saved as fixtures); after each sync, productions without actors get team and cast from their own page. Sync log error column shows the full message on hover.
 - **2026-10-17** — Production page: "Внеси екип" pastes team and cast as text (labels like Режисьор/Актьори, characters in brackets); people matched by name in one place (`App\Services\People`), shared with the importer.
 - **2026-10-17** — Хора: "Слей в…" merges a duplicate person (credits and followers move, the duplicate is deleted); # column for ids.
 - **2026-10-17** — First production sync: Théatro failed with "value too long" on an Eventim ticket URL (Postgres enforces varchar(255), SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped. Младежки 403 in production too (Cloudflare, known block).

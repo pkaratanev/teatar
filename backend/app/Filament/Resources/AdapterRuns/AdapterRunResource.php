@@ -40,7 +40,9 @@ class AdapterRunResource extends Resource
                 TextColumn::make('performances_moved')->label('Преместени'),
                 TextColumn::make('performances_cancelled')->label('Отменени'),
                 TextColumn::make('productions_created')->label('Нови постановки'),
-                TextColumn::make('error')->label('Грешка')->limit(60)->wrap(),
+                TextColumn::make('credits_added')->label('Екип (нови)')->toggleable(),
+                // Hover shows the whole message; the column keeps the start.
+                TextColumn::make('error')->label('Грешка')->limit(60)->wrap()->tooltip(fn (?string $state) => $state),
             ])
             ->defaultSort('started_at', 'desc')
             ->filters([
