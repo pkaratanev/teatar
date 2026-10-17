@@ -32,9 +32,8 @@ class TheatroCastReader implements CastReader
             }
         }
 
-        foreach ($crawler->filter('p') as $p) {
-            /** @var DOMElement $p */
-            foreach (LinePairs::fromHtml((new Crawler($p))->html()) as $pair) {
+        foreach ($crawler->filter('p') as $paragraph) {
+            foreach (LinePairs::fromHtml((new Crawler($paragraph))->html()) as $pair) {
                 $pairs[] = $pair;
             }
         }
