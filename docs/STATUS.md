@@ -268,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — Хора: "Слей в…" merges a duplicate person (credits and followers move, the duplicate is deleted); # column for ids.
 - **2026-10-17** — First production sync: Théatro failed with "value too long" on an Eventim ticket URL (Postgres enforces varchar(255), SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped. Младежки 403 in production too (Cloudflare, known block).
 - **2026-10-17** — First production sync: one theatre failed with "value too long" (Postgres enforces varchar limits, SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped.
 - **2026-10-17** — `npm run start:prod`: Expo Go against the Laravel Cloud API.
