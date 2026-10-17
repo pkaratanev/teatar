@@ -1,14 +1,15 @@
 # Project status
 
-**Last updated:** 2026-10-16 · **Stage:** walk-through done for everything built (12 of 26 MVP goals ticked) · **Next:** box-office links, then city from location · **Then:** final test → deploy → stores
+**Last updated:** 2026-10-17 · **Stage:** 12 of 26 MVP goals ticked; backend deploy and closed Play test prepared · **Next:** Preslav deploys ([deploy.md](deploy.md)); box-office links, then city from location
 
 Screen map of the app (what each screen shows and where it leads): https://claude.ai/artifact/SHD5q6aU93xAYBA9YTG3XH
 
 This is the single source of truth for the project. Update it in the same commit as the work: tick what's
 done, move "Now", add what you found, add a Log line. Plan and rationale: [plan.md](plan.md). How we test: [testing.md](testing.md).
 
-**Order of work:** build a stable MVP → Preslav tests it → only then pay for hosting and store accounts.
-No deploy work before the MVP goals below are met.
+**Order of work** (changed by Preslav 2026-10-17): deploy the backend now and put the app on a closed Google Play
+test, keep building the MVP, and go public only once the MVP goals are ticked and the theatres have agreed to posters.
+Deploy steps and the rules that keep the production database: [deploy.md](deploy.md).
 
 ## MVP goals
 
@@ -52,6 +53,9 @@ Claude try it in the web build). The note after each goal says where the build s
 - [ ] No known crash or data-loss bug open — *none known*
 
 ## Now
+
+**Deploy (Preslav):** push the S3 package (`composer require league/flysystem-aws-s3-v3`), then follow
+[deploy.md](deploy.md): Laravel Cloud, then an EAS preview APK, then the closed Play test.
 
 **Next to build:** box-office links (Next up 1), then city from location (Next up 2; `expo-location` is installed).
 
@@ -177,20 +181,24 @@ Findings that shape the code:
 - [ ] Posters for the rest: Сатира, Театър „София“ and others show them only on production pages (one extra request per production; could ride on the cast reader's request); Възраждане's are filled by JavaScript; Куклен театър Варна's crawl delay rules out extra requests. Зад канала's come with the cast reader (Next up 4)
 - [ ] Театър „София“ sold-out rows (no time in the listing)
 
-## After the MVP (not before)
+## Deploy and stores
+
+Moved up from "after the MVP" (Preslav, 2026-10-17). Steps: [deploy.md](deploy.md).
 
 ### Preslav tests
 - [ ] Go through every MVP goal on a real phone; log issues under Test findings
 - [ ] Fix round; re-test
 
-### Deploy — Laravel Cloud (account exists)
+### Deploy — Laravel Cloud (account exists; now)
 - [ ] Application in the EU region, linked to `pkaratanev/teatar`, root `backend/`
 - [ ] Postgres in the same region (`pg_trgm` enabled by the migration)
 - [ ] Environment variables from `backend/.env.example`
-- [ ] Object storage for posters and headshots
+- [ ] Object storage for posters and headshots — *code ready: `MEDIA_DISK=s3`; needs the S3 package pushed from Preslav's PC*
 - [ ] Scheduler (nightly sync) and a queue worker
 - [ ] Deploy runs `php artisan migrate --force`; deploy on push to `main` when CI is green
-- [ ] Domain and HTTPS for API and admin; first production admin user
+- [ ] Domain and HTTPS for API and admin
+- [ ] First production admin user — *`php artisan teatar:make-admin <email>` (built 2026-10-17)*
+- [ ] Email for password-reset codes (SMTP, e.g. Resend free tier) — *password reset built 2026-10-17*
 - [ ] Web links for sharing (`https://<domain>/production/{id}`): iOS Universal Links + Android App Links, plus a simple web page for people without the app. Until then shared links are `teatar://…`
 - [ ] Error tracking, uptime check, backups
 
@@ -198,10 +206,11 @@ Findings that shape the code:
 - [ ] Apple Developer Program (99 USD/year; company enrolment needs a D-U-N-S number)
 - [ ] Google Play Console (25 USD once); new personal accounts must run a closed test with 12+ testers for 14 days before production
 - [ ] Final app name, icon, splash, bundle id (placeholder `bg.teatar.app`)
-- [ ] `eas.json` profiles (`development`, `preview`, `production`); EAS Build, Submit, Update
+- [ ] `eas.json` profiles — *`preview` (APK) and `production` (Play bundle) added 2026-10-17; `development` comes with Google sign-in*; `eas init`, API address as an EAS environment variable
+- [ ] Firebase (FCM) key for push notifications in real Android builds
 - Budget (checked 2026-10-16): ≈ 124 USD the first year (Play 25 once + Apple 99/year), 99 USD/year after. Expo Free plan is enough; no Mac needed (iOS builds on EAS). Hosting is separate
 - [ ] Before the public launch: ask each theatre whose posters and descriptions we import for permission; remove any that say no
-- [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form
+- [ ] Privacy policy and terms in Bulgarian; App Store privacy label; Play Data safety form — */privacy and /delete-account pages built 2026-10-17 (a starting draft, not legal advice); terms still to write; update /privacy when location or analytics arrive*
 - [ ] Sign in with Apple before the first iOS submission — Decided 2026-10-16 (Preslav): build it once the Apple Developer account exists, so the first iOS build isn't rejected under guideline 4.8. Socialite on the backend, `expo-apple-authentication` in the app
 - [ ] Store rules already covered by the MVP: in-app account deletion, reporting user content
 - [ ] Bulgarian store listings, screenshots, age rating
@@ -258,6 +267,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — Decided (Preslav): deploy the backend to Laravel Cloud now, closed Play test, public after the MVP. Built for it: posters on a bucket (`MEDIA_DISK`), `teatar:make-admin`, forgotten password with an emailed code (API + app), `eas.json`, /privacy and /delete-account, docs/deploy.md. CLAUDE.md spending rule updated.
 - **2026-10-16** — Data-source decisions (Preslav): cast reader un-parked (Next up 4), Нов театър НДК dropped (registered as a shop), Сфумато: respect robots.txt and ask for permission, box-office links to the seeder (Next up 1; Българска армия open). Build order set; new to-dos and parked expansions (Топлоцентрала, Столичен куклен театър, Азарян). STATUS condensed: done milestones and fixed findings summarised, research item 1 trimmed, superseded notes dropped.
 - **2026-10-16** — Preslav added `expo-location` (lock file from his machine); city from location ready to build.
 - **2026-10-16** — Decided (Preslav): skip descriptions for now; city from location is next.

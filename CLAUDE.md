@@ -29,7 +29,10 @@ Claude in the desktop app's browser pane against the web build at http://localho
 - Ratings are stored as `half_stars` 1–10; the API and app show stars.
 - Programme times are entered in Europe/Sofia and stored in UTC.
 - Don't add new theatre adapters unless Preslav asks (he said there's enough data for now).
-- No spending (hosting, store accounts, paid plans) before Preslav has tested the MVP.
+- No spending beyond what Preslav has approved. Approved 2026-10-17: Laravel Cloud for the backend and the Google
+  Play account for a closed test. No public store release before the MVP goals are ticked.
+- The production database is never reset: deploy runs only `migrate --force`, and migrations are only added,
+  never edited once deployed ([docs/deploy.md](docs/deploy.md)).
 - Each site adapter gets a test against saved HTML in `backend/tests/Fixtures`, so a site redesign
   fails a test instead of importing wrong data.
 
