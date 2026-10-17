@@ -83,6 +83,7 @@ class PasswordResetController extends Controller
         $user->tokens()->delete();
         DB::table('password_reset_tokens')->where('email', $data['email'])->delete();
         RateLimiter::clear($key);
+        $request->setUserResolver(fn () => $user); // so the response includes the user's own email
 
         return response()->json([
             'token' => $user->createToken($data['device_name'])->plainTextToken,

@@ -9,7 +9,7 @@ it('registers, reads the profile, and logs out with a token', function () {
         'email' => 'maria@example.test',
         'password' => 'teatar-2026',
         'device_name' => 'iPhone',
-    ])->assertCreated()->json('token');
+    ])->assertCreated()->assertJsonPath('user.email', 'maria@example.test')->json('token');
 
     $this->withToken($token)->getJson('/api/v1/me')->assertOk()->assertJsonPath('data.email', 'maria@example.test');
     $this->withToken($token)->postJson('/api/v1/auth/logout')->assertNoContent();

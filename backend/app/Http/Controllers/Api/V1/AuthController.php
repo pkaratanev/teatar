@@ -30,6 +30,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create($data);
+        $request->setUserResolver(fn () => $user); // so the response includes the user's own email
 
         return response()->json([
             'token' => $user->createToken($data['device_name'])->plainTextToken,
@@ -50,6 +51,7 @@ class AuthController extends Controller
         if (! $user || ! $user->password || ! Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages(['email' => 'Грешен имейл или парола.']);
         }
+        $request->setUserResolver(fn () => $user); // so the response includes the user's own email
 
         return response()->json([
             'token' => $user->createToken($data['device_name'])->plainTextToken,
