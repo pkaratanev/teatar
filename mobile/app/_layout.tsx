@@ -70,6 +70,7 @@ export default function RootLayout() {
             <Stack.Screen name="person/[id]" options={{ title: '' }} />
             <Stack.Screen name="theatre/[id]" options={{ title: '' }} />
             <Stack.Screen name="sign-in" options={{ title: '', presentation: 'modal' }} />
+            <Stack.Screen name="forgot-password" options={{ title: 'Нова парола', presentation: 'modal' }} />
             <Stack.Screen name="user/[username]" options={{ title: '' }} />
             <Stack.Screen name="edit-profile" options={{ title: 'Редактиране на профила', presentation: 'modal' }} />
             <Stack.Screen name="+not-found" options={{ title: 'Няма такава страница' }} />

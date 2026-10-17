@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\PerformanceController;
+use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\PersonController;
 use App\Http\Controllers\Api\V1\ProductionController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -29,6 +30,8 @@ Route::prefix('v1')->group(function () {
     Route::middleware('throttle:10,1')->group(function () {
         Route::post('auth/register', [AuthController::class, 'register']);
         Route::post('auth/login', [AuthController::class, 'login']);
+        Route::post('auth/forgot-password', [PasswordResetController::class, 'send']);
+        Route::post('auth/reset-password', [PasswordResetController::class, 'reset']);
     });
 
     Route::middleware('auth:sanctum')->group(function () {

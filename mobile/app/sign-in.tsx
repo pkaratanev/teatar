@@ -95,6 +95,17 @@ export default function SignInScreen() {
           onSubmitEditing={submit}
         />
 
+        {mode === 'in' && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-mt-2 self-start px-0"
+            onPress={() => router.push({ pathname: '/forgot-password', params: { email: email.trim() } })}
+          >
+            Забравена парола?
+          </Button>
+        )}
+
         {failed && (
           <Text variant="caption" className="text-destructive">
             Нещо се обърка. Проверете връзката и опитайте пак.
