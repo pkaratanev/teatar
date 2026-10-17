@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — [agent-fill-data.md](agent-fill-data.md): prompt for an agent filling credits in the admin (theatre's own page via „Източник“, „Внеси екип“ instead of the repeater, no descriptions/posters, duplicates reported not merged). Production form shows the source link.
 - **2026-10-17** — Cast reader for Зад канала, Възраждане, Българска армия, Théatro (probe of 3 pages each, saved as fixtures); after each sync, productions without actors get team and cast from their own page. Sync log error column shows the full message on hover.
 - **2026-10-17** — Production page: "Внеси екип" pastes team and cast as text (labels like Режисьор/Актьори, characters in brackets); people matched by name in one place (`App\Services\People`), shared with the importer.
 - **2026-10-17** — Хора: "Слей в…" merges a duplicate person (credits and followers move, the duplicate is deleted); # column for ids.
