@@ -1,0 +1,16 @@
+vaz-robots.txt 200 https://theatrevazrajdane.bg/robots.txt
+vaz-1.html 200 https://theatrevazrajdane.bg/portfolio/%d0%b8%d0%b2%d0%b0%d0%bd%d0%be%d0%b2/
+vaz-2.html 200 https://theatrevazrajdane.bg/portfolio/%d0%ba%d0%b2%d0%b0%d1%80%d1%82%d0%b5%d1%82-%d0%b7%d0%b0-%d0%b4%d0%b2%d0%b0%d0%bc%d0%b0/
+vaz-3.html 200 https://theatrevazrajdane.bg/portfolio/%d1%82%d0%b5-%d0%b1%d1%8f%d1%85%d0%b0-10/
+tba-robots.txt 200 http://www.tba.art.bg/robots.txt
+tba-1.html 200 http://www.tba.art.bg/гняв___8075
+tba-2.html 200 http://www.tba.art.bg/мечтата-на-идиотката___6556
+tba-3.html 200 http://www.tba.art.bg/басейнът___5199
+zad-robots.txt 200 https://zadkanala.bg/robots.txt
+zad-1.html 200 https://zadkanala.bg/spektakli/velika
+zad-2.html 200 https://zadkanala.bg/spektakli/syn-v-zimna-nosht
+zad-3.html 200 https://zadkanala.bg/spektakli/pop-folk-hroniki-beli-ptitzi-i-kurshumi
+theatro-robots.txt 200 https://www.theatro.bg/robots.txt
+theatro-1.html 200 https://www.theatro.bg/portfolio_page/илюзии/
+theatro-2.html 200 https://www.theatro.bg/portfolio_page/сватба-със-закъснител/
+theatro-3.html 200 https://www.theatro.bg/portfolio_page/българската-литература-накратко/
