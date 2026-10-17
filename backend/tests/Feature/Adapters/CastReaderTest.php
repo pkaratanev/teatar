@@ -131,7 +131,8 @@ it('fills productions without actors after a sync, once, and puts them on the re
         ->and($missing->fresh()->credits_checked_at)->not->toBeNull()
         ->and($programme->fresh()->credits_checked_at)->toBeNull();
 
-    Sleep::assertSleptTimes(1); // 10 s between the two Зад канала pages (robots.txt Crawl-delay)
+    // 10 s between the two Зад канала pages (robots.txt Crawl-delay); the HTTP client's own retry pauses are shorter.
+    Sleep::assertSlept(fn (Carbon\CarbonInterval $d) => (int) $d->totalSeconds === 10, 1);
     expect(app(CastSync::class)->fill($theatre))->toBe(0); // read once; not again for 30 days
 });
 
