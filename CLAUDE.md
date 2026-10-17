@@ -33,6 +33,8 @@ Claude in the desktop app's browser pane against the web build at http://localho
   Play account for a closed test. No public store release before the MVP goals are ticked.
 - The production database is never reset: deploy runs only `migrate --force`, and migrations are only added,
   never edited once deployed ([docs/deploy.md](docs/deploy.md)).
+- Laravel Cloud deploys from the `prod` branch. Work goes to `main`; move `prod` (`git push origin main:prod`) only
+  when Preslav asks for a deploy and CI is green on `main`.
 - Each site adapter gets a test against saved HTML in `backend/tests/Fixtures`, so a site redesign
   fails a test instead of importing wrong data.
 

@@ -17,14 +17,21 @@ The database must never be reset. These rules keep it that way:
   fails in CI first.
 - Turn on backups for the database before the first real user signs up.
 
-## Before the first deploy (on Preslav's PC)
+## Branches: `main` and `prod`
 
-1. `composer require league/flysystem-aws-s3-v3` in `backend/`, then commit and push `composer.json` and
-   `composer.lock`. Without it, the bucket for posters can't be used.
+Work lands on `main` as before. Laravel Cloud builds only from `prod`, so nothing reaches production by accident.
+To deploy, once CI is green on `main`:
+
+```
+git push origin main:prod
+```
+
+This moves `prod` forward to the same commit as `main`. Claude does this only when Preslav asks for a deploy.
 
 ## Laravel Cloud
 
-1. **Application:** new application from `pkaratanev/teatar`, EU region, branch `main`, root folder `backend`.
+1. **Application:** new application from `pkaratanev/teatar`, EU region, branch **`prod`**, root folder `backend`,
+   auto-deploy on push.
 2. **Database:** Postgres in the same region, attached to the environment. It fills the `DB_*` variables.
 3. **Bucket:** Laravel Object Storage, visibility **public**, attached with disk name `public` and "default disk"
    on. Posters go to the `public` disk, so they land in the bucket with no extra setting. The server's own disk is

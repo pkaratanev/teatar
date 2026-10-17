@@ -54,8 +54,9 @@ Claude try it in the web build). The note after each goal says where the build s
 
 ## Now
 
-**Deploy (Preslav):** push the S3 package (`composer require league/flysystem-aws-s3-v3`), then follow
-[deploy.md](deploy.md): Laravel Cloud, then an EAS preview APK, then the closed Play test.
+**Deploy (Preslav):** Laravel Cloud environment set up (Frankfurt, Postgres, bucket); set its branch to `prod`, turn on
+the scheduler and a queue worker, deploy, then the first-deploy commands in [deploy.md](deploy.md). After that: an EAS
+preview APK, then the closed Play test.
 
 **Next to build:** box-office links (Next up 1), then city from location (Next up 2; `expo-location` is installed).
 
@@ -193,9 +194,9 @@ Moved up from "after the MVP" (Preslav, 2026-10-17). Steps: [deploy.md](deploy.m
 - [ ] Application in the EU region, linked to `pkaratanev/teatar`, root `backend/`
 - [ ] Postgres in the same region (`pg_trgm` enabled by the migration)
 - [ ] Environment variables from `backend/.env.example`
-- [ ] Object storage for posters and headshots — *code ready: `MEDIA_DISK=s3`; needs the S3 package pushed from Preslav's PC*
+- [ ] Object storage for posters and headshots — *bucket attached as the `public` disk; S3 package pushed 2026-10-17; check posters after the first sync*
 - [ ] Scheduler (nightly sync) and a queue worker
-- [ ] Deploy runs `php artisan migrate --force`; deploy on push to `main` when CI is green
+- [ ] Deploy runs `php artisan migrate --force`; Laravel Cloud deploys from the `prod` branch (`git push origin main:prod` when CI is green on `main`) — *branch created 2026-10-17*
 - [ ] Domain and HTTPS for API and admin
 - [ ] First production admin user — *`php artisan teatar:make-admin <email>` (built 2026-10-17)*
 - [ ] Email for password-reset codes (SMTP, e.g. Resend free tier) — *password reset built 2026-10-17*
@@ -267,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — S3 package pushed (lock from Preslav's PC); `prod` branch for Laravel Cloud deploys; stale-run check hourly so the app can scale to zero; bucket used as the `public` disk.
 - **2026-10-17** — Decided (Preslav): deploy the backend to Laravel Cloud now, closed Play test, public after the MVP. Built for it: posters on a bucket (`MEDIA_DISK`), `teatar:make-admin`, forgotten password with an emailed code (API + app), `eas.json`, /privacy and /delete-account, docs/deploy.md. CLAUDE.md spending rule updated.
 - **2026-10-16** — Data-source decisions (Preslav): cast reader un-parked (Next up 4), Нов театър НДК dropped (registered as a shop), Сфумато: respect robots.txt and ask for permission, box-office links to the seeder (Next up 1; Българска армия open). Build order set; new to-dos and parked expansions (Топлоцентрала, Столичен куклен театър, Азарян). STATUS condensed: done milestones and fixed findings summarised, research item 1 trimmed, superseded notes dropped.
 - **2026-10-16** — Preslav added `expo-location` (lock file from his machine); city from location ready to build.
