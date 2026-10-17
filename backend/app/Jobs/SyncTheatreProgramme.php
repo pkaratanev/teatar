@@ -28,8 +28,9 @@ class SyncTheatreProgramme implements ShouldQueue
     /** @param  int|null  $runId  the "queued" run made by ProgrammeSync; null makes a new one (teatar:demo, tests) */
     public function __construct(public Theatre $theatre, public ?int $runId = null) {}
 
-    public function handle(ProgrammeImporter $importer, CastSync $cast): void
+    public function handle(ProgrammeImporter $importer, ?CastSync $cast = null): void
     {
+        $cast ??= app(CastSync::class);
         $values = ['status' => 'running', 'started_at' => now(), 'finished_at' => null, 'error' => null];
         $run = $this->runId !== null ? AdapterRun::find($this->runId) : null;
 

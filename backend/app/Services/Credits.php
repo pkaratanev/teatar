@@ -211,6 +211,7 @@ class Credits
     {
         $text = People::clean(preg_replace('/\([^)]*\)/u', '', $text) ?? $text);
         $text = preg_replace('/^(проф|доц|д-р|акад|гл\. ас)\.?\s+/iu', '', $text) ?? $text;
+        $text = preg_replace('/^(от|по)\s+/u', '', $text) ?? $text; // "от Тони Макнамара"
 
         $words = [];
         foreach (preg_split('/\s+/u', $text) ?: [] as $word) {
