@@ -15,7 +15,11 @@
 
     <h2>Без приложението</h2>
     <p>Пишете
-        @if ($contact)на <a href="mailto:{{ $contact }}?subject=Изтриване на профил">{{ $contact }}</a>@else на адреса, посочен в Google Play,@endif
+        @if ($contact)
+            на <a href="mailto:{{ $contact }}?subject=Изтриване на профил">{{ $contact }}</a>
+        @else
+            на адреса, посочен в Google Play,
+        @endif
         от имейла, с който сте се регистрирали, с тема „Изтриване на профил“. Изтриваме профила до 30 дни и ви
         отговаряме, когато е готово.</p>
 
