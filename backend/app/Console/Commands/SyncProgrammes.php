@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 class SyncProgrammes extends Command
 {
     protected $signature = 'teatar:sync-programmes
-                            {theatre? : Slug of one theatre; all active theatres with an adapter if omitted}
+                            {theatre? : One theatre, by its slug or its adapter (e.g. zadkanala); all active theatres with an adapter if omitted}
                             {--now : Run in this process instead of queueing}';
 
     protected $description = 'Pull upcoming performances from each theatre\'s own programme source';
@@ -17,11 +17,11 @@ class SyncProgrammes extends Command
     public function handle(ProgrammeSync $sync): int
     {
         $theatres = ProgrammeSync::theatres()
-            ->when($this->argument('theatre'), fn ($q, $slug) => $q->where('slug', $slug))
+            ->when($this->argument('theatre'), fn ($q, $key) => $q->where(fn ($q) => $q->where('slug', $key)->orWhere('adapter', $key)))
             ->get();
 
         if ($theatres->isEmpty()) {
-            $this->warn('No matching theatre has an adapter configured.');
+            $this->warn('No matching theatre has an adapter configured. Use a theatre slug or an adapter: '.implode(', ', array_keys((array) config('teatar.adapters'))).'.');
 
             return self::SUCCESS;
         }
