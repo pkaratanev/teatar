@@ -268,6 +268,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-17** — First production sync: Théatro failed with "value too long" on an Eventim ticket URL (Postgres enforces varchar(255), SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped. Младежки 403 in production too (Cloudflare, known block).
 - **2026-10-17** — First production sync: one theatre failed with "value too long" (Postgres enforces varchar limits, SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped.
 - **2026-10-17** — `npm run start:prod`: Expo Go against the Laravel Cloud API.
 - **2026-10-17** — Production address: https://teatar-production-8awteq.laravel.cloud (temporary Laravel Cloud domain), set as the API address in the EAS builds.
