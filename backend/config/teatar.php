@@ -30,6 +30,9 @@ return [
     // We never try to get around such checks.
     'known_blocked' => ['mlt'],
 
+    // Shown on /privacy and /delete-account as the address for data and deletion requests.
+    'contact_email' => env('TEATAR_CONTACT_EMAIL', env('MAIL_FROM_ADDRESS')),
+
     // Days before a watchlisted production's next date that the reminder push goes out.
     'watchlist_reminder_days' => 7,
 

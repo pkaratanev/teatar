@@ -6,6 +6,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Linked from Google Play and the app: the privacy policy and how to delete an account without the app.
+Route::get('/privacy', fn () => view('legal.privacy', [
+    'contact' => config('teatar.contact_email'),
+    'updated' => '17.10.2026',
+]))->name('privacy');
+Route::get('/delete-account', fn () => view('legal.delete-account', [
+    'contact' => config('teatar.contact_email'),
+]))->name('delete-account');
+
 // The app's web build for testing in a browser on this PC (`npm run web:local` in mobile/ builds it into
 // public/app-build). Files are served from there; any other /app path gets index.html and the app's own router
 // takes over, so deep links work.
