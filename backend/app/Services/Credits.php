@@ -31,7 +31,7 @@ class Credits
     private const LABELS = [
         '/сценограф\w*\s+и\s+костюм|художник/u' => [CreditRole::SetDesigner, CreditRole::CostumeDesigner],
         '/режис|^постановка\b/u' => [CreditRole::Director],
-        '/^автор|^по пиесата|^пиеса\b|^текст\b/u' => [CreditRole::Playwright],
+        '/^автор|^по пиесата|^пиеса\b|^текст$/u' => [CreditRole::Playwright],
         '/драматург/u' => [CreditRole::Other],
         '/превод/u' => [CreditRole::Translator],
         '/сценограф/u' => [CreditRole::SetDesigner],
@@ -39,7 +39,7 @@ class Credits
         '/музик|композитор/u' => [CreditRole::Composer],
         '/хореограф/u' => [CreditRole::Choreographer],
         '/светлин|осветлен|^светли/u' => [CreditRole::LightingDesigner],
-        '/^участват|^актьор|^в ролите|^играят|^роли\b|изпълнители|^актьорски/u' => [CreditRole::Actor],
+        '/^участва|^актьор|^в ролите|^играят|^роли\b|изпълнители|^актьорски/u' => [CreditRole::Actor],
     ];
 
     public function __construct(private People $people) {}
@@ -48,6 +48,9 @@ class Credits
     public static function roles(string $label): ?array
     {
         $label = mb_strtolower(trim(preg_replace('/\s+/u', ' ', $label) ?? $label, " \t\n\r\0\x0B:;"));
+        if (preg_match('/помощник|асистент|музикант/u', $label)) {
+            return null; // "помощник-режисьор" is not the director, "Музиканти" are not composers
+        }
         foreach (self::LABELS as $pattern => $roles) {
             if (preg_match($pattern, $label)) {
                 return $roles;
@@ -213,14 +216,15 @@ class Credits
         }
 
         $out = [];
-        foreach (preg_split('/\s*[,;\/]\s*|\s+и\s+/u', $text) ?: [] as $part) {
+        // Commas inside brackets belong to the character ("Тодор Лазаров (Мъф Потър, Ученик)").
+        foreach (preg_split('/\s*[,;\/]\s*(?![^(]*\))|\s+и\s+(?![^(]*\))/u', $text) ?: [] as $part) {
             $character = null;
             $pick = null;
             if (preg_match('/\s*#(\d+|нов|new)(?![\p{L}\d])/u', $part, $m)) {
                 $pick = ctype_digit($m[1]) ? (int) $m[1] : 'new';
                 $part = str_replace($m[0], '', $part);
             }
-            if ($characters && preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
+            if (preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
             } elseif ($characters && preg_match('/^(.+?)\s+[-–—]\s+(.+)$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
@@ -236,19 +240,26 @@ class Credits
     }
 
     /**
-     * A person's name: titles dropped, then the leading capitalised words, 2 to 4 of them
-     * ("Елизабет Динкова по романа на …" → "Елизабет Динкова"). Anything else isn't a name.
+     * A person's name: titles and leading lower-case words dropped, then the capitalised words that
+     * follow, 2 to 4 of them ("Елизабет Динкова по романа на …" → "Елизабет Динкова"), names in
+     * capitals re-cased. Anything else isn't a name.
      */
     private static function name(string $text): ?string
     {
         $text = People::clean(preg_replace('/\([^)]*\)/u', '', $text) ?? $text);
         $text = preg_replace('/^(проф|доц|д-р|акад|гл\. ас)\.?\s+/iu', '', $text) ?? $text;
-        $text = preg_replace('/^(от|по)\s+/u', '', $text) ?? $text; // "от Тони Макнамара"
 
         $words = [];
         foreach (preg_split('/\s+/u', $text) ?: [] as $word) {
             if (! preg_match('/^\p{Lu}[\p{L}\'’.-]*$/u', $word)) {
+                if ($words === []) {
+                    continue; // leading "от", "на постановката" …
+                }
                 break;
+            }
+            // "ТОДОР ЛАЗАРОВ" → "Тодор Лазаров"; initials ("К.") stay.
+            if (mb_strlen($word) > 2 && $word === mb_strtoupper($word)) {
+                $word = mb_convert_case(mb_strtolower($word), MB_CASE_TITLE);
             }
             $words[] = $word;
         }

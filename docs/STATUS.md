@@ -95,7 +95,7 @@ Build order for the unbuilt MVP goals (Preslav, 2026-10-16; he can reorder):
 3. [ ] **"Already seen" onboarding** · Size S — research feature 6. The fallback question (few reviews at launch) is left for later; build with a stated provisional fallback and flag it to Preslav
 4. [ ] **Cast and credits from production pages** · Size M — Decided 2026-10-16 (Preslav): un-park the production-page reader; admins fill the rest in Filament.
    - **Built 2026-10-17** (`App\Services\CastSync`, readers in `app/Adapters/Cast`): Зад канала, Възраждане, Българска армия, Théatro. Runs after each sync for productions without actors, 25 pages per theatre, re-checks empty ones after 30 days; Зад канала waits 10 s per page (robots.txt). Label → role mapping and name cleaning shared with the admin paste box (`App\Services\Credits`). Posters from these pages are not taken (permission rule). The sync log shows "Екип (нови)"
-   - Still to do from the first pass below: Сатира, Народен, Театър „София“ (Младежки stays blocked)
+   - **2026-10-19:** Народен, Театър 199, Сатира, Театър „София“, Сълза и смях, Драматичен Варна added (10 theatres in all). Left: Младежки (blocked), Куклен театър Варна (pages have photos only), guest shows
    - One shared reader for labelled credit blocks ("Режисьор", "Автор", "Участват", "В ролите" / "Ролите изпълняват", "Премиера", "Продължителност") plus a small per-theatre selector. Cast stored as people linked to the production, with roles where given
    - Runs once when a production first appears, then monthly (not nightly); one request per production. Every row sets `source` and `source_url`. Never overwrites admin data. New or changed credits flag the production in the review list
    - First pass:
@@ -180,7 +180,7 @@ Findings that shape the code:
 - [ ] Театър „Азарян“ (НДК, Зала 2): closed by fire-safety order; NDK's ticket centre lists no performances there for Oct 2026. Recheck next season
 - [ ] Per-show "Билети" for Театър 199 from its Eventim venue page (match title + date, keep the numeric event id)
 - [ ] Entase production pages as a credits fallback for visiting companies at Théatro and Възраждане
-- [ ] Cast reader, second pass: 199, Сълза и смях (Théatro, Възраждане, Българска армия done 2026-10-17; see Next up 4)
+- [x] Cast reader, second pass: all done 2026-10-19 (see Next up 4)
 - [ ] Posters for the rest: Сатира, Театър „София“ and others show them only on production pages (one extra request per production; could ride on the cast reader's request); Възраждане's are filled by JavaScript; Куклен театър Варна's crawl delay rules out extra requests. Зад канала's come with the cast reader (Next up 4)
 - [ ] Театър „София“ sold-out rows (no time in the listing)
 
@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — Cast reader for 6 more theatres (Народен, 199, Сатира, София, Сълза и смях, Драматичен Варна; probe of 3 pages each). Names in capitals re-cased, assistants and musicians not taken as director/composer, characters kept from "Персонаж – Актьор" lines. Paste box: "#12" / "#нов" for namesakes. Imported authors lose a leading "от". Agent so far: 23 productions by hand; its prompt now skips the 10 automated theatres.
 - **2026-10-17** — [agent-fill-data.md](agent-fill-data.md): prompt for an agent filling credits in the admin (theatre's own page via „Източник“, „Внеси екип“ instead of the repeater, no descriptions/posters, duplicates reported not merged). Production form shows the source link.
 - **2026-10-17** — Cast reader for Зад канала, Възраждане, Българска армия, Théatro (probe of 3 pages each, saved as fixtures); after each sync, productions without actors get team and cast from their own page. Sync log error column shows the full message on hover.
 - **2026-10-17** — Production page: "Внеси екип" pastes team and cast as text (labels like Режисьор/Актьори, characters in brackets); people matched by name in one place (`App\Services\People`), shared with the importer.

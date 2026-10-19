@@ -31,6 +31,12 @@ return [
             'zadkanala' => App\Adapters\Cast\ZadKanalaCastReader::class,
             'tba' => App\Adapters\Cast\TbaCastReader::class,
             'theatro' => App\Adapters\Cast\TheatroCastReader::class,
+            'national' => App\Adapters\Cast\NationalCastReader::class,
+            'theatre199' => App\Adapters\Cast\Theatre199CastReader::class,
+            'satirata' => App\Adapters\Cast\SatirataCastReader::class,
+            'sofia' => App\Adapters\Cast\SofiaTheatreCastReader::class,
+            'salzaismyah' => App\Adapters\Cast\SalzaISmyahCastReader::class,
+            'dramavarna' => App\Adapters\Cast\DramaVarnaCastReader::class,
         ],
     ],
 

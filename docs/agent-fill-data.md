@@ -13,9 +13,14 @@ then stop and report.
 
 - **The list:** Каталог → **За преглед**. Keep the default filter (performances soon), soonest first. The table shows
   what's missing for each production.
-- **Skip** a production whose theatre is **Зад канала, Възраждане, Българска армия or Théatro** and which has no actors
-  yet. The nightly cast reader fills those automatically. Take them only if they still have no actors after a sync
-  has run (check Синхронизации → the theatre's last run, column "Екип (нови)").
+- **Skip** a production that has no actors yet if its theatre is one of these 10: **Народен театър, Театър 199,
+  Сатиричен театър, Театър „София“, Сълза и смях, Зад канала, Възраждане, Българска армия, Théatro, Драматичен
+  театър Варна**. The nightly sync reads their cast from the theatre's own page automatically.
+- **What's left for you:** productions from those 10 that still have no actors after a sync (their page had none,
+  or a different layout), and every production from the other theatres (Младежки, Куклен театър Варна, guest
+  shows). Check that a sync has run first: Синхронизации → the theatre's last run, column "Екип (нови)".
+- **Wait about 4 seconds** after a production page opens before clicking „Внеси екип“, or the first click may not
+  open the dialog.
 
 ## Where the data comes from
 
@@ -57,6 +62,9 @@ Rules for the text:
 - It's safe to paste again. Existing people are reused by name and nothing is duplicated or deleted, so if a run
   timed out, just paste the same text again.
 - If the production has no **Автор** text, the playwright you paste fills it.
+- **Two people with the same name** (e.g. a director and an actor both called Стоян Радев): look them up in
+  Каталог → Хора, then write `Стоян Радев #12` to attach person #12, or `Стоян Радев #нов` to create a separate
+  person. Use this only when you're sure they're different people; otherwise list them in the report.
 
 **Never** create people through the „Добави човек“ repeater or the „Хора“ form, and never run scripts in the page.
 That's what created duplicates before.
