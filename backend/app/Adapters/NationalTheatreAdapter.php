@@ -5,6 +5,7 @@ namespace App\Adapters;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\Theatre;
 use App\Services\ProgrammeImporter;
+use App\Support\AbsoluteUrl;
 use App\Support\BulgarianDate;
 use App\Support\TheatreHttp;
 use Carbon\CarbonImmutable;
@@ -14,7 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * Народен театър „Иван Вазов“ — reads {website}/bg/programa?day=&month=M&year=Y
  * (UTF-8, one block per day, several shows per day, stage on each show).
- * Takes title, author line, date, time, stage, guest label and the ticket link.
+ * Takes title, author line, date, time, stage, guest label, poster and the ticket link.
  */
 class NationalTheatreAdapter implements TheatreAdapter
 {
@@ -38,14 +39,14 @@ class NationalTheatreAdapter implements TheatreAdapter
                 throw new RuntimeException("{$url} answered HTTP {$response->status()}");
             }
 
-            yield from $this->parse($response->body(), $month->year, $month->month);
+            yield from $this->parse($response->body(), $month->year, $month->month, $base);
         }
     }
 
     /**
      * @return list<ScrapedPerformance>
      */
-    public function parse(string $html, int $year, int $month): array
+    public function parse(string $html, int $year, int $month, string $base = self::DEFAULT_BASE_URL): array
     {
         $crawler = new Crawler($html);
         $days = $crawler->filter('section.calendar div.items > div.item');
@@ -94,6 +95,7 @@ class NationalTheatreAdapter implements TheatreAdapter
                     sourceUrl: (string) $link->attr('href'),
                     isGuest: $show->filter('.guest-label')->count() > 0,
                     author: self::author($show),
+                    posterUrl: AbsoluteUrl::from($show->filter('a.poster img')->count() ? $show->filter('a.poster img')->attr('src') : null, $base),
                 );
             }
         }

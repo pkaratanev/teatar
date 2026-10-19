@@ -47,3 +47,13 @@ it('runs the one-command offline setup', function () {
         ->and(Performance::count())->toBeGreaterThan(0)
         ->and(Review::count())->toBeGreaterThan(0);
 });
+
+it('gives a demo user different review texts on different productions', function () {
+    $this->seed([LaunchTheatresSeeder::class, DemoCatalogueSeeder::class, DemoActivitySeeder::class]);
+
+    $busiest = Review::selectRaw('user_id, count(*) as n')->groupBy('user_id')->orderByDesc('n')->first();
+    $texts = Review::where('user_id', $busiest->user_id)->pluck('body');
+
+    expect($texts->count())->toBeGreaterThan(2)
+        ->and($texts->unique()->count())->toBeGreaterThan(1);
+});

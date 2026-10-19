@@ -33,6 +33,8 @@ it('reads date and time from the ticket link, stage and author from the listing'
         ->and($aria->ticketUrl)->toBe('https://nationaltheatre.bg/bg/predstavlenie/ariya-na-spernicata/2026-11-05%7C19:30:00')
         ->and($aria->sourceUrl)->toBe('https://nationaltheatre.bg/bg/predstavlenie/ariya-na-spernicata');
 
+    expect($rows->firstWhere('title', 'ТЕАТЪР')->posterUrl)->toBe('https://nationaltheatre.bg/storage/shows/29394ef0e98855188a3c47a6e5af7d2edb1.jpg');
+
     // "по …" author lines are kept as written.
     expect($rows->firstWhere('title', 'ТЕАТЪР')->author)->toBe('по едноименния роман на Съмърсет Моъм');
 });

@@ -53,10 +53,7 @@ class TheatreLog
     public function logVisit(User $user, Production $production, CarbonImmutable $seenOn, ?int $performanceId = null): DiaryEntry
     {
         return DB::transaction(function () use ($user, $production, $seenOn, $performanceId) {
-            $entry = DiaryEntry::updateOrCreate(
-                ['user_id' => $user->id, 'production_id' => $production->id, 'seen_on' => $seenOn->toDateString()],
-                ['performance_id' => $performanceId],
-            );
+            $entry = DiaryEntry::record($user->id, $production->id, $seenOn->toDateString(), ['performance_id' => $performanceId]);
 
             $this->unwatch($user, $production);
 

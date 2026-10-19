@@ -3,6 +3,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { registerForPush } from '../push';
 import { api } from './client';
 import type {
+  City,
   DiaryEntry,
   FollowState,
   LogVisitInput,
@@ -35,11 +36,19 @@ function useInfiniteList<T>(queryKey: unknown[], path: string, enabled = true) {
   return { ...query, items: query.data?.pages.flatMap((p) => p.data) ?? [] };
 }
 
-export function useProgramme(range: ProgrammeRange, theatreId?: number) {
-  const params = new URLSearchParams({ range });
+export function useProgramme(city: string, range: ProgrammeRange, theatreId?: number) {
+  const params = new URLSearchParams({ city, range });
   if (theatreId) params.set('theatre_id', String(theatreId));
 
-  return useInfiniteList<Performance>(['programme', range, theatreId ?? null], `/performances?${params}`);
+  return useInfiniteList<Performance>(['programme', city, range, theatreId ?? null], `/performances?${params}`);
+}
+
+export function useCities() {
+  return useQuery({
+    queryKey: ['cities'],
+    queryFn: () => api<{ data: City[] }>('/cities').then((r) => r.data),
+    staleTime: 60 * 60_000,
+  });
 }
 
 /** The production, plus the signed-in user's own state ("me") when there is a session. */
@@ -175,10 +184,10 @@ export function useLike(review: { id: number }) {
   });
 }
 
-export function useTheatres() {
+export function useTheatres(city: string) {
   return useQuery({
-    queryKey: ['theatres'],
-    queryFn: () => api<{ data: Theatre[] }>('/theatres').then((r) => r.data),
+    queryKey: ['theatres', city],
+    queryFn: () => api<{ data: Theatre[] }>(`/theatres?${new URLSearchParams({ city })}`).then((r) => r.data),
     staleTime: 60 * 60_000,
   });
 }

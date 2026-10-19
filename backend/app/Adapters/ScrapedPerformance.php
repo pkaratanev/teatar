@@ -24,6 +24,8 @@ final readonly class ScrapedPerformance
         public ?string $author = null,
         public ?string $director = null,
         public ?string $ageAdvisory = null,
+        // Absolute URL of the theatre's own poster image, when its programme shows one.
+        public ?string $posterUrl = null,
     ) {}
 
     public function guest(): bool

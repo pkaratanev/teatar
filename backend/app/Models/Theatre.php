@@ -13,10 +13,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 /**
  * @property int $id
  * @property string $slug
+ * @property string|null $short_name
  * @property string|null $website
  * @property string|null $adapter
  */
-#[Fillable(['name', 'slug', 'city', 'address', 'lat', 'lng', 'website', 'box_office_url', 'phone', 'adapter', 'is_active', 'source', 'source_url'])]
+#[Fillable(['name', 'short_name', 'slug', 'city', 'address', 'lat', 'lng', 'website', 'box_office_url', 'phone', 'adapter', 'is_active', 'source', 'source_url'])]
 class Theatre extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;

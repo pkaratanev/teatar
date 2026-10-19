@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Theatres;
 
 use App\Filament\Resources\Theatres\Pages\ManageTheatres;
-use App\Jobs\SyncTheatreProgramme;
+use App\Filament\Widgets\SyncHealth;
 use App\Models\Theatre;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -12,7 +12,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
@@ -45,6 +44,8 @@ class TheatreResource extends Resource
                 TextInput::make('name')->label('Име')->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn ($state, Set $set, ?Theatre $record) => $record ? null : $set('slug', Str::slug((string) $state))),
+                TextInput::make('short_name')->label('Кратко име')->maxLength(40)
+                    ->helperText('За бутоните с театри в приложението, напр. „Народен театър“. Празно: пълното име.'),
                 TextInput::make('slug')->required()->unique(ignoreRecord: true),
                 TextInput::make('city')->label('Град')->default('София')->required(),
                 TextInput::make('address')->label('Адрес'),
@@ -83,10 +84,7 @@ class TheatreResource extends Resource
                     ->label('Обнови програмата')
                     ->icon(Heroicon::OutlinedArrowPath)
                     ->visible(fn (Theatre $record) => filled($record->adapter))
-                    ->action(function (Theatre $record) {
-                        SyncTheatreProgramme::dispatch($record);
-                        Notification::make()->title('Синхронизацията е пусната')->success()->send();
-                    }),
+                    ->action(fn (Theatre $record) => SyncHealth::syncOne($record)),
                 EditAction::make(),
             ]);
     }

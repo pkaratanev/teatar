@@ -16,6 +16,10 @@ type AuthState = {
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   updateProfile: (changes: ProfileChanges) => Promise<void>;
+  /** Forgotten password: mails a 6-digit code (the server answers the same whether or not the email exists). */
+  sendResetCode: (email: string) => Promise<void>;
+  /** Sets the new password with the code and signs in; other devices are signed out. */
+  resetPassword: (r: { email: string; code: string; password: string }) => Promise<void>;
 };
 
 type ProfileChanges = { name?: string; bio?: string | null };
@@ -75,6 +79,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [startSession],
   );
 
+  const sendResetCode = useCallback(async (email: string) => {
+    await api('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
+  }, []);
+
+  const resetPassword = useCallback(
+    async (r: { email: string; code: string; password: string }) => {
+      const res = await api<{ token: string; user: { data?: User } & User }>('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ ...r, device_name: deviceName }),
+      });
+      await startSession(res.token, res.user.data ?? res.user);
+    },
+    [startSession],
+  );
+
   const endSession = useCallback(async () => {
     await tokenStore.clear();
     setUser(null);
@@ -104,8 +123,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ user, signIn, signUp, signOut, deleteAccount, updateProfile }),
-    [user, signIn, signUp, signOut, deleteAccount, updateProfile],
+    () => ({ user, signIn, signUp, signOut, deleteAccount, updateProfile, sendResetCode, resetPassword }),
+    [user, signIn, signUp, signOut, deleteAccount, updateProfile, sendResetCode, resetPassword],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

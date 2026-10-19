@@ -15,31 +15,38 @@ jobs:
           UA=$(grep -oP "user_agent'\s*=>\s*env\('[A-Z_]+',\s*'\K[^']+" ../backend/config/teatar.php || echo "TeatarBot/0.1")
           echo "$UA" > ua.txt
           f() { curl -sSL -m 30 -A "$UA" -H 'Accept-Language: bg' -o "$1" -w "$1 %{http_code} %{url_effective}\n" "$2" >> index.txt 2>&1 || echo "$1 FAIL $2" >> index.txt; }
-          f nat-robots.txt "https://nationaltheatre.bg/robots.txt"
-          f nat-1.html "https://nationaltheatre.bg/bg/predstavlenie/ariya-na-spernicata"
-          f nat-2.html "https://nationaltheatre.bg/bg/predstavlenie/az-plasham"
-          f nat-3.html "https://nationaltheatre.bg/bg/predstavlenie/venecianskiyat-targovec"
-          f t199-robots.txt "https://theatre199.org/robots.txt"
-          f t199-1.html "https://theatre199.org/bg/plays/p/432-vecheren-akt"
-          f t199-2.html "https://theatre199.org/bg/plays/p/624-godinata-na-magicheskoto-mislene-theatre199"
-          f t199-3.html "https://theatre199.org/bg/plays/p/654-prizemena-theatre199"
-          f sat-robots.txt "https://satirata.bg/robots.txt"
-          f sat-1.html "https://satirata.bg/show/tom-i-huk"
-          f sat-2.html "https://satirata.bg/show/primadoni"
-          f sat-3.html "https://satirata.bg/show/zhenata-pita-chatgpt"
-          f sof-robots.txt "https://sofiatheatre.eu/robots.txt"
-          f sof-1.html "https://sofiatheatre.eu/repertoires/118/lyubov-i-drugi-avarii"
-          f sof-2.html "https://sofiatheatre.eu/repertoires/120/uroci"
-          f sof-3.html "https://sofiatheatre.eu/repertoires/264/uzasnite-roditeli"
-          f ss-robots.txt "https://www.salzaismyah.bg/robots.txt"
-          f ss-1.html "https://www.salzaismyah.bg/site/play/228"
-          f ss-2.html "https://www.salzaismyah.bg/site/play/527"
-          f ss-3.html "https://www.salzaismyah.bg/site/play/716"
-          f dv-robots.txt "https://dramavarna.com/robots.txt"
-          f dv-1.html "https://dramavarna.com/index.php/bg/program-and-tickets?event=953"
-          f dv-2.html "https://dramavarna.com/index.php/bg/program-and-tickets?event=955"
-          f dv-3.html "https://dramavarna.com/index.php/bg/program-and-tickets?event=957"
-      - name: publish
+          f tba-robots.txt "http://www.tba.art.bg/robots.txt"
+          f tba-home.html "http://www.tba.art.bg/"
+          f vnp-robots.txt "https://vnpuppet.com/robots.txt"
+          f vnp-home.html "https://vnpuppet.com/"
+          f sfu-robots.txt "https://sfumato.info/robots.txt"
+          f ndk-robots.txt "https://ndk.bg/robots.txt"
+          f ndk-home.html "https://ndk.bg/"
+          f geo-tba.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A2%D0%B5%D0%B0%D1%82%D1%8A%D1%80%20%D0%91%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B0%20%D0%B0%D1%80%D0%BC%D0%B8%D1%8F%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-tba-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%93%D0%B5%D0%BE%D1%80%D0%B3%D0%B8%20%D0%A1.%20%D0%A0%D0%B0%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%2098%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-nat.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%9D%D0%B0%D1%80%D0%BE%D0%B4%D0%B5%D0%BD%20%D1%82%D0%B5%D0%B0%D1%82%D1%8A%D1%80%20%D0%98%D0%B2%D0%B0%D0%BD%20%D0%92%D0%B0%D0%B7%D0%BE%D0%B2%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-nat-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%94%D1%8F%D0%BA%D0%BE%D0%BD%20%D0%98%D0%B3%D0%BD%D0%B0%D1%82%D0%B8%D0%B9%205%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-ss.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D1%8A%D0%BB%D0%B7%D0%B0%20%D0%B8%20%D1%81%D0%BC%D1%8F%D1%85%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-ss-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%93%D0%B5%D0%BE%D1%80%D0%B3%D0%B8%20%D0%A1.%20%D0%A0%D0%B0%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%20127%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-mlt.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%9C%D0%BB%D0%B0%D0%B4%D0%B5%D0%B6%D0%BA%D0%B8%20%D1%82%D0%B5%D0%B0%D1%82%D1%8A%D1%80%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-mlt-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%9A%D0%BD%D1%8F%D0%B7%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%8A%D1%80%20%D0%94%D0%BE%D0%BD%D0%B4%D1%83%D0%BA%D0%BE%D0%B2%208%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-t199.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A2%D0%B5%D0%B0%D1%82%D1%8A%D1%80%20199%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-t199-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D0%BB%D0%B0%D0%B2%D1%8F%D0%BD%D1%81%D0%BA%D0%B0%208%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-sfu.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D1%84%D1%83%D0%BC%D0%B0%D1%82%D0%BE%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-sat.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D0%B0%D1%82%D0%B8%D1%80%D0%B8%D1%87%D0%B5%D0%BD%20%D1%82%D0%B5%D0%B0%D1%82%D1%8A%D1%80%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-sat-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%20%D0%9A%D0%B0%D1%80%D0%B0%D0%B4%D0%B6%D0%B0%2026%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-zk.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%97%D0%B0%D0%B4%20%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-zk-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%B1%D1%83%D0%BB%D0%B5%D0%B2%D0%B0%D1%80%D0%B4%20%D0%9C%D0%B0%D0%B4%D1%80%D0%B8%D0%B4%201%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-sof.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A2%D0%B5%D0%B0%D1%82%D1%8A%D1%80%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-sof-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%AF%D0%BD%D0%BA%D0%BE%20%D0%A1%D0%B0%D0%BA%D1%8A%D0%B7%D0%BE%D0%B2%2023%D0%90%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-vaz.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%A1%D1%82%D0%BE%D0%BB%D0%B8%D1%87%D0%BD%D0%B0%20%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA%D0%B0%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-vaz-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%20%D0%A1%D0%BB%D0%B0%D0%B2%D0%B5%D0%B9%D0%BA%D0%BE%D0%B2%204%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-ndk.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%9D%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D0%BB%D0%B5%D0%BD%20%D0%B4%D0%B2%D0%BE%D1%80%D0%B5%D1%86%20%D0%BD%D0%B0%20%D0%BA%D1%83%D0%BB%D1%82%D1%83%D1%80%D0%B0%D1%82%D0%B0%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-tro.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=Th%C3%A9atro%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-tro-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%92%D1%8A%D1%80%D0%B1%D0%B8%D1%86%D0%B0%2012%2C%20%D0%A1%D0%BE%D1%84%D0%B8%D1%8F"; sleep 2
+          f geo-dv.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%94%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D0%BD%20%D1%82%D0%B5%D0%B0%D1%82%D1%8A%D1%80%20%D0%A1%D1%82%D0%BE%D1%8F%D0%BD%20%D0%91%D1%8A%D1%87%D0%B2%D0%B0%D1%80%D0%BE%D0%B2%2C%20%D0%92%D0%B0%D1%80%D0%BD%D0%B0"; sleep 2
+          f geo-dv-a.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%20%D0%9D%D0%B5%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D0%BE%D1%81%D1%82%201%2C%20%D0%92%D0%B0%D1%80%D0%BD%D0%B0"; sleep 2
+          f geo-vnp.json "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=bg&limit=3&q=%D0%94%D1%8A%D1%80%D0%B6%D0%B0%D0%B2%D0%B5%D0%BD%20%D0%BA%D1%83%D0%BA%D0%BB%D0%B5%D0%BD%20%D1%82%D0%B5%D0%B0%D1%82%D1%8A%D1%80%2C%20%D0%92%D0%B0%D1%80%D0%BD%D0%B0"; sleep 2      - name: publish
         if: always()
         run: |
           git config user.name ci; git config user.email ci@example.com

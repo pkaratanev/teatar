@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Adapters\Contracts\TheatreAdapter;
 use App\Models\AdapterRun;
 use App\Models\Theatre;
+use App\Services\CastSync;
 use App\Services\ProgrammeImporter;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -21,16 +22,28 @@ class SyncTheatreProgramme implements ShouldQueue
 
     public int $tries = 1;
 
-    public function __construct(public Theatre $theatre) {}
+    /** Seconds before the worker kills the job; the queue's retry_after must be longer (config/queue.php). */
+    public int $timeout = 600;
 
-    public function handle(ProgrammeImporter $importer): void
+    /** @param  int|null  $runId  the "queued" run made by ProgrammeSync; null makes a new one (teatar:demo, tests) */
+    public function __construct(public Theatre $theatre, public ?int $runId = null) {}
+
+    public function handle(ProgrammeImporter $importer, ?CastSync $cast = null): void
     {
-        $run = AdapterRun::create([
-            'theatre_id' => $this->theatre->id,
-            'adapter' => (string) $this->theatre->adapter,
-            'status' => 'running',
-            'started_at' => now(),
-        ]);
+        $cast ??= app(CastSync::class);
+        $values = ['status' => 'running', 'started_at' => now(), 'finished_at' => null, 'error' => null];
+        $run = $this->runId !== null ? AdapterRun::find($this->runId) : null;
+
+        if ($run !== null) {
+            $run->update($values);
+        } else {
+            $run = AdapterRun::create([
+                'theatre_id' => $this->theatre->id,
+                'adapter' => (string) $this->theatre->adapter,
+                ...$values,
+            ]);
+            $this->runId = $run->id;
+        }
 
         try {
             $stats = $importer->import($this->theatre, self::resolveAdapter($this->theatre)->fetch($this->theatre));
@@ -40,6 +53,11 @@ class SyncTheatreProgramme implements ShouldQueue
                 'performances_found' => $stats['found'],
                 'performances_upserted' => $stats['upserted'],
                 'productions_created' => $stats['productions_created'],
+                'performances_moved' => $stats['moved'],
+                'performances_cancelled' => $stats['cancelled'],
+                'error' => $stats['held_back'] > 0
+                    ? "Не са отменени {$stats['held_back']} представления, които източникът вече не показва: твърде много наведнъж. Провери сайта."
+                    : null,
                 'finished_at' => now(),
             ]);
         } catch (Throwable $e) {
@@ -50,7 +68,30 @@ class SyncTheatreProgramme implements ShouldQueue
             ]);
 
             report($e);
+
+            return;
         }
+
+        // Team and cast from the productions' own pages. Never fails the run: the programme is already in.
+        try {
+            $run->update(['credits_added' => $cast->fill($this->theatre)]);
+        } catch (Throwable $e) {
+            report($e);
+        }
+    }
+
+    /** Timeout or a killed worker: handle() never got to its catch, so close the run here. */
+    public function failed(?Throwable $e): void
+    {
+        if ($this->runId === null) {
+            return;
+        }
+
+        AdapterRun::whereKey($this->runId)->whereIn('status', AdapterRun::BUSY)->update([
+            'status' => 'failed',
+            'error' => mb_substr('Прекъснато: '.($e?->getMessage() ?? 'неизвестна причина'), 0, 2000),
+            'finished_at' => now(),
+        ]);
     }
 
     public static function resolveAdapter(Theatre $theatre): TheatreAdapter

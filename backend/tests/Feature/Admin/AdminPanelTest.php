@@ -37,6 +37,7 @@ it('loads every resource list', function (string $path) {
     '/admin/theatres',
     '/admin/productions',
     '/admin/productions/create',
+    '/admin/production-reviews',
     '/admin/people',
     '/admin/reviews',
     '/admin/adapter-runs',

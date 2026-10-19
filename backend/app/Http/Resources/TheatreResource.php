@@ -15,6 +15,7 @@ class TheatreResource extends JsonResource
             'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
+            'short_name' => $this->short_name ?? $this->name,
             'city' => $this->city,
             'address' => $this->address,
             'lat' => $this->lat,

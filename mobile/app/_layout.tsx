@@ -12,6 +12,7 @@ import { View } from 'react-native';
 
 import { ApiError } from '@/src/api/client';
 import { AuthProvider } from '@/src/auth';
+import { CityProvider } from '@/src/city';
 import { listenForNotificationTaps } from '@/src/push';
 import { colors } from '@/src/ui';
 
@@ -50,26 +51,31 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerBackButtonDisplayMode: 'minimal',
-            headerStyle: { backgroundColor: colors.background },
-            headerTintColor: colors.foreground,
-            headerTitleStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 16 },
-            headerShadowVisible: false,
-            contentStyle: { backgroundColor: colors.background },
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="production/[id]" options={{ title: '' }} />
-          <Stack.Screen name="person/[id]" options={{ title: '' }} />
-          <Stack.Screen name="theatre/[id]" options={{ title: '' }} />
-          <Stack.Screen name="sign-in" options={{ title: '', presentation: 'modal' }} />
-          <Stack.Screen name="user/[username]" options={{ title: '' }} />
-          <Stack.Screen name="edit-profile" options={{ title: 'Редактиране на профила', presentation: 'modal' }} />
-          <Stack.Screen name="+not-found" options={{ title: 'Няма такава страница' }} />
-        </Stack>
+        <CityProvider>
+          <StatusBar style="light" />
+          <Stack
+            screenOptions={{
+              headerBackButtonDisplayMode: 'minimal',
+              headerBackTitle: 'Назад',
+              headerStyle: { backgroundColor: colors.background },
+              headerTintColor: colors.foreground,
+              headerTitleStyle: { fontFamily: 'Inter_600SemiBold', fontSize: 16 },
+              headerShadowVisible: false,
+              contentStyle: { backgroundColor: colors.background },
+            }}
+          >
+            {/* The title is what Back is called on the next screen (screen readers say "Назад, back", not "(tabs)"). */}
+            <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Назад' }} />
+            <Stack.Screen name="production/[id]" options={{ title: '' }} />
+            <Stack.Screen name="person/[id]" options={{ title: '' }} />
+            <Stack.Screen name="theatre/[id]" options={{ title: '' }} />
+            <Stack.Screen name="sign-in" options={{ title: '', presentation: 'modal' }} />
+            <Stack.Screen name="forgot-password" options={{ title: 'Нова парола', presentation: 'modal' }} />
+            <Stack.Screen name="user/[username]" options={{ title: '' }} />
+            <Stack.Screen name="edit-profile" options={{ title: 'Редактиране на профила', presentation: 'modal' }} />
+            <Stack.Screen name="+not-found" options={{ title: 'Няма такава страница' }} />
+          </Stack>
+        </CityProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

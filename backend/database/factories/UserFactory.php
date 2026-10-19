@@ -26,7 +26,8 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'username' => fake()->unique()->userName(),
+            // The column holds 32; Faker's usernames are sometimes longer (Postgres rejects them).
+            'username' => fake()->unique()->regexify('[a-z]{6,12}[0-9]{4}'),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

@@ -1,0 +1,32 @@
+# What EAS uploads for a build. When this file exists EAS reads it instead of .gitignore,
+# so mobile's own ignores are repeated here. Only mobile/ is needed: the rest (backend's
+# storage symlink above all) breaks the upload on Windows.
+/backend/
+/docs/
+/scripts/
+/.github/
+/compose.yaml
+
+node_modules/
+.expo/
+dist/
+web-build/
+web-dist/
+shots/
+expo-env.d.ts
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.metro-health-check*
+npm-debug.*
+.DS_Store
+*.pem
+.env
+.env*.local
+*.tsbuildinfo
+/mobile/ios
+/mobile/android

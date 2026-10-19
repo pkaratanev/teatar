@@ -24,7 +24,7 @@ class ProductionSummaryResource extends JsonResource
             'is_guest' => $this->is_guest,
             'visiting_company' => $this->visiting_company,
             'status' => $this->status,
-            'poster_url' => $this->getFirstMediaUrl('poster', 'card') ?: null,
+            'poster_url' => $this->posterUrl(),
             'rating_average' => $this->rating_average,
             'ratings_count' => $this->ratings_count,
             // Present only on lists that add them (watchlist, my ratings).

@@ -17,6 +17,7 @@
         "laravel/sanctum": "^4.3",
         "laravel/socialite": "^5.31",
         "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.35",
         "spatie/laravel-medialibrary": "^11.23",
         "symfony/css-selector": "^7.3|^8.0",
         "symfony/dom-crawler": "^7.3|^8.0"

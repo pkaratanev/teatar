@@ -11,6 +11,7 @@ use App\Filament\Resources\Productions\RelationManagers\PerformancesRelationMana
 use App\Models\Production;
 use BackedEnum;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -69,6 +70,11 @@ class ProductionResource extends Resource
                     ->columnSpanFull(),
                 SpatieMediaLibraryFileUpload::make('poster')->label('Плакат')->collection('poster')->image(),
                 TextInput::make('title_en')->label('Заглавие (EN)'),
+                TextInput::make('source_url')->label('Източник (страницата на театъра)')->url()->maxLength(2048)
+                    ->suffixAction(Action::make('openSource')->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                        ->url(fn (?Production $record) => $record?->source_url, shouldOpenInNewTab: true)
+                        ->visible(fn (?Production $record) => filled($record?->source_url)))
+                    ->columnSpanFull(),
             ]),
             Section::make('Екип и актьори')->schema([
                 Repeater::make('credits')->hiddenLabel()->relationship()
