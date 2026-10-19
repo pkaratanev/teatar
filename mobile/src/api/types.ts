@@ -96,6 +96,8 @@ export interface Theatre {
   address: string | null;
   lat: number | null;
   lng: number | null;
+  /** Box office. */
+  phone: string | null;
   website: string | null;
   box_office_url: string | null;
   logo_url: string | null;
