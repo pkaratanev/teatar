@@ -210,10 +210,6 @@ class Credits
     private static function names(string $text, bool $characters): array
     {
         $text = str_replace("\u{00A0}", ' ', $text);
-        if (! $characters) {
-            // "Донка Аврамова – Бочева" is one double surname.
-            $text = preg_replace('/(\p{L})\s*[-–—]\s*(?=\p{Lu})/u', '$1-', $text) ?? $text;
-        }
 
         $out = [];
         // Commas inside brackets belong to the character ("Тодор Лазаров (Мъф Потър, Ученик)").
@@ -227,7 +223,15 @@ class Credits
             if (preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
             } elseif ($characters && preg_match('/^(.+?)\s+[-–—]\s+(.+)$/u', $part, $m)) {
-                [$part, $character] = [$m[1], $m[2]];
+                [$part, $character] = [$m[1], $m[2]]; // paste box: "Анна Колева - Офелия"
+            } elseif (! $characters && preg_match('/^(.+?)(?:\s+[-–—]\s*|\s*[-–—]\s+)(.+)$/u', $part, $m)) {
+                // On theatres' pages a spaced dash is either a double surname ("Донка Аврамова – Бочева")
+                // or the character / nickname after the actor ("Александър Карасански – Джош").
+                if (self::isSurname(trim($m[2]))) {
+                    $part = trim($m[1]).'-'.trim($m[2]);
+                } else {
+                    [$part, $character] = [$m[1], trim($m[2])];
+                }
             }
 
             $name = self::name($part);
@@ -237,6 +241,27 @@ class Credits
         }
 
         return $out;
+    }
+
+    /** A credit label as a whole word ("Художник", "Режисьор:"), so a surname like "Светлинов" is not one. */
+    private static function isLabelWord(string $word): bool
+    {
+        return in_array(mb_strtolower(rtrim($word, ':;,')), [
+            'автор', 'превод', 'режисьор', 'режисура', 'постановка', 'сценография', 'сценограф', 'художник',
+            'костюми', 'костюмограф', 'музика', 'композитор', 'хореография', 'хореограф', 'участват', 'актьори',
+        ], true) || (str_ends_with($word, ':') && self::roles($word) !== null);
+    }
+
+    /** One word that looks like a Bulgarian surname (Бочева, Тодорова, Макариев, Петрински …). */
+    private static function isSurname(string $word): bool
+    {
+        return (bool) preg_match('/^\p{Lu}\p{Ll}+(ова|ева|ов|ев|ина|ин|ска|ски|цка|цки|ич|ян|ян|иева|иев)$/u', $word);
+    }
+
+    /** The cleaned person's name in a text, or null when there is none (see name()). */
+    public static function personName(string $text): ?string
+    {
+        return self::name($text);
     }
 
     /**
@@ -251,6 +276,9 @@ class Credits
 
         $words = [];
         foreach (preg_split('/\s+/u', $text) ?: [] as $word) {
+            if ($words !== [] && self::isLabelWord($word)) {
+                break; // the next label ran into the name: "Златомир Молдовански Художник и сценограф: …"
+            }
             if (! preg_match('/^\p{Lu}[\p{L}\'’.-]*$/u', $word)) {
                 if ($words === []) {
                     continue; // leading "от", "на постановката" …

@@ -57,3 +57,13 @@ it('merges from the people list in the admin', function () {
     expect(Person::find($dup->id))->toBeNull()
         ->and($keep->credits()->count())->toBe(1);
 });
+
+it('shows each person\'s productions in the list, so namesakes can be told apart', function () {
+    $director = Person::factory()->create(['name' => 'Стоян Радев']);
+    $production = Production::factory()->create(['title' => 'Сън в зимна нощ']);
+    $director->credits()->create(['production_id' => $production->id, 'role_type' => CreditRole::Director]);
+
+    Livewire::actingAs(User::factory()->admin()->create())
+        ->test(ManagePeople::class)
+        ->assertSee('Сън в зимна нощ (режисьор');
+});

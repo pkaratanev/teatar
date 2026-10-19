@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — Agent merged 14 duplicate people; it found the readers glued characters onto names ("Карасански-Джош"): a spaced dash is now a double surname only when the second word looks like a surname, otherwise the character. Imported director names are cleaned the same way. Хора shows each person's productions (also in the merge picker) and can delete a record.
 - **2026-10-19** — Cast reader for 6 more theatres (Народен, 199, Сатира, София, Сълза и смях, Драматичен Варна; probe of 3 pages each). Names in capitals re-cased, assistants and musicians not taken as director/composer, characters kept from "Персонаж – Актьор" lines. Paste box: "#12" / "#нов" for namesakes. Imported authors lose a leading "от". Agent so far: 23 productions by hand; its prompt now skips the 10 automated theatres.
 - **2026-10-17** — [agent-fill-data.md](agent-fill-data.md): prompt for an agent filling credits in the admin (theatre's own page via „Източник“, „Внеси екип“ instead of the repeater, no descriptions/posters, duplicates reported not merged). Production form shows the source link.
 - **2026-10-17** — Cast reader for Зад канала, Възраждане, Българска армия, Théatro (probe of 3 pages each, saved as fixtures); after each sync, productions without actors get team and cast from their own page. Sync log error column shows the full message on hover.

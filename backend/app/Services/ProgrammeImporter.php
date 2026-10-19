@@ -281,7 +281,8 @@ class ProgrammeImporter
     /** Add a director credit when the production has none yet; reuse a person with the same name. */
     private function ensureDirector(Production $production, string $name): void
     {
-        $name = trim(preg_replace('/\s+/u', ' ', $name) ?? $name);
+        // Some programme pages run the director into the next label ("… Художник и сценограф: …").
+        $name = Credits::personName($name) ?? '';
         if ($name === '' || $production->credits()->where('role_type', CreditRole::Director)->exists()) {
             return;
         }

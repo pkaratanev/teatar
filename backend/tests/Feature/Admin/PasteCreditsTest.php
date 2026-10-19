@@ -96,3 +96,21 @@ it('tells apart two people with the same name with #id or #нов', function () 
     expect(Person::where('name', 'Иван Петров')->count())->toBe(2)
         ->and($other->credits()->count())->toBe(2);
 });
+
+it('on theatre pages, keeps double surnames but splits off a character or nickname', function () {
+    $credits = app(Credits::class)->fromPairs([['Актьори', 'Донка Аврамова – Бочева, Александър Карасански – Джош, Луиза Григорова - Макариев, Димитър Коцев – Шошо']]);
+    $rows = collect($credits['credits'])->map(fn ($c) => [$c['name'], $c['character']])->all();
+
+    expect($rows)->toBe([
+        ['Донка Аврамова-Бочева', null],
+        ['Александър Карасански', 'Джош'],
+        ['Луиза Григорова-Макариев', null],
+        ['Димитър Коцев', 'Шошо'],
+    ]);
+});
+
+it('cuts a name where the next label ran into it', function () {
+    expect(Credits::personName('Златомир Молдовански Художник и сценограф: Ивелина Минева'))->toBe('Златомир Молдовански')
+        ->and(Credits::personName('Иван Светлинов'))->toBe('Иван Светлинов')
+        ->and(Credits::personName('СВЕТОВНА'))->toBeNull();
+});

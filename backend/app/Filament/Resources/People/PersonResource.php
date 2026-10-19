@@ -7,6 +7,7 @@ use App\Models\Person;
 use BackedEnum;
 use App\Services\PersonMerge;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -20,6 +21,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -58,9 +60,16 @@ class PersonResource extends Resource
                 TextColumn::make('id')->label('#')->sortable(),
                 TextColumn::make('name')->label('Име')->searchable()->sortable(),
                 TextColumn::make('credits_count')->label('Участия')->counts('credits')->sortable(),
+                // Which productions, so namesakes (two „Стоян Радев“) can be told apart before merging.
+                TextColumn::make('productions_list')->label('Постановки')
+                    ->state(fn (Person $record) => $record->credits
+                        ->map(fn ($credit) => $credit->production?->title.' ('.mb_strtolower($credit->role_type->getLabel()).', '.$credit->production?->theatre?->short_name.')')
+                        ->unique()->values()->all())
+                    ->listWithLineBreaks()->limitList(3)->expandableLimitedList()->wrap(),
             ])
+            ->modifyQueryUsing(fn (Builder $query) => $query->with('credits.production.theatre'))
             ->defaultSort('name')
-            ->recordActions([EditAction::make(), self::mergeAction()]);
+            ->recordActions([EditAction::make(), self::mergeAction(), DeleteAction::make()]);
     }
 
     /** "Слей в…": this row is the duplicate; its credits and followers move to the person picked here. */
@@ -109,7 +118,9 @@ class PersonResource extends Resource
 
     private static function pickLabel(Person $person): string
     {
-        return "{$person->name} (#{$person->id}, участия: {$person->credits_count})";
+        $titles = $person->productions()->limit(2)->pluck('title')->implode(', ');
+
+        return "{$person->name} (#{$person->id}, участия: {$person->credits_count}".($titles !== '' ? " — {$titles}" : '').')';
     }
 
     public static function getPages(): array
