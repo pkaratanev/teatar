@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\CatalogueSource;
 use App\Enums\CreditRole;
+use App\Models\Person;
 use App\Models\Production;
 
 /**
@@ -18,7 +19,10 @@ use App\Models\Production;
  *
  * Adding is safe to repeat: an existing credit is never doubled and nothing is removed.
  *
- * @phpstan-type ParsedCredit array{role: CreditRole, name: string, character: ?string}
+ * A name may end in "#123" (that exact person, for two people with the same name) or "#нов" (a new
+ * person even though the name exists).
+ *
+ * @phpstan-type ParsedCredit array{role: CreditRole, name: string, character: ?string, pick?: int|'new'|null}
  * @phpstan-type Parsed array{credits: list<ParsedCredit>, author: ?string, skipped: list<string>}
  */
 class Credits
@@ -119,9 +123,9 @@ class Credits
                 $author = People::clean(preg_replace('/^от\s+/u', '', People::clean($value)) ?? $value) ?: null;
             }
 
-            foreach (self::names($value, $characters) as [$name, $character]) {
+            foreach (self::names($value, $characters) as [$name, $character, $pick]) {
                 foreach ($roles as $role) {
-                    $credits[] = ['role' => $role, 'name' => $name, 'character' => $role === CreditRole::Actor ? $character : null];
+                    $credits[] = ['role' => $role, 'name' => $name, 'character' => $role === CreditRole::Actor ? $character : null, 'pick' => $pick];
                 }
             }
         }
@@ -141,7 +145,7 @@ class Credits
         $sort = (int) $production->credits()->max('sort');
 
         foreach ($parsed['credits'] as $credit) {
-            $person = $this->people->findOrCreate($credit['name'], $source, $sourceUrl);
+            $person = $this->person($production, $credit, $source, $sourceUrl);
             $character = $credit['character'] === null ? null : (People::clean($credit['character']) ?: null);
             $same = $production->credits()->where('person_id', $person->id)->where('role_type', $credit['role']);
 
@@ -176,7 +180,30 @@ class Credits
         return $added;
     }
 
-    /** @return list<array{0: string, 1: ?string}> name and character */
+    /**
+     * The person for a credit: "#123" picks that person, "#нов" a new one (or the one this production
+     * already has under that name and role, so pasting again doesn't create another), else by name.
+     *
+     * @param  ParsedCredit  $credit
+     */
+    private function person(Production $production, array $credit, CatalogueSource $source, ?string $sourceUrl): Person
+    {
+        $pick = $credit['pick'] ?? null;
+        if (is_int($pick) && ($person = Person::find($pick)) !== null) {
+            return $person;
+        }
+        if ($pick === 'new') {
+            $existing = $production->credits()->where('role_type', $credit['role'])
+                ->whereHas('person', fn ($q) => $q->where('name', People::clean($credit['name'])))
+                ->first()?->person;
+
+            return $existing ?? $this->people->create($credit['name'], $source, $sourceUrl);
+        }
+
+        return $this->people->findOrCreate($credit['name'], $source, $sourceUrl);
+    }
+
+    /** @return list<array{0: string, 1: ?string, 2: int|'new'|null}> name, character and "#…" pick */
     private static function names(string $text, bool $characters): array
     {
         $text = str_replace("\u{00A0}", ' ', $text);
@@ -188,6 +215,11 @@ class Credits
         $out = [];
         foreach (preg_split('/\s*[,;\/]\s*|\s+и\s+/u', $text) ?: [] as $part) {
             $character = null;
+            $pick = null;
+            if (preg_match('/\s*#(\d+|нов|new)(?![\p{L}\d])/u', $part, $m)) {
+                $pick = ctype_digit($m[1]) ? (int) $m[1] : 'new';
+                $part = str_replace($m[0], '', $part);
+            }
             if ($characters && preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $part, $m)) {
                 [$part, $character] = [$m[1], $m[2]];
             } elseif ($characters && preg_match('/^(.+?)\s+[-–—]\s+(.+)$/u', $part, $m)) {
@@ -196,7 +228,7 @@ class Credits
 
             $name = self::name($part);
             if ($name !== null) {
-                $out[] = [$name, $character];
+                $out[] = [$name, $character, $pick];
             }
         }
 

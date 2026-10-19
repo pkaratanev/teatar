@@ -75,3 +75,24 @@ it('pastes the team from the production page in the admin', function () {
 
     expect($production->credits()->count())->toBe(3);
 });
+
+it('tells apart two people with the same name with #id or #нов', function () {
+    $director = Person::factory()->create(['name' => 'Стоян Радев']);
+    $actor = Person::factory()->create(['name' => 'Стоян Радев']);
+    $production = Production::factory()->create();
+    $credits = app(Credits::class);
+
+    $credits->add($production, $credits->parse("Режисьор: Стоян Радев #{$director->id}\nАктьори: Стоян Радев #{$actor->id} (Свидетелят)"), CatalogueSource::Admin);
+
+    expect($production->credits()->where('role_type', CreditRole::Director)->value('person_id'))->toBe($director->id)
+        ->and($production->credits()->where('role_type', CreditRole::Actor)->value('person_id'))->toBe($actor->id)
+        ->and($production->credits()->where('role_type', CreditRole::Actor)->value('character_name'))->toBe('Свидетелят');
+
+    $other = Production::factory()->create();
+    $text = "Режисьор: Иван Петров\nАктьори: Иван Петров #нов";
+    $credits->add($other, $credits->parse($text), CatalogueSource::Admin);
+    $credits->add($other, $credits->parse($text), CatalogueSource::Admin); // pasting again makes no third one
+
+    expect(Person::where('name', 'Иван Петров')->count())->toBe(2)
+        ->and($other->credits()->count())->toBe(2);
+});

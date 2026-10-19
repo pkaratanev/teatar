@@ -25,15 +25,24 @@ class People
     {
         $name = self::clean($name);
 
-        return Person::where('name', $name)->first()
-            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->first();
+        // The oldest record wins, so a name always resolves to the same person.
+        return Person::where('name', $name)->orderBy('id')->first()
+            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->orderBy('id')->first();
     }
 
     public function findOrCreate(string $name, CatalogueSource $source, ?string $sourceUrl = null): Person
     {
         $name = self::clean($name);
 
-        return $this->find($name) ?? Person::create([
+        return $this->find($name) ?? $this->create($name, $source, $sourceUrl);
+    }
+
+    /** A new person even if the name exists (two people with the same name). */
+    public function create(string $name, CatalogueSource $source, ?string $sourceUrl = null): Person
+    {
+        $name = self::clean($name);
+
+        return Person::create([
             'name' => $name,
             'slug' => rtrim(Str::limit(Str::slug($name), 80, ''), '-').'-'.Str::lower(Str::random(4)),
             'source' => $source->value,
