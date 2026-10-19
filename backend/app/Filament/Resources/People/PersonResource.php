@@ -63,7 +63,7 @@ class PersonResource extends Resource
                 // Which productions, so namesakes (two „Стоян Радев“) can be told apart before merging.
                 TextColumn::make('productions_list')->label('Постановки')
                     ->state(fn (Person $record) => $record->credits
-                        ->map(fn ($credit) => $credit->production?->title.' ('.mb_strtolower($credit->role_type->getLabel()).', '.$credit->production?->theatre?->short_name.')')
+                        ->map(fn ($credit) => $credit->production->title.' ('.mb_strtolower($credit->role_type->getLabel()).', '.$credit->production->theatre->short_name.')')
                         ->unique()->values()->all())
                     ->listWithLineBreaks()->limitList(3)->expandableLimitedList()->wrap(),
             ])
