@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — Person aliases: merging or renaming keeps the old spelling, and every lookup (import, cast reader, paste box) checks aliases, so a merged duplicate isn't created again. Backfilled Любо Нейков and Юлияна Войкова-Найман.
 - **2026-10-19** — Хора: "Възможни дубликати" filter (same surname and first 3 letters of the first name, ignoring middle names, nicknames after a dash, initials, case and spacing; groups listed together) and "Слей избраните" bulk merge into the one picked.
 - **2026-10-19** — Sync log: one row per active theatre (its latest run) with "Обнови" and "История"; a theatre's page lists all its runs and has "Обнови сега".
 - **2026-10-19** — Agent merged 14 duplicate people; it found the readers glued characters onto names ("Карасански-Джош"): a spaced dash is now a double surname only when the second word looks like a surname, otherwise the character. Imported director names are cleaned the same way. Хора shows each person's productions (also in the merge picker) and can delete a record.

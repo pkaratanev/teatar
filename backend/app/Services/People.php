@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\CatalogueSource;
 use App\Models\Person;
+use App\Models\PersonAlias;
 use Illuminate\Support\Str;
 
 /**
@@ -21,13 +22,21 @@ class People
         return trim($name, " \t\n\r\0\x0B.,;:");
     }
 
+    /** Lower case and cleaned, for comparing spellings ("Любо  Нейков" = "любо нейков"). */
+    public static function key(string $name): string
+    {
+        return mb_substr(mb_strtolower(self::clean($name)), 0, 191);
+    }
+
     public function find(string $name): ?Person
     {
         $name = self::clean($name);
 
-        // The oldest record wins, so a name always resolves to the same person.
+        // The oldest record wins, so a name always resolves to the same person; then the spellings
+        // remembered from merges, so a merged duplicate isn't created again by the next import.
         return Person::where('name', $name)->orderBy('id')->first()
-            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->orderBy('id')->first();
+            ?? Person::whereRaw('lower(name) = ?', [mb_strtolower($name)])->orderBy('id')->first()
+            ?? PersonAlias::where('name_key', self::key($name))->first()?->person;
     }
 
     public function findOrCreate(string $name, CatalogueSource $source, ?string $sourceUrl = null): Person

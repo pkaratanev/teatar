@@ -106,3 +106,27 @@ it('shows only probable duplicates with the filter, and merges several at once',
     expect(Person::whereIn('id', [$dupA->id, $dupB->id])->count())->toBe(0)
         ->and($keep->credits()->count())->toBe(2);
 });
+
+it('remembers a merged spelling, so the next import finds the kept person', function () {
+    $keep = Person::factory()->create(['name' => 'Любомир Нейков']);
+    $dup = Person::factory()->create(['name' => 'Любо Нейков']);
+
+    app(PersonMerge::class)->merge($keep, $dup);
+
+    $found = app(App\Services\People::class)->findOrCreate('Любо  Нейков', App\Enums\CatalogueSource::Adapter);
+    expect($found->id)->toBe($keep->id)
+        ->and(Person::count())->toBe(1);
+
+    // A later merge carries the alias along.
+    $other = Person::factory()->create(['name' => 'Любомир Нейков-Л']);
+    app(PersonMerge::class)->merge($other, $keep);
+    expect(app(App\Services\People::class)->find('Любо Нейков')?->id)->toBe($other->id);
+});
+
+it('keeps the old spelling when a person is renamed', function () {
+    $person = Person::factory()->create(['name' => 'Димитър Коцев-Шошо']);
+
+    $person->update(['name' => 'Димитър Коцев']);
+
+    expect(app(App\Services\People::class)->find('Димитър Коцев-Шошо')?->id)->toBe($person->id);
+});
