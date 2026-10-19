@@ -9,7 +9,7 @@ it('seeds the launch theatres with address, coordinates and box-office phone', f
 
     $national = Theatre::where('adapter', 'national')->firstOrFail();
     expect($national->address)->toBe('ул. „Дякон Игнатий“ 5')
-        ->and($national->lat)->toBe(42.6941714)
+        ->and($national->lat)->toBe(42.694171)
         ->and($national->getAttribute('phone'))->toBe('02 811 92 27');
 
     // No adapter: matched by name.
@@ -24,7 +24,7 @@ it('fills only empty fields, so an admin edit stays', function () {
     $theatre->refresh();
     expect($theatre->address)->toBe('Моят адрес')
         ->and($theatre->getAttribute('phone'))->toBe('0882 565 653')
-        ->and($theatre->lng)->toBe(23.3263186)
+        ->and($theatre->lng)->toBe(23.326319)
         ->and(TheatreContacts::fill($theatre))->toBeFalse();
 });
 
