@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — Хора: "Възможни дубликати" filter (same surname and first 3 letters of the first name, ignoring middle names, nicknames after a dash, initials, case and spacing; groups listed together) and "Слей избраните" bulk merge into the one picked.
 - **2026-10-19** — Sync log: one row per active theatre (its latest run) with "Обнови" and "История"; a theatre's page lists all its runs and has "Обнови сега".
 - **2026-10-19** — Agent merged 14 duplicate people; it found the readers glued characters onto names ("Карасански-Джош"): a spaced dash is now a double surname only when the second word looks like a surname, otherwise the character. Imported director names are cleaned the same way. Хора shows each person's productions (also in the merge picker) and can delete a record.
 - **2026-10-19** — Cast reader for 6 more theatres (Народен, 199, Сатира, София, Сълза и смях, Драматичен Варна; probe of 3 pages each). Names in capitals re-cased, assistants and musicians not taken as director/composer, characters kept from "Персонаж – Актьор" lines. Paste box: "#12" / "#нов" for namesakes. Imported authors lose a leading "от". Agent so far: 23 productions by hand; its prompt now skips the 10 automated theatres.

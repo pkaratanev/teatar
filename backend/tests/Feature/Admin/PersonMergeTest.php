@@ -67,3 +67,42 @@ it('shows each person\'s productions in the list, so namesakes can be told apart
         ->test(ManagePeople::class)
         ->assertSee('Сън в зимна нощ (режисьор');
 });
+
+it('groups probable duplicates: middle names, short first names, nicknames, dash styles, initials', function () {
+    $names = ['Христо Станчев', 'Христо Ботев Станчев', 'Любо Нейков', 'Любомир Нейков', 'Александър Карасански-Джош',
+        'Александър Карасански', 'Димитър Коцев – Шошо', 'Димитър Коцев-Шошо', 'Стоян Радев', 'Стоян Радев Ге. К.', 'Иван Петров'];
+    foreach ($names as $name) {
+        Person::factory()->create(['name' => $name]);
+    }
+
+    $groups = app(App\Services\PeopleDuplicates::class)->groups()
+        ->map(fn ($people) => $people->pluck('name')->sort()->values()->all())->values()->all();
+
+    expect($groups)->toHaveCount(5)
+        ->and($groups)->toContain(['Христо Ботев Станчев', 'Христо Станчев'])
+        ->and($groups)->toContain(['Любо Нейков', 'Любомир Нейков'])
+        ->and($groups)->toContain(['Стоян Радев', 'Стоян Радев Ге. К.'])
+        ->and(collect($groups)->flatten())->not->toContain('Иван Петров');
+});
+
+it('shows only probable duplicates with the filter, and merges several at once', function () {
+    $keep = Person::factory()->create(['name' => 'Стоян Радев']);
+    $dupA = Person::factory()->create(['name' => 'Стоян Радев Ге. К.']);
+    $dupB = Person::factory()->create(['name' => 'стоян  радев']);
+    $alone = Person::factory()->create(['name' => 'Иван Петров']);
+    [$p1, $p2] = Production::factory()->count(2)->create();
+    $dupA->credits()->create(['production_id' => $p1->id, 'role_type' => CreditRole::Actor]);
+    $dupB->credits()->create(['production_id' => $p2->id, 'role_type' => CreditRole::Director]);
+
+    Livewire::actingAs(User::factory()->admin()->create())
+        ->test(ManagePeople::class)
+        ->filterTable('duplicates')
+        ->assertCanSeeTableRecords([$keep, $dupA, $dupB])
+        ->assertCanNotSeeTableRecords([$alone])
+        ->callTableBulkAction('mergeSelected', [$keep, $dupA, $dupB], data: ['keep_id' => $keep->id])
+        ->assertHasNoTableBulkActionErrors()
+        ->assertNotified();
+
+    expect(Person::whereIn('id', [$dupA->id, $dupB->id])->count())->toBe(0)
+        ->and($keep->credits()->count())->toBe(2);
+});

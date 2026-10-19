@@ -4,9 +4,11 @@ namespace App\Filament\Resources\People;
 
 use App\Filament\Resources\People\Pages\ManagePeople;
 use App\Models\Person;
-use BackedEnum;
+use App\Services\PeopleDuplicates;
 use App\Services\PersonMerge;
+use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
@@ -20,8 +22,10 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -69,7 +73,66 @@ class PersonResource extends Resource
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->with('credits.production.theatre'))
             ->defaultSort('name')
-            ->recordActions([EditAction::make(), self::mergeAction(), DeleteAction::make()]);
+            ->filters([
+                // Groups people who are probably the same person next to each other (see PeopleDuplicates).
+                Filter::make('duplicates')->label('Възможни дубликати')->toggle()
+                    ->query(function (Builder $query) {
+                        $ids = app(PeopleDuplicates::class)->ids();
+                        if ($ids === []) {
+                            return $query->whereRaw('1 = 0');
+                        }
+                        $order = collect($ids)->map(fn (int $id, int $i) => "WHEN {$id} THEN {$i}")->implode(' ');
+
+                        return $query->whereIn('id', $ids)->orderByRaw("CASE id {$order} END");
+                    }),
+            ])
+            ->recordActions([EditAction::make(), self::mergeAction(), DeleteAction::make()])
+            ->toolbarActions([self::mergeSelectedAction()]);
+    }
+
+    /** Tick two or more people, pick the one that stays; the others are merged into it. */
+    public static function mergeSelectedAction(): BulkAction
+    {
+        return BulkAction::make('mergeSelected')
+            ->label('Слей избраните')
+            ->icon(Heroicon::OutlinedArrowsPointingIn)
+            ->color('gray')
+            ->modalHeading('Слей избраните хора в един')
+            ->modalDescription('Участията и последователите на всички избрани се преместват при този, който остава; другите записи се изтриват. Не може да се върне.')
+            ->modalSubmitActionLabel('Слей')
+            ->schema(fn (Collection $records) => [
+                Select::make('keep_id')
+                    ->label('Остава')
+                    ->required()
+                    ->options($records->mapWithKeys(fn (Person $p) => [$p->id => self::pickLabel($p->loadCount('credits'))])->all())
+                    ->default($records->sortByDesc(fn (Person $p) => $p->credits()->count())->first()?->getKey()),
+            ])
+            ->action(function (Collection $records, array $data, PersonMerge $merge): void {
+                $keep = $records->firstWhere('id', (int) $data['keep_id']);
+                if (! $keep instanceof Person || $records->count() < 2) {
+                    Notification::make()->title('Изберете поне двама души и кой остава')->danger()->send();
+
+                    return;
+                }
+
+                $moved = ['credits' => 0, 'followers' => 0];
+                $names = [];
+                foreach ($records as $person) {
+                    if ($person instanceof Person && ! $person->is($keep)) {
+                        $names[] = $person->name;
+                        $result = $merge->merge($keep, $person);
+                        $moved['credits'] += $result['credits'];
+                        $moved['followers'] += $result['followers'];
+                    }
+                }
+
+                Notification::make()
+                    ->title('Слети в „'.$keep->name.'“: '.count($names))
+                    ->body(implode(', ', $names)." · преместени участия: {$moved['credits']}, последователи: {$moved['followers']}")
+                    ->success()
+                    ->send();
+            })
+            ->deselectRecordsAfterCompletion();
     }
 
     /** "Слей в…": this row is the duplicate; its credits and followers move to the person picked here. */
