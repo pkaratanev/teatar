@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — `.easignore` at the repo root: EAS uploads only `mobile/` (the backend's storage symlink broke `eas build` on Windows).
 - **2026-10-19** — Person aliases: merging or renaming keeps the old spelling, and every lookup (import, cast reader, paste box) checks aliases, so a merged duplicate isn't created again. Backfilled Любо Нейков and Юлияна Войкова-Найман.
 - **2026-10-19** — Хора: "Възможни дубликати" filter (same surname and first 3 letters of the first name, ignoring middle names, nicknames after a dash, initials, case and spacing; groups listed together) and "Слей избраните" bulk merge into the one picked.
 - **2026-10-19** — Sync log: one row per active theatre (its latest run) with "Обнови" and "История"; a theatre's page lists all its runs and has "Обнови сега".
@@ -282,7 +283,6 @@ Newest first. One line per working session.
 - **2026-10-17** — First production sync: Théatro failed with "value too long" on an Eventim ticket URL (Postgres enforces varchar(255), SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped. Младежки 403 in production too (Cloudflare, known block).
 - **2026-10-17** — First production sync: one theatre failed with "value too long" (Postgres enforces varchar limits, SQLite doesn't). Imported text columns widened to text, slugs capped at 80, odd age labels dropped.
 - **2026-10-17** — `npm run start:prod`: Expo Go against the Laravel Cloud API.
-- **2026-10-19** — `.easignore` at the repo root: EAS uploads only `mobile/` (the backend's storage symlink broke `eas build` on Windows).
 - **2026-10-17** — Production address: https://teatar-production-8awteq.laravel.cloud (temporary Laravel Cloud domain), set as the API address in the EAS builds.
 - **2026-10-17** — S3 package pushed (lock from Preslav's PC); `prod` branch for Laravel Cloud deploys; stale-run check hourly so the app can scale to zero; bucket used as the `public` disk.
 - **2026-10-17** — Decided (Preslav): deploy the backend to Laravel Cloud now, closed Play test, public after the MVP. Built for it: posters on a bucket (`MEDIA_DISK`), `teatar:make-admin`, forgotten password with an emailed code (API + app), `eas.json`, /privacy and /delete-account, docs/deploy.md. CLAUDE.md spending rule updated.
