@@ -61,7 +61,7 @@ class ProgrammeImporter
                 } else {
                     // Fill gaps, never overwrite what an admin already set.
                     $gaps = array_filter([
-                        'author' => $production->author === null ? $item->author : null,
+                        'author' => $production->author === null ? self::author($item->author) : null,
                         'age_advisory' => $production->age_advisory === null ? $item->ageAdvisory : null,
                     ]);
                     if ($gaps !== []) {
@@ -300,7 +300,7 @@ class ProgrammeImporter
         // or by the community; the admin dashboard lists productions missing them.
         return $theatre->productions()->create([
             'title' => $title,
-            'author' => $item->author,
+            'author' => self::author($item->author),
             'age_advisory' => self::ageAdvisory($item->ageAdvisory),
             'is_guest' => $item->guest(),
             'visiting_company' => $item->visitingCompany,
@@ -325,5 +325,16 @@ class ProgrammeImporter
         $age = $age === null ? null : trim($age);
 
         return $age !== null && $age !== '' && mb_strlen($age) <= 8 ? $age : null;
+    }
+
+    /** "от Франсис Вебер" → "Франсис Вебер": some sites write the author with "от" (by). */
+    private static function author(?string $author): ?string
+    {
+        if ($author === null) {
+            return null;
+        }
+        $author = trim(preg_replace('/^от\s+/iu', '', trim($author)) ?? $author);
+
+        return $author === '' ? null : $author;
     }
 }

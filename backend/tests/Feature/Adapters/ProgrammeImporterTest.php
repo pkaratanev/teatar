@@ -90,3 +90,15 @@ it('stores long titles, credits and links from theatre sites (Postgres rejects t
         ->and($production->age_advisory)->toBeNull()
         ->and(Performance::sole()->ticket_url)->toBe($url);
 });
+
+it('drops a leading "от" from imported authors', function () {
+    $theatre = Theatre::factory()->create();
+
+    app(ProgrammeImporter::class)->import($theatre, [new ScrapedPerformance(
+        title: 'Вечеря за глупаци',
+        startsAt: CarbonImmutable::parse('2026-11-03 19:00', 'Europe/Sofia'),
+        author: 'от Франсис Вебер',
+    )]);
+
+    expect(Production::sole()->author)->toBe('Франсис Вебер');
+});
