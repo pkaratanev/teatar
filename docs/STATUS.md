@@ -270,6 +270,7 @@ push works; Preslav tests them on a development build later.
 
 Newest first. One line per working session.
 
+- **2026-10-19** — Theatre contacts: address, map point, box-office phone and ticket page for the 13 launch theatres (from their own contacts pages; points from OpenStreetMap), filled by a migration and the seeder without overwriting admin edits; API returns `phone`. Сфумато has a map point only (robots.txt), НДК nothing (closed).
 - **2026-10-19** — `.easignore` at the repo root: EAS uploads only `mobile/` (the backend's storage symlink broke `eas build` on Windows).
 - **2026-10-19** — Person aliases: merging or renaming keeps the old spelling, and every lookup (import, cast reader, paste box) checks aliases, so a merged duplicate isn't created again. Backfilled Любо Нейков and Юлияна Войкова-Найман.
 - **2026-10-19** — Хора: "Възможни дубликати" filter (same surname and first 3 letters of the first name, ignoring middle names, nicknames after a dash, initials, case and spacing; groups listed together) and "Слей избраните" bulk merge into the one picked.

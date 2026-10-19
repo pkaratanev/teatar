@@ -3,13 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Theatre;
+use App\Support\TheatreContacts;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 /**
- * The launch set: 12 Sofia theatres (see docs/plan.md) and Varna, the second city. Only names and the
- * websites we have confirmed; addresses, box-office links and adapters are
- * filled in Filament as each theatre is onboarded.
+ * The launch set: 12 Sofia theatres (see docs/plan.md) and Varna, the second city, with the contacts in
+ * TheatreContacts. Anything else is filled in Filament.
  */
 class LaunchTheatresSeeder extends Seeder
 {
@@ -42,6 +42,8 @@ class LaunchTheatresSeeder extends Seeder
             if ($theatre->short_name === null) {
                 $theatre->update(['short_name' => $t['short']]);
             }
+
+            TheatreContacts::fill($theatre);
         }
     }
 }

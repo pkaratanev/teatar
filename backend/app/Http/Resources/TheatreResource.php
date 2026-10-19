@@ -20,6 +20,7 @@ class TheatreResource extends JsonResource
             'address' => $this->address,
             'lat' => $this->lat,
             'lng' => $this->lng,
+            'phone' => $this->phone,
             'website' => $this->website,
             'box_office_url' => $this->box_office_url,
             'logo_url' => $this->getFirstMediaUrl('logo') ?: null,
