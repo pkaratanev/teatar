@@ -98,7 +98,8 @@ Until a domain is verified, Resend only delivers to your own address, which is e
    eas login
    eas init
    ```
-   `eas init` asks you to add `extra.eas.projectId` to `app.json`; commit that.
+   `eas init` asks you to add `extra.eas.projectId` to `app.json`; commit that. The root `.easignore` keeps the
+   upload to `mobile/`; a new file the app needs outside it must be un-ignored there.
 3. **API address:** already set in `eas.json` for the `preview` and `production` builds:
    `https://teatar-production-8awteq.laravel.cloud/api/v1`. When a custom domain arrives, change it there for new
    builds. Keep the Laravel Cloud domain attached, because builds already on phones still use it.
