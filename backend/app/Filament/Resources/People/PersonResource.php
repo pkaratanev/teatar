@@ -104,8 +104,8 @@ class PersonResource extends Resource
                 Select::make('keep_id')
                     ->label('Остава')
                     ->required()
-                    ->options($records->mapWithKeys(fn (Person $p) => [$p->id => self::pickLabel($p->loadCount('credits'))])->all())
-                    ->default($records->sortByDesc(fn (Person $p) => $p->credits()->count())->first()?->getKey()),
+                    ->options(self::pickOptions($records))
+                    ->default(array_key_first(self::pickOptions($records))),
             ])
             ->action(function (Collection $records, array $data, PersonMerge $merge): void {
                 $keep = $records->firstWhere('id', (int) $data['keep_id']);
@@ -177,6 +177,19 @@ class PersonResource extends Resource
                     ->success()
                     ->send();
             });
+    }
+
+    /**
+     * Selected people as options, the one with the most credits first.
+     *
+     * @param  Collection<int, \Illuminate\Database\Eloquent\Model>  $records
+     * @return array<int, string>
+     */
+    private static function pickOptions(Collection $records): array
+    {
+        return Person::query()->whereKey($records->modelKeys())->withCount('credits')
+            ->orderByDesc('credits_count')->orderBy('id')->get()
+            ->mapWithKeys(fn (Person $p) => [$p->id => self::pickLabel($p)])->all();
     }
 
     private static function pickLabel(Person $person): string

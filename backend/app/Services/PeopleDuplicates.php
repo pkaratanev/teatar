@@ -17,12 +17,13 @@ use Illuminate\Support\Collection;
  */
 class PeopleDuplicates
 {
-    /** @return Collection<string, Collection<int, Person>> group key => people, only groups of 2 or more */
+    /** @return \Illuminate\Support\Collection<int|string, \Illuminate\Database\Eloquent\Collection<int, Person>> group key => people, only groups of 2 or more */
     public function groups(): Collection
     {
         return Person::query()
             ->get(['id', 'name'])
             ->groupBy(fn (Person $person) => self::key($person->name))
+            ->toBase()
             ->filter(fn (Collection $people, string $key) => $key !== '' && $people->count() > 1)
             ->sortKeys();
     }
