@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Resources\AdapterRuns\Pages\ListAdapterRuns;
+use App\Filament\Resources\AdapterRuns\Pages\TheatreAdapterRuns;
 use App\Jobs\SyncTheatreProgramme;
 use App\Models\AdapterRun;
 use App\Models\Theatre;
@@ -207,4 +208,39 @@ it('shows the next run on the sync log', function () {
         ->get('/admin/adapter-runs')
         ->assertOk()
         ->assertSee('Нощна синхронизация всеки ден в 03:15');
+});
+
+it('lists the latest run per active theatre, and each theatre\'s history on its own page', function () {
+    $zad = Theatre::factory()->create(['name' => 'Зад канала', 'adapter' => 'zadkanala']);
+    $old = run($zad, 'failed', ['error' => 'стара грешка', 'started_at' => now()->subDays(2)]);
+    $latest = run($zad, 'succeeded', ['started_at' => now()->subHour()]);
+    $other = run(Theatre::factory()->create(['adapter' => 'theatro']), 'succeeded');
+    $off = run(Theatre::factory()->create(['adapter' => 'mlt', 'is_active' => false]), 'failed');
+
+    Livewire::actingAs(User::factory()->admin()->create())
+        ->test(ListAdapterRuns::class)
+        ->assertCanSeeTableRecords([$latest, $other])
+        ->assertCanNotSeeTableRecords([$old, $off]);
+
+    Livewire::test(TheatreAdapterRuns::class, ['theatre' => $zad->id])
+        ->assertCanSeeTableRecords([$latest, $old])
+        ->assertCanNotSeeTableRecords([$other])
+        ->assertSee('Синхронизации: Зад канала');
+});
+
+it('starts a sync for one theatre from its row or its history page', function () {
+    Queue::fake();
+    $theatre = Theatre::factory()->create(['adapter' => 'zadkanala']);
+    $done = run($theatre, 'succeeded');
+
+    Livewire::actingAs(User::factory()->admin()->create())
+        ->test(ListAdapterRuns::class)
+        ->callTableAction('syncTheatre', $done)
+        ->assertNotified("Синхронизацията на {$theatre->name} е пусната");
+
+    Queue::assertPushed(SyncTheatreProgramme::class, 1);
+
+    Livewire::test(TheatreAdapterRuns::class, ['theatre' => $theatre->id])
+        ->callAction('syncTheatre')
+        ->assertNotified("{$theatre->name} вече се синхронизира"); // the first one is still queued
 });

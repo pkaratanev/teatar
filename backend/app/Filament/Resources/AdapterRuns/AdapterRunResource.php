@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AdapterRuns;
 
 use App\Filament\Resources\AdapterRuns\Pages\ListAdapterRuns;
+use App\Filament\Resources\AdapterRuns\Pages\TheatreAdapterRuns;
 use App\Models\AdapterRun;
 use App\Services\SyncAlerts;
 use BackedEnum;
@@ -13,7 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use UnitEnum;
 
-/** Read-only log of programme syncs: which theatre broke, when, and why. */
+/** Read-only log of programme syncs: which theatre broke, when, and why. Latest per theatre, then each theatre's history. */
 class AdapterRunResource extends Resource
 {
     protected static ?string $model = AdapterRun::class;
@@ -31,7 +32,7 @@ class AdapterRunResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('started_at')->label('Начало')->dateTime('d.m.Y H:i', config('app.theatre_timezone'))->sortable(),
-                TextColumn::make('theatre.name')->label('Театър'),
+                TextColumn::make('theatre.name')->label('Театър')->sortable(),
                 TextColumn::make('status')->label('Статус')->badge()
                     ->formatStateUsing(fn (string $state) => AdapterRun::LABELS[$state] ?? $state)
                     ->color(fn (string $state) => AdapterRun::color($state)),
@@ -76,6 +77,9 @@ class AdapterRunResource extends Resource
 
     public static function getPages(): array
     {
-        return ['index' => ListAdapterRuns::route('/')];
+        return [
+            'index' => ListAdapterRuns::route('/'),
+            'theatre' => TheatreAdapterRuns::route('/theatre/{theatre}'),
+        ];
     }
 }
